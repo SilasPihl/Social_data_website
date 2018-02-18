@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <style type="text/css">
+            p {
+                font-size: 24px;
+                font-weight: bold;
+				font-family: Helvetica, Arial, sans-serif;
+            }
+
+        div.bar {
+				display: inline-block;
+				width: 20px;
+				height: 75px; /* We'll override height later */
+				margin-right: 2px;
+				background-color: teal;
+			}
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+}
+
+        </style>
+		<meta charset="utf-8">
+		<title>Week 2</title>
+		<script type="text/javascript" src="js/d3.v3.min.js"></script>
+    <!-- <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script> -->
+  </head>
+  <body>
+
+    <script type="text/javascript">
+      var width = 500;
+      var height = 100;
+      var barPadding = 1;
+      var dataset = [ 5, 10, 15, 20, 25 ];
+      var datasetRandom = []; //Initialize empty array
+      for (var i = 0; i < 25; i++) { //Loop 25 times
+          var newNumber = Math.round(Math.random() * 30); //New random number (0-30)
+          datasetRandom.push(newNumber); //Add new number to array
+      }
+      var dataset2 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+      11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+      var datasetPoints = [
+          [ 5, 20 ],
+          [ 480, 90 ],
+          [ 250, 50 ],
+          [ 100, 33 ],
+          [ 330, 95 ],
+          [ 410, 12 ],
+          [ 475, 44 ],
+          [ 25, 67 ],
+          [ 85, 21 ],
+          [ 220, 88 ]
+          ];
+
+    </script>
+    <script type="text/javascript" src="js/w2_bars.js"> 
+    </script>
+		<script type="text/javascript" src="js/w2_circles.js"> 
+    </script>
+    <script type="text/javascript" src="js/w2_scatter.js"> 
+    </script>
+    <script type="text/javascript" src="js/w2_presidents.js">
+    </script>
+
+
+ 	</body>
+ </html>
