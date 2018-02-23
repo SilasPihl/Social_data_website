@@ -3,7 +3,7 @@ width = 600 - margin.left - margin.right,
 height = 270 - margin.top - margin.bottom;
 
 // Adds the svg canvas
-var svg = d3.select("body")
+var svg = d3.select("#part1_content")
   .append("svg")
   .attr("width", width + margin.left + margin.right)
   .attr("height", height + margin.top + margin.bottom)

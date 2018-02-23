@@ -1,14 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>D3 Page Template</title>
-  <link rel="stylesheet" type="text/css" href="css/global.css">
-  <script type="text/javascript" src="js/d3.js"></script>
-</head>
-<body>
-<a href="week2.html"><h1>Week 2</h1></a>
-<a href="week3.html"><h1>Week 3</h1></a>
-</body>
-</html>
+<!DOCTYPE HTML>
+<!--
+	Transitive by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Assignment 1</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
 
+    <script src="https://www.w3schools.com/lib/w3.js"></script> 
+    <script type="text/javascript" src="js/d3.js"></script>
+    <style type="text/css">
+        div.bar {
+          display: inline-block;
+          width: 20px;
+          height: 75px; /* We'll override height later */
+          margin-right: 2px;
+          background-color: teal;
+        }
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: grey;
+          stroke-width: 1;
+          shape-rendering: crispEdges;
+        }
+      </style>
+	</head>
+	<body>
+
+		<!-- Header -->
+			<header id="header" class="alt">
+				<div class="logo"><a href="index.html">DTU <span>02806 Social data analysis and visualization F18</span></a></div>
+				<a href="#menu" class="toggle"><span>Menu</span></a>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">Home</a></li>
+          <li><a href="#part1_a">Part 1</a></li>
+          <li><a href="#part2_a">Part 2</a></li>
+          <li><a href="#part3_a">Part 3</a></li>
+					<li><a href="#part4_a">Part 4</a></li>
+				</ul>
+			</nav>
+
+		<!-- Banner -->
+			<section id="banner" data-video="images/banner">
+				<div class="inner">
+					<h1>Assignment 1</h1>
+					<p>This webpage is the hand-in answer for assignment 1 in the DTU course <br />
+					02806 Social data analysis and visualization F18</p>
+					<a href="#one" class="button special scrolly">Check out the assignment</a>
+				</div>
+			</section>
+
+		<!-- Answers structure -->
+			<section id="one" class="wrapper style2">
+				<div class="inner">
+						<div id="part1¨_a" class="content">
+							<header class="align-center">
+							  <h2>Part 1</h2>
+								<p>DAOST Chapter 2 Questions</p>
+                <div id="part1">
+                </div>
+					  </div>
+            <div id="part2_a" class="content">
+              <header class="align-center">
+                <h2>Part 2</h2>
+                <p>DAOST Chapter 3 Questions</p>
+                <div id="part2">
+                </div>
+            </div>
+            <div id="part3_a" class="content">
+              <header class="align-center">
+                <h2>Part 3</h2>
+                <p>Viz 1</p>
+                <div id="part3">
+                </div>
+            </div>
+            <div id="part2_a" class="content">
+              <header class="align-center">
+                <h2>Part 4</h2>
+                <p>Viz 2</p>
+                <div id="part4">
+                </div>
+            </div>                        
+					</div>
+				</div>
+			</section>
+
+      <!-- Scripts -->
+      <script src="assets/js/jquery.min.js"></script>
+      <script src="assets/js/jquery.scrolly.min.js"></script>
+      <script src="assets/js/jquery.scrollex.min.js"></script>
+      <script src="assets/js/skel.min.js"></script>
+      <script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script>
+
+    <!-- Answers d3 section -->
+
+    <script type="text/javascript">
+      var width = 500;
+      var height = 100;
+      var barPadding = 1;
+      var dataset = [ 5, 10, 15, 20, 25 ];
+      var datasetRandom = []; //Initialize empty array
+      for (var i = 0; i < 25; i++) { //Loop 25 times
+          var newNumber = Math.round(Math.random() * 30); //New random number (0-30)
+          datasetRandom.push(newNumber); //Add new number to array
+      }
+      var dataset2 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+      11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+
+      var datasetPoints = [
+          [ 5, 20 ],
+          [ 480, 90 ],
+          [ 250, 50 ],
+          [ 100, 33 ],
+          [ 330, 95 ],
+          [ 410, 12 ],
+          [ 475, 44 ],
+          [ 25, 67 ],
+          [ 85, 21 ],
+          [ 220, 88 ]
+          ];
+
+    </script>
+    <script type="text/javascript" src="js/w2_bars.js"> 
+    </script>
+
+
+	</body>
+</html>

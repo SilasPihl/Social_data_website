@@ -1,4 +1,4 @@
-d3.select("body").selectAll("div")
+d3.select("#part1_content").selectAll("div")
 .data(datasetRandom)
 .enter()
 .append("div")
@@ -8,7 +8,7 @@ d3.select("body").selectAll("div")
     return barHeight + "px";});
 
 
- var svg = d3.select("body")
+ var svg = d3.select("#part1_content")
             .append("svg")
             .attr("width", width)
             .attr("height", height);
