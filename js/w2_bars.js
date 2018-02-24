@@ -1,14 +1,14 @@
-d3.select("#part1").selectAll("div")
-.data(datasetRandom)
-.enter()
-.append("div")
-.attr("class", "bar")
-.style("height", function(d) {
-    var barHeight = d * 5; //Scale up by factor of 5
-    return barHeight + "px";});
+// d3.select("body").selectAll("div")
+// .data(datasetRandom)
+// .enter()
+// .append("div")
+// .attr("class", "bar")
+// .style("height", function(d) {
+//     var barHeight = d * 5; //Scale up by factor of 5
+//     return barHeight + "px";});
 
 
- var svg = d3.select("#part1")
+ var svg = d3.select("body")
             .append("svg")
             .attr("width", width)
             .attr("height", height);

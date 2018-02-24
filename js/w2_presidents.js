@@ -58,7 +58,7 @@ d3.csv("data/president.csv", function( data) {
     .call(yAxis);
 
 
-          // text label for the y axis
+  // text label for the y axis
   svg.append("text")
     .attr("transform",
           "translate(" + (width/2) + " ," + 

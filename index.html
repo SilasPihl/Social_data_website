@@ -1,9 +1,4 @@
 <!DOCTYPE HTML>
-<!--
-	Transitive by TEMPLATED
-	templated.co @templatedco
-	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
--->
 <html>
 	<head>
 		<title>Assignment 1</title>
@@ -11,8 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 
-    <script src="https://www.w3schools.com/lib/w3.js"></script> 
-    <script type="text/javascript" src="js/d3.js"></script>
+    <!-- <script src="https://www.w3schools.com/lib/w3.js"></script>  -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <!-- <script type="text/javascript" src="js/d3.v3.js"></script> -->
     <style type="text/css">
         div.bar {
           display: inline-block;
@@ -28,10 +24,13 @@
           stroke-width: 1;
           shape-rendering: crispEdges;
         }
+        .p {
+          color: black;
+        }
       </style>
+
 	</head>
 	<body>
-
 		<!-- Header -->
 			<header id="header" class="alt">
 				<div class="logo"><a href="index.html">DTU <span>02806 Social data analysis and visualization F18</span></a></div>
@@ -59,40 +58,195 @@
 				</div>
 			</section>
 
-		<!-- Answers structure -->
+		<!-- Answers -->
 			<section id="one" class="wrapper style2">
 				<div class="inner">
 						<div id="part1_a" class="content">
-							<header class="align-center">
-							  <h2>Part 1</h2>
-								<p>DAOST Chapter 2 Questions</p>
+
+                <!-- PART 1  -->
+                <div class="align-center">
+                  <h2>Part 1</h2>
+                  <p>DAOST Chapter 2 Questions</p>
+                </div>
+
                 <div id="part1">
+<blockquote>Explain in your own words the point of the jitter plot.</blockquote>
+<p>Jitter plot can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
+In the president example from the DAOST book the presidents usaully spend a term or two in office, i.e. 4 or 8 years.
+By adding random noise to the univariate data, the y-axis is utilized as well.
+</p>
+<p class="align-center">
+  <img src="images/jitter.png" />
+</p>
+
+<blockquote>Explain in your own words the point of figure 2-3. (I'm going to skip saying "in your own words" going forward, but I hope you get the point; I expect all answers to be in your own words).</blockquote>
+<p>
+The jitterplot can be harder to interpret and distinquish if the amount of data becomes relatively high.
+One would think that a histogram would be better to show where the data is more prominent. 
+In a histogram it's important to chose the appropriate bin sizes and anchor points. From figure 2-3 this problem is shown. 
+Different anchor point have been chosen in the two plots on the same data and the results are very different. 
+A first guess of the correct bin size can be chosen from <em>Scott's rule</em>.
+histogram can be good to represent varying data, e.g. if one would make an experiment where it's expected to have data in a certain interval. 
+If it's desired to view two similar histogram giving some small varying data the bin size and anchor point gives the benifit of aligning the data.
+</p>
+<p class="align-center">
+  <img src="images/scott.png">
+</p>
+
+<p>
+NOTES:
+One can no longer extrapolate directly. With too rough/coarse granularity it's not good. 
+</p>
+
+<blockquote>The author of DAOST (philipp Janert) likes KDEs (and think they're better than histograms). And I don't. I didn't give a detailed explanation in the video, but now that works to my advantage. I'll ask you guys to think about this and thereby create an excellent exercise: When can KDEs be misleading?</blockquote>
+The KDE's can be used to predict data and connections by smoothing out the existing data. 
+This can be good if a lot of outliers are present.
+Problem of KDE's are that data can no longer be extrapolated directly from the plot since the data has been modified. 
+In the president example the KDE ruins the actual data totally. 
+
+<p class="align-center">
+  <img src="images/kde.png" />
+</p>
+
+<p>
+NOTES:
+Kernel Density Estimater
+Numalize to 1.
+Probability estimater
+</p>
+
+<blockquote>I've discussed some strengths of the CDF - there are also weaknesses. Janert writes "[CDFs] have less intuitive appeal than histograms of KDEs". What does he mean by that?</blockquote>
+
+<p>
+NOTES:
+Cumulative Distribution Function
+Sums the probability of data being to the left of the exact point. It sums to 1 in the y-axis.
+Can be good to answer questions regarding probability like "Have many percent change of the data being lower than ....?"
+Good if asking "How likely is it that the response time is 1000 or less?", answer 80%
+Bad if asking the opposite question. 1000 ms response time and above. 
+Estimate future data.
+Weaknesses: A lot of data peaks is omitted by CDF. If having two peaks, one in beginning and one in the end, this can't be seen in the plot. 
+
+</p>
+
+<blockquote>What is a Quantile plot? What is it good for.</blockquote>
+
+
+<p>
+NOTES:
+Like an CDF but with switched x and y axis. Benificial in questions regarding percentage questions.
+Good: Likelyhood of response time of 1000 ms and above?
+</p>
+
+<blockquote>How is a probablity plot defined? What is it useful for? Have you ever seen one before?</blockquote>
+<p>
+NOTES:
+It defined by multples of standard deviation in lower x-axis. Putting the lower x values into a fitting equation the y values are optained.
+The upper x-axis shows a CDF. It's easy to see outliers and to give a quick answer on how predicable the data is. 
+Yes/No. 
+</p>
+
+<blockquote>One of the reasons I like DAOST is that Janert is so suspicious of mean, median, and related summary statistics. Explain why one has to be careful when using those - and why visualization of the full data is always better.</blockquote>
+<p>
+NOTES:
+DAOST gives a good explanation of how different the data can look by visualizing it differently.
+</p>
+
+<blockquote>I love box plots. When are box plots most useful?</blockquote>
+
+<p>
+NOTES:
+Usefull to give a quick overview of the data. 5 factor summary with lower extreme, lower quantile, median, upper quantile and upper extreme.
+Usefull for comparing data set and to show whether a data set is skewed and to spot outliers. The larger the amount of observations, the more usefull.  
+</p>
+
+<blockquote>The book doesn't mention violin plots. Are those better or worse than box plots? Why?</blockquote>
+
+<p>
+NOTES:
+Violin plots can show more than box plot. Extented with a rotated kernel density plot. Better to show peaks. 
+Not as populare meaning that they are harder to interpret if you don't know them. 
+</p>
+
+
+
                 </div>
+
 					  </div>
+            <hr />
             <div id="part2_a" class="content">
-              <header class="align-center">
-                <h2>Part 2</h2>
-                <p>DAOST Chapter 3 Questions</p>
+
+                <!-- PART 2 -->
+                <div class="align-center">
+                  <h2>Part 2</h2>
+                  <p>DAOST Chapter 3 Questions</p>
+                </div>
+
                 <div id="part2">
+<blockquote>Looking at Fig 3-1, Janert writes "the data itself shows clearly that the amount of random noise in the data is small". What do you think his argument is?</blockquote>
+
+<blockquote>Can you think of a real-world example of a multivariate relationship like the one in Fig 3-3 (lower right panel)?</blockquote>
+
+<blockquote>What are the two methods Janert metions for smoothing noisy data? Can you think of other ones?</blockquote>
+
+<blockquote>What are residuals? Why is it a good idea to plot the residuals of your fit?</blockquote>
+
+<blockquote>Explain in your own words the point of the smooth tube in figure 3-7.</blockquote>
+
+<blockquote>What kind of relationships will a semi-log plot help you discover?</blockquote>
+
+<blockquote>What kind of functions will loglog plots help you see?</blockquote>
+
+<blockquote>What the h#ll is banking and what element from our visual system does it use to help us see patterns? What are potential problems with banking?</blockquote>
+
+<blockquote>I think figure 3-14 makes an important point about linear fits that is rarely made. What is it?</blockquote>
+
+<blockquote>Summarize the discussion of Graphical Analysis and Presentation Graphics on pp. 68-69 in your own words.</blockquote>
                 </div>
+            
             </div>
+            <hr />
             <div id="part3_a" class="content">
-              <header class="align-center">
-                <h2>Part 3</h2>
-                <p>Viz 1</p>
-                <div id="part3">
+                
+                <!-- PART 3 -->
+                <div class="align-center">
+                  <h2>Part 3</h2>
+                  <p>Viz 1</p>
                 </div>
+                <div id="part3">
+
+<p id='disclaimer'>This is a reproduction of http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the</p>
+<header id='header'>This is Quantifiably the Best Month to go to the Farmers Market</header>
+<p>As part of a homework assignment, I ask my students at Pratt to go out and chart something of interest to them, and Katherine Savarese came back with a simple chart about farmers markets that I loved- it inspired this post.</p>
+<p>You probably know that farmers markets are a staple across all five boroughs of New York City, but September happens to be a very special month. Why is that?  Well, it turns out September is the month with the most unique types of fresh produce- forty three to be exact.</p>
+<p>To show the current offerings, we charted how many types of fruits and vegetables are available by month, and showed if they were fresh or from storage.</p>
+<p id='FreshFruit' style="cursor: pointer">Fresh Fruit</p>
+<p id='FreshVegetable' style="cursor: pointer">Fresh Vegetable</p>
+<p id='StorageFruit' style="cursor: pointer">Storage Fruit</p>
+<p id='StorageVegetable' style="cursor: pointer">Storage Vegetable</p>
+
+<div id="part3_viz" class="align-center"></div>
+
+                </div>
+
             </div>
+            <hr />
             <div id="part2_a" class="content">
-              <header class="align-center">
-                <h2>Part 4</h2>
-                <p>Viz 2</p>
+                
+                <!-- PART 4 -->
+                <div class="align-center">
+                  <h2>Part 4</h2>
+                  <p>Viz 2</p>
+                </div>
                 <div id="part4">
                 </div>
+
             </div>                        
 					</div>
 				</div>
 			</section>
+
+
 
       <!-- Scripts -->
       <script src="assets/js/jquery.min.js"></script>
@@ -103,37 +257,8 @@
       <script src="assets/js/main.js"></script>
 
     <!-- Answers d3 section -->
-
-    <script type="text/javascript">
-      var width = 500;
-      var height = 100;
-      var barPadding = 1;
-      var dataset = [ 5, 10, 15, 20, 25 ];
-      var datasetRandom = []; //Initialize empty array
-      for (var i = 0; i < 25; i++) { //Loop 25 times
-          var newNumber = Math.round(Math.random() * 30); //New random number (0-30)
-          datasetRandom.push(newNumber); //Add new number to array
-      }
-      var dataset2 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-      11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
-
-      var datasetPoints = [
-          [ 5, 20 ],
-          [ 480, 90 ],
-          [ 250, 50 ],
-          [ 100, 33 ],
-          [ 330, 95 ],
-          [ 410, 12 ],
-          [ 475, 44 ],
-          [ 25, 67 ],
-          [ 85, 21 ],
-          [ 220, 88 ]
-          ];
-
+    <script type="text/javascript" src="js/ass1_part3.js"> 
     </script>
-    <script type="text/javascript" src="js/w2_bars.js"> 
-    </script>
-
 
 	</body>
 </html>
