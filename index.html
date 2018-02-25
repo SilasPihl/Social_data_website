@@ -130,8 +130,6 @@ Weaknesses: A lot of data peaks is omitted by CDF. If having two peaks, one in b
 </p>
 
 <blockquote>What is a Quantile plot? What is it good for.</blockquote>
-
-
 <p>
 NOTES:
 Like an CDF but with switched x and y axis. Benificial in questions regarding percentage questions.
@@ -171,7 +169,6 @@ Not as populare meaning that they are harder to interpret if you don't know them
 
 
                 </div>
-
 					  </div>
             <hr />
             <div id="part2_a" class="content">
@@ -220,15 +217,65 @@ Not as populare meaning that they are harder to interpret if you don't know them
 <p>As part of a homework assignment, I ask my students at Pratt to go out and chart something of interest to them, and Katherine Savarese came back with a simple chart about farmers markets that I loved- it inspired this post.</p>
 <p>You probably know that farmers markets are a staple across all five boroughs of New York City, but September happens to be a very special month. Why is that?  Well, it turns out September is the month with the most unique types of fresh produce- forty three to be exact.</p>
 <p>To show the current offerings, we charted how many types of fruits and vegetables are available by month, and showed if they were fresh or from storage.</p>
-<p id='FreshFruit' style="cursor: pointer">Fresh Fruit</p>
+
+<!-- <div class="align-center" style="width: 50%;">
+<ul class="align-center actions fit small" >
+  <li class="button alt fit small" id='FreshFruit' style="cursor: pointer">
+    Fresh Fruit
+  </li>
+  <li class="button alt fit small" id='FreshVegetable' style="cursor: pointer">
+    Fresh Vegetable
+  </li>
+  <li class="button alt fit small" id='StorageFruit' style="cursor: pointer">
+    Storage Fruit
+  </li>
+  <li class="button alt fit small" id='StorageVegetable' style="cursor: pointer">
+    Storage Vegetable
+  </li>  
+</ul>
+</div> -->
+
+
+
+
+
+
+<!-- <p id='FreshFruits' style="cursor: pointer">Fresh Fruit</p>
 <p id='FreshVegetable' style="cursor: pointer">Fresh Vegetable</p>
 <p id='StorageFruit' style="cursor: pointer">Storage Fruit</p>
-<p id='StorageVegetable' style="cursor: pointer">Storage Vegetable</p>
+<p id='StorageVegetable' style="cursor: pointer">Storage Vegetable</p> -->
 
-<div id="part3_viz" class="align-center"></div>
+  <!-- /*<br style="clear:both;"/>*/ -->
+
+
+
+<div class="row align-center">
+  <div class="8u 12u$(small) align-right" id="part3_viz" ></div>
+
+    <div class="4u 12u$(small) align-left">
+    
+      <div class="row">
+        <input type="radio" id='FreshFruit' name="demo-priority" checked>
+        <label for="FreshFruit">Fresh Fruit</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='FreshVegetable' name="demo-priority">
+        <label for="FreshVegetable">Fresh Vegetable</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='StorageFruit' name="demo-priority">
+        <label for="StorageFruit">Storage Fruit</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='StorageVegetable' name="demo-priority">
+        <label for="StorageVegetable">Storage Vegetable</label>
+      </div>
+    </div>
+  </div>
+</div>
+
 
                 </div>
-
             </div>
             <hr />
             <div id="part2_a" class="content">
