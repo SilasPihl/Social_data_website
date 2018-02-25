@@ -5,11 +5,9 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="assets/css/main.css" />
-
-    <!-- <script src="https://www.w3schools.com/lib/w3.js"></script>  -->
     <script src="https://d3js.org/d3.v4.js"></script>
-    <!-- <script type="text/javascript" src="js/d3.v3.js"></script> -->
     <style type="text/css">
+        
         div.bar {
           display: inline-block;
           width: 20px;
@@ -17,6 +15,7 @@
           margin-right: 2px;
           background-color: teal;
         }
+        
         .axis path,
         .axis line {
           fill: none;
@@ -24,9 +23,17 @@
           stroke-width: 1;
           shape-rendering: crispEdges;
         }
+        
         .p {
           color: black;
         }
+        
+        .line {
+        fill: none;
+        stroke: #000;
+        stroke-width: 1.5px;
+        }
+
       </style>
 
 	</head>
@@ -212,48 +219,18 @@ Not as populare meaning that they are harder to interpret if you don't know them
                 </div>
                 <div id="part3">
 
-<p id='disclaimer'>This is a reproduction of http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the</p>
-<header id='header'>This is Quantifiably the Best Month to go to the Farmers Market</header>
+<p>This is a reproduction of http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the</p>
+<h2>This is Quantifiably the Best Month to go to the Farmers Market</h2>
 <p>As part of a homework assignment, I ask my students at Pratt to go out and chart something of interest to them, and Katherine Savarese came back with a simple chart about farmers markets that I loved- it inspired this post.</p>
 <p>You probably know that farmers markets are a staple across all five boroughs of New York City, but September happens to be a very special month. Why is that?  Well, it turns out September is the month with the most unique types of fresh produce- forty three to be exact.</p>
 <p>To show the current offerings, we charted how many types of fruits and vegetables are available by month, and showed if they were fresh or from storage.</p>
 
-<!-- <div class="align-center" style="width: 50%;">
-<ul class="align-center actions fit small" >
-  <li class="button alt fit small" id='FreshFruit' style="cursor: pointer">
-    Fresh Fruit
-  </li>
-  <li class="button alt fit small" id='FreshVegetable' style="cursor: pointer">
-    Fresh Vegetable
-  </li>
-  <li class="button alt fit small" id='StorageFruit' style="cursor: pointer">
-    Storage Fruit
-  </li>
-  <li class="button alt fit small" id='StorageVegetable' style="cursor: pointer">
-    Storage Vegetable
-  </li>  
-</ul>
-</div> -->
 
-
-
-
-
-
-<!-- <p id='FreshFruits' style="cursor: pointer">Fresh Fruit</p>
-<p id='FreshVegetable' style="cursor: pointer">Fresh Vegetable</p>
-<p id='StorageFruit' style="cursor: pointer">Storage Fruit</p>
-<p id='StorageVegetable' style="cursor: pointer">Storage Vegetable</p> -->
-
-  <!-- /*<br style="clear:both;"/>*/ -->
-
-
-
+<h3 class="align-center">NYC Green Markets - Unique Produce Types</h3>
 <div class="row align-center">
-  <div class="8u 12u$(small) align-right" id="part3_viz" ></div>
+    <div class="8u 12u$(small) align-right" id="part3_viz" ></div>
 
-    <div class="4u 12u$(small) align-left">
-    
+    <div class="4u 12u$(small) align-left" style="margin-top:100px;">
       <div class="row">
         <input type="radio" id='FreshFruit' name="demo-priority" checked>
         <label for="FreshFruit">Fresh Fruit</label>
@@ -273,7 +250,10 @@ Not as populare meaning that they are harder to interpret if you don't know them
     </div>
   </div>
 </div>
+<p>If you miss the month of September, you might be behind the fruit curve, but there are plenty more months of vegetables left.  The chart shows that fresh vegetables are available 9 out of 12 months, but fruit is only available 5 out of 12. Now if only we could quantify how delicious the produce is… 
+</p>
 
+<p>Data from: <a href"http://www.grownyc.org/greenmarket/whatsavailable" target="_blank">http://www.grownyc.org/greenmarket/whatsavailable</a></p>
 
                 </div>
             </div>

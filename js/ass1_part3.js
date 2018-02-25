@@ -89,7 +89,6 @@ function createPlot (data, init) {
                 .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5));
 
     //Create bars
-
     var bars = svg.selectAll(".bar")
                     .remove()
                     .exit()
@@ -143,7 +142,6 @@ function createPlot (data, init) {
         .duration(1000)
         .call(yAxis.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5)));
     }
-
 }
 
 window.onload = function () {
