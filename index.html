@@ -78,8 +78,8 @@
 
                 <div id="part1">
 <blockquote>Explain in your own words the point of the jitter plot.</blockquote>
-<p>Jitter plot can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
-In the president example from the DAOST book the presidents usaully spend a term or two in office, i.e. 4 or 8 years.
+<p>Jitter plots can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
+In the presidents example from the DAOST book the presidents usually spend a term or two in office, i.e. 4 or 8 years.
 By adding random noise to the univariate data, the y-axis is utilized as well.
 </p>
 <p class="align-center">
@@ -90,10 +90,10 @@ By adding random noise to the univariate data, the y-axis is utilized as well.
 <p>
 The jitterplot can be harder to interpret and distinquish if the amount of data becomes relatively high.
 One would think that a histogram would be better to show where the data is more prominent. 
-In a histogram it's important to chose the appropriate bin sizes and anchor points. From figure 2-3 this problem is shown. 
-Different anchor point have been chosen in the two plots on the same data and the results are very different. 
+In a histogram it's important to choose the appropriate bin sizes and anchor points. From figure 2-3 this problem is shown. 
+Different anchor points have been chosen in the two plots on the same data and the results are very different. 
 A first guess of the correct bin size can be chosen from <em>Scott's rule</em>.
-histogram can be good to represent varying data, e.g. if one would make an experiment where it's expected to have data in a certain interval. 
+Histograms exceed at representing varying data, e.g. if one would make an experiment where it's expected to have data in a certain interval. 
 If it's desired to view two similar histogram giving some small varying data the bin size and anchor point gives the benifit of aligning the data.
 </p>
 <p class="align-center">
@@ -101,39 +101,25 @@ If it's desired to view two similar histogram giving some small varying data the
 </p>
 
 <p>
-NOTES:
-One can no longer extrapolate directly. With too rough/coarse granularity it's not good. 
+Using a histogram does however result in a loss of information. You can no longer read the individual datapoints and if the anchorpoints, number of bars and width have not been chosen correctly it can even constitute a gross misrepresentation of the data. Additionally, histograms are ill suited at communicating data with outliers as having several bars with a value or height of zero is undesirable.
 </p>
 
-<blockquote>The author of DAOST (philipp Janert) likes KDEs (and think they're better than histograms). And I don't. I didn't give a detailed explanation in the video, but now that works to my advantage. I'll ask you guys to think about this and thereby create an excellent exercise: When can KDEs be misleading?</blockquote>
-The KDE's can be used to predict data and connections by smoothing out the existing data. 
-This can be good if a lot of outliers are present.
-Problem of KDE's are that data can no longer be extrapolated directly from the plot since the data has been modified. 
-In the president example the KDE ruins the actual data totally. 
+<blockquote>The author of DAOST (Philipp Janert) likes KDEs (and think they're better than histograms). And I don't. I didn't give a detailed explanation in the video, but now that works to my advantage. I'll ask you guys to think about this and thereby create an excellent exercise: When can KDEs be misleading?</blockquote>
+The KDE's can be used to predict data and connections by smoothing out the existing data, as it is supposed to represent an estimation of a probability distribution. 
+This can be good if a lot of outliers are present, or if the data collected is not very smooth, but there is an assumption of smoothness given more data.
+One problem of KDE's are that data can no longer be extrapolated directly from the plot since the data has been modified. 
+In the presidents example the KDE ruins the actual data totally. 
 
 <p class="align-center">
   <img src="images/kde.png" />
 </p>
 
-<p>
-NOTES:
-Kernel Density Estimater
-Numalize to 1.
-Probability estimater
-</p>
 
 <blockquote>I've discussed some strengths of the CDF - there are also weaknesses. Janert writes "[CDFs] have less intuitive appeal than histograms of KDEs". What does he mean by that?</blockquote>
 
 <p>
-NOTES:
-Cumulative Distribution Function
-Sums the probability of data being to the left of the exact point. It sums to 1 in the y-axis.
-Can be good to answer questions regarding probability like "Have many percent change of the data being lower than ....?"
-Good if asking "How likely is it that the response time is 1000 or less?", answer 80%
-Bad if asking the opposite question. 1000 ms response time and above. 
-Estimate future data.
-Weaknesses: A lot of data peaks is omitted by CDF. If having two peaks, one in beginning and one in the end, this can't be seen in the plot. 
-
+CDF's is an abbreviation of Cumulative Distribution Function, which does just that. It accumulates the total of the distribution to the left of the point. 
+When at the end of the function the distribution should be 1 on the y-axis. It naturally answers the question, how big a chance is there of a new datapoint being to the left of this point. Which is good if you approach it with a question of say, "what is the probability of a response time of less than 1000 ms?". It is however not easily readable for humans as angles and areas are alot harder to read than distances. All in all it is difficult to conclude much from just a CDF and it works best when supplementing another plot.
 </p>
 
 <blockquote>What is a Quantile plot? What is it good for.</blockquote>
