@@ -79,7 +79,7 @@
                 <div id="part1">
 <blockquote>Explain in your own words the point of the jitter plot.</blockquote>
 <p>Jitter plots can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
-In the presidents example from the DAOST book the presidents usually spend a term or two in office, i.e. 4 or 8 years.
+In the presidents example, from the DAOST book, the presidents usually spend a term or two in office, i.e. 4 or 8 years.
 By adding random noise to the univariate data, the y-axis is utilized as well.
 </p>
 <p class="align-center">
@@ -88,13 +88,13 @@ By adding random noise to the univariate data, the y-axis is utilized as well.
 
 <blockquote>Explain in your own words the point of figure 2-3. (I'm going to skip saying "in your own words" going forward, but I hope you get the point; I expect all answers to be in your own words).</blockquote>
 <p>
-The jitterplot can be harder to interpret and distinquish if the amount of data becomes relatively high.
+The jitterplot can be harder to interpret and distinguish if the amount of data becomes relatively high.
 One would think that a histogram would be better to show where the data is more prominent. 
 In a histogram it's important to choose the appropriate bin sizes and anchor points. From figure 2-3 this problem is shown. 
 Different anchor points have been chosen in the two plots on the same data and the results are very different. 
 A first guess of the correct bin size can be chosen from <em>Scott's rule</em>.
 Histograms exceed at representing varying data, e.g. if one would make an experiment where it's expected to have data in a certain interval. 
-If it's desired to view two similar histogram giving some small varying data the bin size and anchor point gives the benifit of aligning the data.
+If it's desired to view two similar histogram giving some small varying data the bin size and anchor point gives the benefit of aligning the data.
 </p>
 <p class="align-center">
   <img src="images/scott.png">
@@ -105,11 +105,12 @@ Using a histogram does however result in a loss of information. You can no longe
 </p>
 
 <blockquote>The author of DAOST (Philipp Janert) likes KDEs (and think they're better than histograms). And I don't. I didn't give a detailed explanation in the video, but now that works to my advantage. I'll ask you guys to think about this and thereby create an excellent exercise: When can KDEs be misleading?</blockquote>
+<p>
 The KDE's can be used to predict data and connections by smoothing out the existing data, as it is supposed to represent an estimation of a probability distribution. 
 This can be good if a lot of outliers are present, or if the data collected is not very smooth, but there is an assumption of smoothness given more data.
 One problem of KDE's are that data can no longer be extrapolated directly from the plot since the data has been modified. 
 In the presidents example the KDE ruins the actual data totally. 
-
+</p>
 <p class="align-center">
   <img src="images/kde.png" />
 </p>
