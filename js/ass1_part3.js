@@ -8,8 +8,8 @@ var m = {
     left: 40
 }
 
-var weight = 600;
-var height = 400;
+var weight = 900;
+var height = 450;
 
 var w = weight - m.left - m.right;
 var h = height - m.top - m.bottom;
