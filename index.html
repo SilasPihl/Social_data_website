@@ -30,12 +30,27 @@
         
         .line {
         fill: none;
-        stroke: #000;
+        stroke: grey;
+        stroke-dasharray: 3;
         stroke-width: 1.5px;
+        }
+        
+        div.tooltip { 
+            z-index: 99;
+            opacity: 1;
+            position: absolute;     
+            text-align: center;     
+            width: 120px;          
+            height: 38px;         
+            padding: 2px;       
+            font: 12px sans-serif;    
+            background: lightsteelblue; 
+            border: 0px;    
+            border-radius: 8px;     
+            pointer-events: none;     
         }
 
       </style>
-
 	</head>
 	<body>
 		<!-- Header -->
@@ -320,7 +335,7 @@ The other part mainly pertains to how to create good presentation graphics. The 
     <!-- Answers d3 section -->
     <script type="text/javascript" src="js/ass1_part3.js"> 
     </script>
-    <script type="text/javascript" src="js/ass1_part4_test.js"> 
+    <script type="text/javascript" src="js/ass1_part4.js"> 
     </script>
 	</body>
 </html>

@@ -115,6 +115,7 @@ function createPlot (data, init) {
             .attr("transform", "translate(0," + h + ")")
             .call(xAxis);
 
+        //Create Y axis
         svg.append("g")
            .attr("class", "y axis")
            .call(yAxis.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5)));    
