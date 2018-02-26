@@ -48,10 +48,10 @@
 			<nav id="menu">
 				<ul class="links">
 					<li><a href="index.html">Home</a></li>
-          <li><a href="#part1_a">Part 1</a></li>
-          <li><a href="#part2_a">Part 2</a></li>
-          <li><a href="#part3_a">Part 3</a></li>
-					<li><a href="#part4_a">Part 4</a></li>
+          <li><a href="#part1">Part 1</a></li>
+          <li><a href="#part2">Part 2</a></li>
+          <li><a href="#part3">Part 3</a></li>
+					<li><a href="#part4">Part 4</a></li>
 				</ul>
 			</nav>
 
@@ -68,7 +68,7 @@
 		<!-- Answers -->
 			<section id="one" class="wrapper style2">
 				<div class="inner">
-						<div id="part1_a" class="content">
+						<div id="part1" class="content">
 
                 <!-- PART 1  -->
                 <div class="align-center">
@@ -76,7 +76,7 @@
                   <p>DAOST Chapter 2 Questions</p>
                 </div>
 
-                <div id="part1">
+                <div id="part1_content">
 <blockquote>Explain in your own words the point of the jitter plot.</blockquote>
 <p>Jitter plots can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
 In the presidents example, from the DAOST book, the presidents usually spend a term or two in office, i.e. 4 or 8 years.
@@ -158,7 +158,7 @@ However, they are not as popular. This makes them harder to interpret if you don
                 </div>
 					  </div>
             <hr />
-            <div id="part2_a" class="content">
+            <div id="part2" class="content">
 
                 <!-- PART 2 -->
                 <div class="align-center">
@@ -166,7 +166,7 @@ However, they are not as popular. This makes them harder to interpret if you don
                   <p>DAOST Chapter 3 Questions</p>
                 </div>
 
-                <div id="part2">
+                <div id="part2_content">
 <blockquote>Looking at Fig 3-1, Janert writes "the data itself shows clearly that the amount of random noise in the data is small". What do you think his argument is?</blockquote>
 <p>
 The data fits far too nicely on lines to have more than a diminutive noise presence. Usually data will have lines superimposed to promise the viewer that with enough measurements, this line represents truth. Superimposing a line is hardly necessary with this figure as it fits so neatly. In comparison, fig 3-2 is completely chaotic, and is thus likely to be heavily affected by random noise.
@@ -224,14 +224,14 @@ The other part mainly pertains to how to create good presentation graphics. The 
             
             </div>
             <hr />
-            <div id="part3_a" class="content">
+            <div id="part3" class="content">
                 
                 <!-- PART 3 -->
                 <div class="align-center">
                   <h2>Part 3</h2>
                   <p>Viz 1</p>
                 </div>
-                <div id="part3">
+                <div id="part3_content">
 
 <p>This is a reproduction of http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the</p>
 <h2>This is Quantifiably the Best Month to go to the Farmers Market</h2>
@@ -269,20 +269,40 @@ The other part mainly pertains to how to create good presentation graphics. The 
 
 <p>Data from: <a href"http://www.grownyc.org/greenmarket/whatsavailable" target="_blank">http://www.grownyc.org/greenmarket/whatsavailable</a></p>
 
-                </div>
             </div>
             <hr />
-            <div id="part2_a" class="content">
+
+            <div id="part4" class="content">
                 
                 <!-- PART 4 -->
                 <div class="align-center">
                   <h2>Part 4</h2>
                   <p>Viz 2</p>
-                </div>
-                <div id="part4">
-                </div>
+                </div id="part4_content">
 
-            </div>                        
+
+<h3 class="align-center">Boston Marathon Winning Times</h3>
+<div class="row align-center">
+    <div class="8u 12u$(small) align-right" id="part4_viz" ></div>
+
+    <div class="4u 12u$(small) align-left" style="margin-top:100px;">
+      <div class="row">
+        <input type="radio" id='ButtonMen' name="demo-priority" >
+        <label for="ButtonMen">Men only</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='ButtonWomen' name="demo-priority">
+        <label for="ButtonWomen">Women only</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='ButtonBoth' name="demo-priority" checked>
+        <label for="ButtonBoth">Men and women</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+            </div>
 					</div>
 				</div>
 			</section>
@@ -300,6 +320,7 @@ The other part mainly pertains to how to create good presentation graphics. The 
     <!-- Answers d3 section -->
     <script type="text/javascript" src="js/ass1_part3.js"> 
     </script>
-
+    <script type="text/javascript" src="js/ass1_part4_test.js"> 
+    </script>
 	</body>
 </html>

@@ -2170,7 +2170,7 @@
 
 		input[type="checkbox"]:checked + label:before,
 		input[type="radio"]:checked + label:before {
-			content: '\f00c';
+			content: '';
 		}
 
 	input[type="checkbox"] + label:before {
@@ -3465,7 +3465,7 @@
 			}
 
 				#header > a[href="#menu"]:before {
-					content: "";
+					content: "Menu";
 					-moz-osx-font-smoothing: grayscale;
 					-webkit-font-smoothing: antialiased;
 					font-family: FontAwesome;
@@ -3646,7 +3646,7 @@
 		}
 
 			#menu .close:before {
-				content: "";
+				content: "Menu";
 				-moz-osx-font-smoothing: grayscale;
 				-webkit-font-smoothing: antialiased;
 				font-family: FontAwesome;
