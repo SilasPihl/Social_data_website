@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Assignment 1</title>
+        <meta charset="utf-8" />
+
+    <!-- <script src="https://www.w3schools.com/lib/w3.js"></script>  -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <!-- <script type="text/javascript" src="js/d3.v3.js"></script> -->
+    <style type="text/css">
+        body {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#content{
+    width: 770px;
+    margin: 0 auto;
+}
+
+#part3_viz{
+     width: 600px;
+     display: inline-block;
+}
+#legend{
+     padding-top: 150px;
+     display: inline-block;
+}
+
+div.bar{
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    background-color: teal;
+    border: 2px;
+    margin-right: 2px;
+}
+
+.line{
+    border-top: 1px solid rgba(0,0,0,.9);
+}
+
+.thick{
+    border-top: 4px solid rgba(0,0,0,.9);
+    margin-top: 5px;
+}
+
+ .links a{
+    color: #447777;
+    font-weight: bold;
+    text-decoration: none;
+    padding-right: 10px;
+    font-size:12px;
+}
+
+.header{
+    width: 688px;
+    color: #202020;
+    font-family: Georgia;
+    font-size: 72px;
+    font-style: italic;
+    font-weight: normal;
+    letter-spacing: -3px;
+    text-decoration: none;
+    margin: 0;
+}
+.subheader{
+    font-size: 10px;
+    margin-bottom: 5px;
+    padding: 0px 0;
+}
+
+.title{
+    width: 688px;
+    color: #202020;
+    font-family: Georgia;
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: -3px;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+
+        div.bar {
+          display: inline-block;
+          width: 20px;
+          height: 75px; /* We'll override height later */
+          margin-right: 2px;
+          background-color: teal;
+        }
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: grey;
+          stroke-width: 1;
+          shape-rendering: crispEdges;
+        }
+        .p {
+          color: black;
+        }
+      </style>
+
+    </head>
+    <body>
+Hallo
+
+<div class="content"></div>
+<div id="part3_viz"></div>
+
+<div class="row align-center">
+  <div class="6u 12u$(small)" id="part3_viz2" ></div>
+
+  <div class="6u 12u$(small) align-center">
+  
+    <div class="row">
+      <input type="radio" id='FreshFruit' name="demo-priority" checked>
+      <label for="FreshFruit">Fresh Fruit</label>
+    </div>
+    <div class="row">
+      <input type="radio" id='FreshVegetable' name="demo-priority">
+      <label for="FreshVegetable">Fresh Vegetable</label>
+    </div>
+    <div class="row">
+      <input type="radio" id='StorageFruit' name="demo-priority">
+      <label for="StorageFruit">Storage Fruit</label>
+    </div>
+    <div class="row">
+      <input type="radio" id='StorageVegetable' name="demo-priority">
+      <label for="StorageVegetable">Storage Vegetable</label>
+    </div>
+  </div>
+</div>
+</div>
+
+    <script type="text/javascript" src="js/ass1_part3.js"> 
+    </script>
+
+    </body>
+</html>

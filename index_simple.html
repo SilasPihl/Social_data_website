@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-    <title>Assignment 1</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="assets/css/main.css" />
+	<head>
+		<title>Assignment 1</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
     <script src="https://d3js.org/d3.v4.js"></script>
     <style type="text/css">
         
@@ -30,9 +30,8 @@
         
         .line {
         fill: none;
-        stroke: grey;
-        stroke-dasharray: 3;
-        stroke-width: 1.5px;
+        stroke: teal;
+        stroke-width: 0.5;
         }
         
         div.tooltip { 
@@ -50,42 +49,21 @@
             pointer-events: none;     
         }
 
+        .map-label{
+            font-size: 20px;
+            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+        }
+
       </style>
-  </head>
-  <body>
-    <!-- Header -->
-      <header id="header" class="alt">
-        <div class="logo"><a href="index.html">DTU <span>02806 Social data analysis and visualization F18</span></a></div>
-        <a href="#menu" class="toggle"><span>Menu</span></a>
-      </header>
+	</head>
+	<body>
+		<!-- Header -->
 
-    <!-- Nav -->
-      <nav id="menu">
-        <ul class="links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="#part1">Part 1</a></li>
-          <li><a href="#part2">Part 2</a></li>
-        </ul>
-      </nav>
+		<!-- Answers -->
+			<section id="one" class=" align-center wrapper style2">
+<!-- 				<div class="inner">
+						<div id="part1" class="content">
 
-
-
-    <!-- Banner -->
-      <section id="banner" data-video="images/banner">
-        <div class="inner">
-          <h1>Assignment 2</h1>
-          <p>This webpage is the hand-in answer for assignment 2 in the DTU course <br />
-          02806 Social data analysis and visualization F18</p>
-          <a href="#one" class="button special scrolly">Check out the assignment</a>
-        </div>
-      </section>
-
-    <!-- Answers -->
-      <section id="one" class="wrapper style2">
-        <div class="inner">
-            <div id="part1" class="content">
-
-                <!-- PART 1  -->
                 <div class="align-center">
                   <h2>Part 1</h2>
                   <p>Something</p>
@@ -96,21 +74,26 @@
 <p>Answer
 </p>
                 </div>
-            </div>
+					  </div>
             <hr />
-            
+             -->
             <div id="part2" class="content">
                 <!-- PART 4 -->
                 <div class="align-center">
                   <h2>Part 2</h2>
                   <p>Visualizing Murders over Time</p>
                 </div id="part2_content">
-<div class="align-center" id="p2"></div>
+<button onclick="animate_time()">Animate</button>
+<div class="align-center" id="part2_linechart"></div>
+<div class="align-center" id="part2_map"></div>
 
+<div>
+  Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
+</div>
             </div>
-          </div>
-        </div>
-      </section>
+					</div>
+				</div>
+			</section>
 
       <!-- Scripts -->
       <script src="assets/js/jquery.min.js"></script>
@@ -123,5 +106,5 @@
     <!-- Answers d3 section -->
     <script type="text/javascript" src="js/ass2_part2.js"> 
     </script>
-  </body>
+	</body>
 </html>

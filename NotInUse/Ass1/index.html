@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Assignment 1</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <style type="text/css">
+        
+        div.bar {
+          display: inline-block;
+          width: 20px;
+          height: 75px; /* We'll override height later */
+          margin-right: 2px;
+          background-color: teal;
+        }
+        
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: grey;
+          stroke-width: 1;
+          shape-rendering: crispEdges;
+        }
+        
+        .p {
+          color: black;
+        }
+        
+        .line {
+        fill: none;
+        stroke: grey;
+        stroke-dasharray: 3;
+        stroke-width: 1.5px;
+        }
+        
+        div.tooltip { 
+            z-index: 99;
+            opacity: 1;
+            position: absolute;     
+            text-align: center;     
+            width: 120px;          
+            height: 38px;         
+            padding: 2px;       
+            font: 12px sans-serif;    
+            background: lightsteelblue; 
+            border: 0px;    
+            border-radius: 8px;     
+            pointer-events: none;     
+        }
+
+      </style>
+	</head>
+	<body>
+		<!-- Header -->
+			<header id="header" class="alt">
+				<div class="logo"><a href="index.html">DTU <span>02806 Social data analysis and visualization F18</span></a></div>
+				<a href="#menu" class="toggle"><span>Menu</span></a>
+			</header>
+
+		<!-- Nav -->
+			<nav id="menu">
+				<ul class="links">
+					<li><a href="index.html">Home</a></li>
+          <li><a href="#part1">Part 1</a></li>
+          <li><a href="#part2">Part 2</a></li>
+          <li><a href="#part3">Part 3</a></li>
+					<li><a href="#part4">Part 4</a></li>
+				</ul>
+			</nav>
+
+
+
+		<!-- Banner -->
+			<section id="banner" data-video="images/banner">
+				<div class="inner">
+					<h1>Assignment 1</h1>
+					<p>This webpage is the hand-in answer for assignment 1 in the DTU course <br />
+					02806 Social data analysis and visualization F18</p>
+					<a href="#one" class="button special scrolly">Check out the assignment</a>
+				</div>
+			</section>
+
+		<!-- Answers -->
+			<section id="one" class="wrapper style2">
+				<div class="inner">
+						<div id="part1" class="content">
+
+                <!-- PART 1  -->
+                <div class="align-center">
+                  <h2>Part 1</h2>
+                  <p>DAOST Chapter 2 Questions</p>
+                </div>
+
+                <div id="part1_content">
+<blockquote>Explain in your own words the point of the jitter plot.</blockquote>
+<p>Jitter plots can be used to prevent overplotting. If the data has many equal values, the data plots will be placed on top of each other, especially if using integer values.
+In the presidents example, from the DAOST book, the presidents usually spend a term or two in office, i.e. 4 or 8 years.
+By adding random noise to the univariate data, the y-axis is utilized as well.
+</p>
+
+<blockquote>Explain in your own words the point of figure 2-3. (I'm going to skip saying "in your own words" going forward, but I hope you get the point; I expect all answers to be in your own words).</blockquote>
+<p>
+The jitterplot can be harder to interpret and distinguish if the amount of data becomes relatively high.
+One would think that a histogram would be better to show where the data is more prominent. 
+In a histogram it's important to choose the appropriate bin sizes and anchor points. From figure 2-3 this problem is shown. 
+Different anchor points have been chosen in the two plots on the same data and the results are very different. 
+A first guess of the correct bin size can be chosen from <em>Scott's rule</em>.
+Histograms exceed at representing varying data, e.g. if one would make an experiment where it's expected to have data in a certain interval. 
+If it's desired to view two similar histogram giving some small varying data the bin size and anchor point gives the benefit of aligning the data.
+</p>
+
+<p>
+Using a histogram does however result in a loss of information. You can no longer read the individual datapoints and if the anchorpoints, number of bars and width have not been chosen correctly it can even constitute a gross misrepresentation of the data. Additionally, histograms are ill suited at communicating data with outliers as having several bars with a value or height of zero is undesirable.
+</p>
+
+<blockquote>The author of DAOST (Philipp Janert) likes KDEs (and think they're better than histograms). And I don't. I didn't give a detailed explanation in the video, but now that works to my advantage. I'll ask you guys to think about this and thereby create an excellent exercise: When can KDEs be misleading?</blockquote>
+<p>
+The KDE's can be used to predict data and connections by smoothing out the existing data, as it is supposed to represent an estimation of a probability distribution. 
+This can be good if a lot of outliers are present, or if the data collected is not very smooth, but there is an assumption of smoothness given more data.
+One problem of KDE's are that data can no longer be extrapolated directly from the plot since the data has been modified. 
+In the presidents example the KDE ruins the actual data totally. 
+</p>
+
+<blockquote>I've discussed some strengths of the CDF - there are also weaknesses. Janert writes "[CDFs] have less intuitive appeal than histograms of KDEs". What does he mean by that?</blockquote>
+
+<p>
+CDF's is an abbreviation of Cumulative Distribution Function, which does just that. It accumulates the total of the distribution to the left of the point. 
+When at the end of the function the distribution should be 1 on the y-axis. It naturally answers the question, how big a chance is there of a new datapoint being to the left of this point. Which is good if you approach it with a question of say, "what is the probability of a response time of less than 1000 ms?". It is however not easily readable for humans as angles and areas are alot harder to read than distances. All in all it is difficult to conclude much from just a CDF and it works best when supplementing another plot.
+</p>
+
+<blockquote>What is a Quantile plot? What is it good for.</blockquote>
+<p>
+The Quantile plot is like a CDF, but with switched x and y axes. Which is beneficial when posing questions in a slightly different manner, such as "What is the likelihood of response time of 1000 ms and above?"
+</p>
+
+<blockquote>How is a probablity plot defined? What is it useful for? Have you ever seen one before?</blockquote>
+<p>
+A probability plot is definied by multiples of the standard deviation as the x-axis. Putting the x values into a fitting equation, the y values are obtained.
+The upper x-axis shows a CDF. It's easy to see outliers and to give a quick answer on how predictable the data is.
+</p>
+
+<blockquote>One of the reasons I like DAOST is that Janert is so suspicious of mean, median, and related summary statistics. Explain why one has to be careful when using those - and why visualization of the full data is always better.</blockquote>
+<p>
+As seen in DAOST, different datasets can result in the exact same summary statistics despite wildly different data. It can lead to trivialization of the data and false conclusions. You could perharps think two different datasets are simillar because of similar summary statistics, despite one being tightly distributed around the mean, whereas the other has a number of wild outliers, and thus a very different distribution, but some semblance of symmetry. 
+</p>
+
+<blockquote>I love box plots. When are box plots most useful?</blockquote>
+
+<p>
+Box plots are useful at presenting a quick overview of the data, as it quickly relays a five factor summary with lower extreme, lower quantile, median, upper quantile and upper extreme.
+They can be useful for comparing datasets and to show whether a dataset is skewed or has an abundance of outliers. The larger the amount of observations, the more useful.
+</p>
+
+<blockquote>The book doesn't mention violin plots. Are those better or worse than box plots? Why?</blockquote>
+
+<p>
+Violin plots can show more than the boxplot. It carries the same information, as well as being extented with a rotated kernel density plot, which more fully shows peaks at various points in the dataset. 
+However, they are not as popular. This makes them harder to interpret if you don't know them. 
+</p>
+
+
+
+                </div>
+					  </div>
+            <hr />
+            <div id="part2" class="content">
+
+                <!-- PART 2 -->
+                <div class="align-center">
+                  <h2>Part 2</h2>
+                  <p>DAOST Chapter 3 Questions</p>
+                </div>
+
+                <div id="part2_content">
+<blockquote>Looking at Fig 3-1, Janert writes "the data itself shows clearly that the amount of random noise in the data is small". What do you think his argument is?</blockquote>
+<p>
+The data fits far too nicely on lines to have more than a diminutive noise presence. Usually data will have lines superimposed to promise the viewer that with enough measurements, this line represents truth. Superimposing a line is hardly necessary with this figure as it fits so neatly. In comparison, fig 3-2 is completely chaotic, and is thus likely to be heavily affected by random noise.
+</p>
+<blockquote>Can you think of a real-world example of a multivariate relationship like the one in Fig 3-3 (lower right panel)?</blockquote>
+<p>
+Possibly medical treatment. The x axis could be time, y axis could be some measurement of health, like number of a specific type of cell. The data could represent how the test patients health deteriorates because of their disease, but when administrating some medicine it helps certain segments of people in the trial, but others are unaffected (e.g. works on women, not on men).
+</p>
+
+<blockquote>What are the two methods Janert mentions for smoothing noisy data? Can you think of other ones?</blockquote>
+<p>
+Janert mentions weighted splines and locally weighted regression.
+	
+Another way of smoothing could be different permutations of k-nearest neighbors.
+</p>
+
+<blockquote>What are residuals? Why is it a good idea to plot the residuals of your fit?</blockquote>
+<p>
+Residuals are the results of subtracting the original data with the smoothed result. It is a good idea to plot the residuals as it becomes easier to check that they are symmetrically distributed around zero, that there aren't any trends in them. Any faults found in the residuals suggest a fault in the smoothing or fitting of the data.
+</p>
+
+<blockquote>Explain in your own words the point of the smooth tube in figure 3-7.</blockquote>
+<p>
+The smooth tube is made of two lines which each represent the smoothed average of the data either above or below the solid middle line, representing the smoothed average of the entire dataset. The further these two are from the solid middle line the more varied is the data, or perhaps easily susceptible to noise.
+</p>
+
+<blockquote>What kind of relationships will a semi-log plot help you discover?</blockquote>
+<p>
+The relationships showcased in a semi-log plot are especially the relative kind, such as stock prices over a length of time or the price of gasoline. As humans experience things relatively, plotting the percentage relationship we usually care about. We don't know whether to care if the price of gas goes up 1$, but if it goes up 50% that is a tangible change.
+</p>
+
+<blockquote>What kind of functions will loglog plots help you see?</blockquote>
+<p>
+Loglog plots helps visualize data that spans orders of magnitude and reveal power-law relationships such as y = Cxk or y = C/xk . 
+</p>
+
+<blockquote>What the h#ll is banking and what element from our visual system does it use to help us see patterns? What are potential problems with banking?</blockquote>
+<p>
+Banking is when you change the aspect ratio of the plot, so the rising and falling flanks of a curve will be roughly 45 degrees. It helps show trends, so we better can see how much the data is falling/rising relative to the rest of the data.
+</p>
+
+<blockquote>I think figure 3-14 makes an important point about linear fits that is rarely made. What is it?</blockquote>
+<p>
+The main point of figure 3-14 is that you get a different result from regressing on y than from regressing on x, and that a linear regression isn't the best it, but the best predictor.
+</p>
+
+<blockquote>Summarize the discussion of Graphical Analysis and Presentation Graphics on pp. 68-69 in your own words.</blockquote>
+<p>
+The discussion has two main parts. The first describes the difference between graphical analysis and presentation graphics.
+The difference between the two is that graphical analysis is exploratory, and pertains to finding answers and examining the data. 
+In a way, it's exploring WHAT to present, and thus should not be concerned by HOW it is presented.
+The other part mainly pertains to how to create good presentation graphics. The main conclusion is that a plot should explain it self without you having to.
+</p>
+                </div>
+            
+            </div>
+            <hr />
+            <div id="part3" class="content">
+                
+                <!-- PART 3 -->
+                <div class="align-center">
+                  <h2>Part 3</h2>
+                  <p>Viz 1</p>
+                </div>
+                <div id="part3_content">
+
+<p>This is a reproduction of http://iquantny.tumblr.com/post/129373499164/this-is-quantifiably-the-best-month-to-go-to-the</p>
+<h2>This is Quantifiably the Best Month to go to the Farmers Market</h2>
+<p>As part of a homework assignment, I ask my students at Pratt to go out and chart something of interest to them, and Katherine Savarese came back with a simple chart about farmers markets that I loved- it inspired this post.</p>
+<p>You probably know that farmers markets are a staple across all five boroughs of New York City, but September happens to be a very special month. Why is that?  Well, it turns out September is the month with the most unique types of fresh produce- forty three to be exact.</p>
+<p>To show the current offerings, we charted how many types of fruits and vegetables are available by month, and showed if they were fresh or from storage.</p>
+
+
+<h3 class="align-center">NYC Green Markets - Unique Produce Types</h3>
+<div class="row align-center">
+    <div class="8u 12u$(small) align-right" id="part3_viz" ></div>
+
+    <div class="4u 12u$(small) align-left" style="margin-top:100px;">
+      <div class="row">
+        <input type="radio" id='FreshFruit' name="demo-priority" checked>
+        <label for="FreshFruit">Fresh Fruit</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='FreshVegetable' name="demo-priority">
+        <label for="FreshVegetable">Fresh Vegetable</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='StorageFruit' name="demo-priority">
+        <label for="StorageFruit">Storage Fruit</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='StorageVegetable' name="demo-priority">
+        <label for="StorageVegetable">Storage Vegetable</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p></p>
+<p>If you miss the month of September, you might be behind the fruit curve, but there are plenty more months of vegetables left.  The chart shows that fresh vegetables are available 9 out of 12 months, but fruit is only available 5 out of 12. Now if only we could quantify how delicious the produce is… 
+</p>
+
+<p>Data from: <a href"http://www.grownyc.org/greenmarket/whatsavailable" target="_blank">http://www.grownyc.org/greenmarket/whatsavailable</a></p>
+
+            </div>
+            <hr />
+
+            <div id="part4" class="content">
+                
+                <!-- PART 4 -->
+                <div class="align-center">
+                  <h2>Part 4</h2>
+                  <p>Viz 2</p>
+                </div id="part4_content">
+
+
+<h3 class="align-center">Boston Marathon Winning Times</h3>
+<div class="row align-center">
+    <div class="8u 12u$(small) align-right" id="part4_viz" ></div>
+
+    <div class="4u 12u$(small) align-left" style="margin-top:100px;">
+      <div class="row">
+        <input type="radio" id='ButtonMen' name="demo-priority" >
+        <label for="ButtonMen">Men only</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='ButtonWomen' name="demo-priority">
+        <label for="ButtonWomen">Women only</label>
+      </div>
+      <div class="row">
+        <input type="radio" id='ButtonBoth' name="demo-priority" checked>
+        <label for="ButtonBoth">Men and women</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>Data from: <a href"https://en.wikipedia.org/wiki/List_of_winners_of_the_Boston_Marathon" target="_blank">https://en.wikipedia.org/wiki/List_of_winners_of_the_Boston_Marathon</a></p>
+
+            </div>
+					</div>
+				</div>
+			</section>
+
+
+
+      <!-- Scripts -->
+      <script src="assets/js/jquery.min.js"></script>
+      <script src="assets/js/jquery.scrolly.min.js"></script>
+      <script src="assets/js/jquery.scrollex.min.js"></script>
+      <script src="assets/js/skel.min.js"></script>
+      <script src="assets/js/util.js"></script>
+      <script src="assets/js/main.js"></script>
+
+    <!-- Answers d3 section -->
+    <script type="text/javascript" src="js/ass1_part3.js"> 
+    </script>
+    <script type="text/javascript" src="js/ass1_part4.js"> 
+    </script>
+	</body>
+</html>
