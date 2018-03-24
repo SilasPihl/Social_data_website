@@ -90,7 +90,6 @@ d3.json("data/boroughs.json", function(json) {
         .text(function(d) {
             return d.properties.BoroName;
         });
- 
 
  // TODO: Fill in days with 0 occurrences
 
@@ -183,9 +182,6 @@ d3.json("data/boroughs.json", function(json) {
         .style("text-anchor", "middle")
         .text("Day");
 
-
-
-
     // make brush
     brush = d3.brushX()
                   .extent([[0, 0],[w, h - 1]])
@@ -197,11 +193,9 @@ d3.json("data/boroughs.json", function(json) {
         .call(brush)
         .call(brush.move, [600, 700]);
 
-    // time_svg.select('.brush')
-    //     .call(brush);
+    time_svg.select('.brush')
+        .call(brush);
 }
-
-// TODO Make functionality to remove brush and show all values again
 
 function brushed () {
   var sel = d3.event.selection
@@ -226,20 +220,48 @@ function brushed () {
 
   }
 }
-
-
-
   });
 });
-function animate_time () {
-  time_svg.select(".brush").call(brush.move, [0,100]);
+
+
+function fill_dots () {
+    d3.selectAll('.dot')
+      .style("fill", function(d) {
+            return "yellow";
+        })
+      .style("stroke", function(d) {
+            return "gray";
+        });
+
+  }
+
+function reset_brush() {
+  time_svg.select(".brush").call(brush.move, [0,0]);
+  fill_dots();
+}
+
+function animate_time (brushSize, speed) {
+  var brushSize, transVar;
+
+  brushSize = document.getElementById('textbox_brushSize').value
+  transVar = document.getElementById('textbox_brushSpeed').value
+
+  if(!brushSize) {
+    brushSize = 100;
+  }
+  if(!transVar) {
+    transVar = 5000;
+  }
   
+  console.log("Brush size = " + brushSize);
+  console.log("Transition variation = " + transVar);
+
+  time_svg.select(".brush").call(brush.move, [0,brushSize]);
   time_svg.select(".brush")
         .transition()
         .ease(d3.easeLinear)
-        .duration(10000)
-        .call(brush.move, [xScale.range()[1] - 100, xScale.range()[1]])
+        .duration(transVar)
+        .call(brush.move, [xScale.range()[1] - brushSize, xScale.range()[1]]);
 }
-
 
 // TODO lav en remove map labels

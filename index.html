@@ -20,7 +20,7 @@
         .axis line {
           fill: none;
           stroke: grey;
-          stroke-width: 1;
+          stroke-width: 1.5;
           shape-rendering: crispEdges;
         }
         
@@ -30,9 +30,8 @@
         
         .line {
         fill: none;
-        stroke: grey;
-        stroke-dasharray: 3;
-        stroke-width: 1.5px;
+        stroke: teal;
+        stroke-width: 0.5;
         }
         
         div.tooltip { 
@@ -48,6 +47,11 @@
             border: 0px;    
             border-radius: 8px;     
             pointer-events: none;     
+        }
+
+        .map-label{
+            font-size: 20px;
+            text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
         }
 
       </style>
@@ -88,11 +92,11 @@
                 <!-- PART 1  -->
                 <div class="align-center">
                   <h2>Part 1</h2>
-                  <p>Something</p>
+                  <p>Telling Data Stories</p>
                 </div>
 
                 <div id="part1_content">
-<blockquote>Something</blockquote>
+<blockquote>Question</blockquote>
 <p>Answer
 </p>
                 </div>
@@ -105,11 +109,26 @@
                   <h2>Part 2</h2>
                   <p>Visualizing Murders over Time</p>
                 </div id="part2_content">
-<div class="align-center" id="p2"></div>
+
+<p>You can pick brush size and transition variation or just click ANIMATE to use default values.</p>
+<ul class="actions align-center">
+  <li><input type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" /></li>
+  <li><input type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" /></li>
+  <li><button class="default" onclick="animate_time()">Animate</button></li>
+  <li><button class="alt" onclick="reset_brush()">Reset brush</button></li>
+</ul>
+<div class="actions align-center uniform">
+
+
+<div class="align-center" id="part2_linechart"></div>
+<div class="align-center" id="part2_map"></div>
+
+<div>
+  Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
+</div>
 
             </div>
           </div>
-        </div>
       </section>
 
       <!-- Scripts -->

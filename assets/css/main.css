@@ -78,7 +78,7 @@
 	}
 
 	.container {
-		width: 80rem;
+		width: 60rem;
 	}
 
 	@media screen and (max-width: 1680px) {
@@ -2650,7 +2650,7 @@
 
 		.wrapper > .inner {
 			margin: 0 auto;
-			width: 80rem;
+			width: 60rem;
 		}
 
 		.wrapper.style1 {
@@ -2758,6 +2758,10 @@
 					background-color: #ffffff;
 					color: #5AA6ED !important;
 				}
+
+                button.default:hover {
+                    background-color: "yello";
+                }
 
 			.wrapper.style1 label {
 				color: #ffffff;
@@ -2966,6 +2970,14 @@
 					.wrapper.style2 .button.special:active {
 						background-color: #439aea;
 					}
+
+                    .wrapper.style2 input[type="submit"].default:hover,
+                    .wrapper.style2 input[type="reset"].default:hover,
+                    .wrapper.style2 input[type="button"].default:hover,
+                    .wrapper.style2 button.default:active,
+                    .wrapper.style2 .button.default:active {
+                        background-color: #439aea;
+                    }
 
 			.wrapper.style2 label {
 				color: #000;
@@ -4223,3 +4235,12 @@
 			}
 
 		}
+
+
+.wrapper.style2 input[type="submit"].default:hover,
+.wrapper.style2 input[type="reset"].default:hover,
+.wrapper.style2 input[type="button"].default:hover,
+.wrapper.style2 button.default:hover,
+.wrapper.style2 .button.default:hover {
+    background-color: #439aea;
+}
