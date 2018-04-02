@@ -57,6 +57,17 @@
             text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
         }
 
+        .activeDot {
+          fill: yellow;
+          stroke: gray;
+          stroke-width: 0.75;
+        }
+
+        .noneActiveDot {
+          fill: transparent;
+          stroke: transparent;
+        }
+
       </style>
   </head>
   <body>
@@ -157,7 +168,9 @@
 <div class="align-center">
   <h3>Bar Chart of Murders per hour</h3>
   <p id="part2_bar_button" class="button alt" onclick="hideShow('part2_bar')">Show/hide Bar Chart</p>
-  <p id="part2_bar_text">Move or clear the brush to change data showned in map.</p>
+  <p id="part2_bar_text">
+  Move or clear the brush to change data showned in bar chart.<br/>
+  Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
 </div>
 
 <div class="align-center" id="part2_bar"></div>

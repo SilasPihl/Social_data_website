@@ -2,7 +2,7 @@
 //Width and height
 var w = 1000;
 var h = 550;
-var dur = 1000;
+var dur = 100;
 
 //Define map projection
 var projection = d3.geoMercator()
@@ -39,6 +39,10 @@ var bar_m = {
     b: 30,
     l: 40
 }
+
+sel_map = [[0,0], [100000,100000]];
+sel_time = [0,1000000];
+sel_bar = [0,1000000];
 
 //Create scale functions
 xBarScale = d3.scaleBand()
@@ -81,6 +85,7 @@ bar_svg.selectAll("rect")
        .attr("fill", function(d) {
         return "rgb(0, 0, " + Math.round(yBarScale(d)) + ")";
        });
+
 bar_svg.selectAll("text")
        .data(dataset)
        .enter()
@@ -154,7 +159,7 @@ d3.json("data/boroughs.json", function(json) {
                 .data(data)
                 .enter()
                 .append("circle")
-                .attr("class", "dot")
+                .attr("class", "dot activeDot")
                 .attr("cx", function(d) {
                     return projection([d.Longitude, d.Latitude])[0];
                 })
@@ -162,10 +167,6 @@ d3.json("data/boroughs.json", function(json) {
                     return projection([d.Longitude, d.Latitude])[1];
                 })
                 .attr("r", 2)
-                .style("fill", "yellow")
-                .style("stroke", "gray")
-                .style("stroke-width", 0.25)
-                .style("opacity", 0.75)
                 .append("title")         //Simple tooltip
                 .text(function(d) {
                      return d.RPT_DT;
@@ -186,45 +187,17 @@ d3.json("data/boroughs.json", function(json) {
              return d.properties.BoroName;
          });
 
- // TODO: Fill in days with 0 occurrences
-
   // Counting murders per day
   murdersPerDay = d3.nest()
-    .key(function(d) { return d.RPT_DT; })
-    .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-    .sortKeys(d3.ascending)
-    .entries(data);
+                    .key(function(d) { return d.RPT_DT; })
+                    .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+                    .sortKeys(d3.ascending)
+                    .entries(data);
 
   createLineChart(murdersPerDay)
   
   });
 });
-
-function brushed () {
-  var sel = d3.event.selection
-  if (sel != null) {
-    var dataset = new Uint8Array(24);
-    d3.selectAll('.dot')
-      .style("fill", function(d) {
-        var dotDate = xScale(new Date(d.RPT_DT));
-        if (sel[0] <= dotDate && dotDate <= sel[1]) {
-            dataset[d.CMPLNT_FR_TM]=dataset[d.CMPLNT_FR_TM]+1;
-            return "yellow";
-        } else { 
-            return "transparent";
-        }
-      })
-      .style("stroke", function(d) {
-        var dotDate = xScale(new Date(d.RPT_DT));
-        if (sel[0] <= dotDate && dotDate <= sel[1]) {
-            return "gray";
-        } else { 
-            return "transparent";
-        }
-      });
-    change_bar_chart(dataset);
-  }
-}
 
 function createLineChart (data) {
   // Margins
@@ -308,19 +281,103 @@ function createLineChart (data) {
           .style("text-anchor", "middle")
           .text("Day");
 
-  // make brush
+  // make brush for timeline
   brush = d3.brushX()
                 .extent([[0, 0],[w, h - 1]])
                 .on("brush end", brushed);
 
-  // brush
+  // make brush for bar chart
+  bar_brush = d3.brushX()
+                .extent([[0, 0],[w, h - 1]])
+                .on("brush end", from_bar_brushed);
+
+  // make brush for map
+  map_brush = d3.brush()
+                .on("brush end", brushed);
+
+  // timeline brush
   time_svg.append("g")
-      .attr("class", "brush")
-      .call(brush)
-      .call(brush.move, [600, 700]);
+          .attr("class", "brush")
+          .call(brush);
+
+  bar_svg.append("g")
+          .attr("class", "brush")
+          .call(bar_brush);
+
+  // map brush
+  map_svg.append("g")
+          .attr("class", "brush")
+          .call(map_brush);
 
   time_svg.select('.brush')
       .call(brush);
+
+  time_svg.select(".brush").call(brush.move, [0,0]);
+
+  change_bar_chart(dataset_all);      
+}
+
+fromBar = false;
+
+function from_bar_brushed() {
+  fromBar = true;
+  brushed();
+}
+
+function brushed () {
+  sel = d3.event.selection
+  
+  dataset = new Uint32Array(24);
+  
+  if (sel == null) {
+    sel_map = [[0,0], [100000,100000]];
+    sel_time = [0,1000000];
+    sel_bar = [0,1000000];
+  }
+  else {
+    if (fromBar) {
+      sel_bar = sel;
+    }
+    else if (sel[0].length) {
+      sel_map = sel;
+    }
+    else {
+      sel_time = sel;
+    }
+  }
+
+  dots = d3.selectAll('.dot');
+
+  var x0 = sel_map[0][0],
+      x1 = sel_map[1][0],
+      y0 = sel_map[0][1],
+      y1 = sel_map[1][1];
+
+  var t0 = sel_time[0],
+      t1 = sel_time[1];
+
+  var b0 = sel_bar[0],
+      b1 = sel_bar[1];      
+
+  var dotDate;
+  dots.attr("class", function(d) {
+    dotDate = xScale(new Date(d.RPT_DT));
+    var cx = d3.select(this).attr("cx");
+    var cy = d3.select(this).attr("cy");
+
+    // checking if the dot is inside both the timeline and map interval 
+    // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
+    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.CMPLNT_FR_TM) && xBarScale(d.CMPLNT_FR_TM) <= b1){
+        dataset[d.CMPLNT_FR_TM]=dataset[d.CMPLNT_FR_TM]+1;
+        return "dot activeDot";
+    } else { 
+        return "dot noneActiveDot";
+    }        
+  });
+
+  change_bar_chart(dataset);
+
+  fromBar = false;
 }
 
 function change_bar_chart (dataset) {
@@ -342,6 +399,7 @@ function change_bar_chart (dataset) {
          .attr("fill", function(d) {
           return "rgb(0, 0, " + Math.round(255-yBarScale(d)) + ")";
          });
+
   //Update all labels
   bar_svg.selectAll("text")
          .data(dataset)
@@ -353,6 +411,7 @@ function change_bar_chart (dataset) {
          .attr("y", function(d) {
             return yBarScale(d)+15;
          });
+
    bar_svg.select(".y.axis")
       .transition()
       .duration(dur)
@@ -361,16 +420,12 @@ function change_bar_chart (dataset) {
 
 function fill_dots () {
     d3.selectAll('.dot')
-      .style("fill", function(d) {
-            return "yellow";
-        })
-      .style("stroke", function(d) {
-            return "gray";
-        });
-  }
+      .attr("class", "dot activeDot");
+}
 
 function reset_brush() {
   time_svg.select(".brush").call(brush.move, [0,0]);
+  // map_svg.select(".brush").call(brush.move, [[0,0],[0,0]]);
   fill_dots();
   change_bar_chart(dataset_all);
 }
@@ -393,10 +448,10 @@ function animate_time (brushSize, speed) {
 
   time_svg.select(".brush").call(brush.move, [0,brushSize]);
   time_svg.select(".brush")
-        .transition()
-        .ease(d3.easeLinear)
-        .duration(transVar)
-        .call(brush.move, [xScale.range()[1] - brushSize, xScale.range()[1]]);
+          .transition()
+          .ease(d3.easeLinear)
+          .duration(transVar)
+          .call(brush.move, [xScale.range()[1] - brushSize, xScale.range()[1]]);
 }
 
 function hideShow (id) {
@@ -418,6 +473,3 @@ function hideShow (id) {
     xButton.value = "Show" + xButton.text;
   } 
 }
-
-// TODO lav en remove map labels
-
