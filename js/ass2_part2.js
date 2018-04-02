@@ -144,10 +144,10 @@ d3.json("data/boroughs.json", function(json) {
 
   d3.csv("data/all_murder.csv", function (data) {
       
-  var data_format = d3.timeFormat("%Y-%m-%d");
-  
+  date_format = d3.timeFormat("%Y-%m-%d");
+
   data.forEach (function(d) {
-    d.RPT_DT = data_format(new Date(d.RPT_DT));
+    d.RPT_DT = date_format(new Date(d.RPT_DT));
   }); 
 
   dots = map_svg.selectAll("circle")
@@ -238,8 +238,15 @@ function createLineChart (data) {
   var w = 800;
   var h = 200;
 
-  var minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
-  var maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
+  minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
+  maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
+
+  // this fill in zeroes in days without murders
+  var dateRange = d3.timeDays(minDate, maxDate);
+
+  data = dateRange.map(function(day) {
+    return _.find(data, { key: date_format(day) }) || { key: date_format(day), value: 0 };
+  });
 
   xScale = d3.scaleTime()
              .domain([minDate, maxDate])
@@ -258,9 +265,9 @@ function createLineChart (data) {
   yAxis = d3.axisLeft()
             .scale(yScale);
 
-  var line = d3.line()
-               .x(function(d) { return xScale(new Date(d.key)); })
-               .y(function(d) { return yScale(new Date(d.value)); });
+  line = d3.line()
+           .x(function(d) { return xScale(new Date(d.key)); })
+           .y(function(d) { return yScale(new Date(d.value)); });
 
   // access div element
   time_svg = d3.select("#part2_linechart")
@@ -413,3 +420,4 @@ function hideShow (id) {
 }
 
 // TODO lav en remove map labels
+
