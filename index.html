@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="js/d3.v4.min.js"></script>
+
     <style type="text/css">
         
         div.bar {
@@ -126,19 +128,38 @@
                   <p>Visualizing Murders over Time</p>
                 </div id="part2_content">
 
-<p>You can pick brush size and transition variation or just click ANIMATE to use default values.</p>
+<p>
+<div>You can pick brush size and transition variation or just click ANIMATE to use default values.</div>
+<div>RESET BRUSH will remove the brush and activate all dots again</div>
+</p>
 <ul class="actions align-center">
   <li><input type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" /></li>
   <li><input type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" /></li>
   <li><button class="default" onclick="animate_time()">Animate</button></li>
   <li><button class="alt" onclick="reset_brush()">Reset brush</button></li>
 </ul>
-<div class="actions align-center uniform">
 
+
+
+<div class="align-center" id="part2_linechart"></div>
+
+
+<div class="align-center">
+  <h3>Map of murders at location</h3>
+  <p id="part2_map_button" class="button alt" onclick="hideShow('part2_map')">Show/hide Map</p>
+  <p id="part2_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
+</div>
+
+<div class="align-center" id="part2_map">
+</div>
+
+<div class="align-center">
+  <h3>Bar Chart of Murders per hour</h3>
+  <p id="part2_bar_button" class="button alt" onclick="hideShow('part2_bar')">Show/hide Bar Chart</p>
+  <p id="part2_bar_text">Move or clear the brush to change data showned in map.</p>
+</div>
 
 <div class="align-center" id="part2_bar"></div>
-<div class="align-center" id="part2_linechart"></div>
-<div class="align-center" id="part2_map"></div>
 
 <div>
   Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
