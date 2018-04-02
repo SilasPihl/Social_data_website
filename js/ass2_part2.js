@@ -18,10 +18,6 @@ var color = d3.scaleOrdinal()
               .range(["rgb(12, 150, 50)","rgb(0, 128, 128) ","rgb(0, 0, 128) ","rgb(128, 0, 0)", "rgb(200, 150, 180)"])
 
 var barPadding = 1;
-var xScale, yScale, xAxis, yAxis, xBarScale, yBarScale;
-var dots;
-var map_svg, time_svg, bar_svg;
-var brush;
 
 //Create SVG element
 map_svg = d3.select("#part2_map")
@@ -149,7 +145,7 @@ d3.json("data/boroughs.json", function(json) {
   d3.csv("data/all_murder.csv", function (data) {
       
   var data_format = d3.timeFormat("%Y-%m-%d");
-
+  
   data.forEach (function(d) {
     d.RPT_DT = data_format(new Date(d.RPT_DT));
   }); 
@@ -193,16 +189,13 @@ d3.json("data/boroughs.json", function(json) {
  // TODO: Fill in days with 0 occurrences
 
   // Counting murders per day
-  var murdersPerDay = d3.nest()
+  murdersPerDay = d3.nest()
     .key(function(d) { return d.RPT_DT; })
     .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
     .sortKeys(d3.ascending)
     .entries(data);
 
   createLineChart(murdersPerDay)
-
- 
-
   
   });
 });
@@ -210,7 +203,7 @@ d3.json("data/boroughs.json", function(json) {
 function brushed () {
   var sel = d3.event.selection
   if (sel != null) {
-    var dataset=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    var dataset = new Uint8Array(24);
     d3.selectAll('.dot')
       .style("fill", function(d) {
         var dotDate = xScale(new Date(d.RPT_DT));
@@ -250,21 +243,19 @@ function createLineChart (data) {
 
   xScale = d3.scaleTime()
              .domain([minDate, maxDate])
-             .range([0, w])
+             .range([0, w]);
 
   yScale = d3.scaleLinear()
              .domain([0, d3.max(data.map(function(d) { return d.value; }))])
-             .range([h, 0])
+             .range([h, 0]);
 
   var formatYear = d3.timeFormat("%Y");
 
   xAxis = d3.axisBottom()
             .scale(xScale)
-            // .ticks(10)
             .tickFormat(formatYear);
 
   yAxis = d3.axisLeft()
-            // .ticks(10)
             .scale(yScale);
 
   var line = d3.line()
