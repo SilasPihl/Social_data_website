@@ -3,7 +3,7 @@
 var w = 1000;
 var h = 550;
 var dur = 100;
-  console.log("TEEEST3");
+console.log("TEEEST3");
 
 //Define map projection
 var projection = d3.geoMercator()
@@ -29,7 +29,9 @@ map_svg = d3.select("#d3_map")
 
 var dataset_all= [320, 292, 280, 260, 285, 198, 99, 88, 101, 83, 102, 108, 167, 144, 152, 178, 140, 207, 237, 246, 247, 309, 343, 323];
 var dataset = dataset_all;
-var hours=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
+var hours = _.range(24);
+// var hours = Array.apply(null, Array(24)).map(function (_, i) {return i.toString();}); // alternative if we want to use strings
+
 var barH = 200
 var barW = 800
 
@@ -64,7 +66,7 @@ xAxis = d3.axisBottom(xBarScale);
 yAxis = d3.axisLeft(yBarScale)
           .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5));
 
-bar_svg = d3.select("#part2_bar")
+bar_svg = d3.select("#d3_bar")
             .append("svg")
             .attr("width", barW + bar_m.l + bar_m.r)
             .attr("height", barH + bar_m.t + bar_m.b);
@@ -149,7 +151,7 @@ d3.json("data/boroughs.json", function(json) {
          });
   console.log("TEEEST2");
 
-  d3.csv("data/Motor.csv", function (data) {
+  d3.csv("data/road_rage.csv", function (data) {
       
   date_format = d3.timeFormat("%Y-%m-%d");
   data.forEach (function(d) {
@@ -157,6 +159,15 @@ d3.json("data/boroughs.json", function(json) {
     d.DATE = date_format(new Date(d.DATE));
     d.TIME = d.TIME.split(":")[0];
   }); 
+
+  data = data.filter (function(d, i) {
+    if (i%4 != 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  });
 
   console.log("TEEEST1");
   dots = map_svg.selectAll("circle")
@@ -218,7 +229,7 @@ function createLineChart (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
   console.log("min: "+minDate);
-    console.log("max: "+maxDate);
+  console.log("max: "+maxDate);
 
 
   // this fill in zeroes in days without murders
@@ -250,7 +261,7 @@ function createLineChart (data) {
            .y(function(d) { return yScale(new Date(d.value)); });
 
   // access div element
-  time_svg = d3.select("#part2_linechart")
+  time_svg = d3.select("#d3_linechart")
                .append("svg")
                .attr("width", w + m.left + m.right)
                .attr("height", h + m.top + m.bottom*2)
@@ -383,7 +394,7 @@ function brushed () {
      //console.log(dotDate <= t1);
    //console.log(b0 <= xBarScale(d.TIME));
     //console.log(xBarScale(d.TIME) <= b1);
-    console.log(d.TIME);
+    // console.log(d.TIME);
 
 
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
