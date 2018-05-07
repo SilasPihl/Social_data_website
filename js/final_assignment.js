@@ -1,12 +1,16 @@
 
 //Width and height
-var w = 1000;
+
+var chartDiv = document.getElementById("d3_map");
+var w = chartDiv.clientWidth;
+// var w = 500;
 var h = 550;
 var dur = 100;
 
 //Define map projection
 var projection = d3.geoMercator()
-        .scale(50000)
+        // .scale(50000)
+        .scale(90*w+1300)
         .center([-74, 40.71])
         .translate([w * 0.5, h * 0.5]);
 
@@ -30,8 +34,10 @@ var dataset_all= [320, 292, 280, 260, 285, 198, 99, 88, 101, 83, 102, 108, 167, 
 var dataset = dataset_all;
 // var hours=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
 var hours = _.range(24);
-var barH = 200
-var barW = 800
+
+var chartDiv = document.getElementById("d3_bar");
+var barW = chartDiv.clientWidth;
+var barH = 200;
 
 // Margins
 var bar_m = {
@@ -96,13 +102,13 @@ bar_svg.selectAll("text")
        })
        .attr("text-anchor", "middle")
        .attr("x", function(d, i) {
-          return xBarScale(i)+14;
+          return xBarScale(i)+w/50;
        })
        .attr("y", function(d) {
-          return barH - yBarScale(d) + 14;
+          return barH - yBarScale(d) - 20;
        })
        .attr("font-family", "sans-serif")
-       .attr("font-size", "11px")
+       .attr("font-size", "10px")
        .attr("fill", "white");
 
 //Create X axis
@@ -130,7 +136,7 @@ bar_svg.append("text")
        .attr("x", 0 - (barH * 0.5))
        .attr("dy", "1em")
        .style("text-anchor", "middle")
-       .text("# of Murders"); 
+       .text("No of accidents"); 
 
 //Load in GeoJSON data
 d3.json("data/boroughs.json", function(json) {
@@ -159,15 +165,14 @@ d3.json("data/boroughs.json", function(json) {
     d.TIME = d.TIME.split(":")[0];
   }); 
 
-  // data = data.filter (function(d, i) {
-  //   if (i%4 != 0) {
-  //     return false;
-  //   }
-  //   else {
-  //     return true;
-  //   }
-  // });
-
+  data = data.filter (function(d, i) {
+    if (i%4 != 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  });
   dots = map_svg.selectAll("circle")
                 .data(data)
                 .enter()
@@ -186,7 +191,7 @@ d3.json("data/boroughs.json", function(json) {
                 });
 
   map_svg.selectAll("text")
-         .data(json.features)
+         .data(json_fet)
          .enter()
          .append("text")
          .attr("fill", "black")
@@ -197,28 +202,35 @@ d3.json("data/boroughs.json", function(json) {
          })
          .attr("text-anchor", "middle")
          .text(function(d) {
-             return d.properties.BOROUGH;
+             return d.properties.BoroName;
          });
 
   // Counting murders per day
-  accidentsPerDay = d3.nest()
-                      .key(function(d) { return d.DATE; })
-                      .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-                      .sortKeys(d3.ascending)
-                      .entries(data);
+  accidentsPerDay = parseData(data);
 
-  accidentsPerDay = fillWithNullDays(accidentsPerDay);
-
+  updatedKeyValueArray = accidentsPerDay;
   createLineChart(accidentsPerDay)
   });
 });
+
+function parseData(data) {
+  // Counting murders per day
+  data = d3.nest()
+           .key(function(d) { return d.DATE; })
+           .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+           .sortKeys(d3.ascending)
+           .entries(data);
+
+  data = fillWithNullDays(data);
+  return data;
+}
 
 function fillWithNullDays (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
 
-  console.log("minDate equals " + minDate);
-  console.log("maxDate equals " + maxDate);
+  // console.log("minDate equals " + minDate);
+  // console.log("maxDate equals " + maxDate);
 
   // this fill in zeroes in days without murders
   var dateRange = d3.timeDays(minDate, maxDate);
@@ -239,8 +251,8 @@ function createLineChart (data) {
       bottom: 30,
       left: 40
   }
-
-  var w = 800;
+  var chartDiv = document.getElementById("d3_linechart");
+  var w = chartDiv.clientWidth;
   var h = 200;
 
   xScale_time_svg = d3.scaleTime()
@@ -269,7 +281,7 @@ function createLineChart (data) {
 
   // access div element
   time_svg = d3.select("#d3_linechart")
-               .append("svg")
+               .append("svg") 
                .attr("width", w + m.left + m.right)
                .attr("height", h + m.top + m.bottom*2)
                .append("g")
@@ -293,11 +305,11 @@ function createLineChart (data) {
   // append labels
   time_svg.append("text")
           .attr("x", 0-(h * 0.5))
-          .attr("y", 0-m.left-2)
+          .attr("y", 0-m.left-6)
           .attr("dy", "1em")
           .attr("transform", "rotate(-90)")
           .style("text-anchor", "middle")
-          .text("# of Traffic accidentes");
+          .text("No. of Traffic accidentes");
 
   time_svg.append("text")
           .attr("transform",
@@ -344,13 +356,14 @@ function createLineChart (data) {
 }
 
 function updateLineChartFromDays (noOfDays) {
-  var coeff = 1000 * 60 * 60 * 24 * noOfDays;
+  noOfDays = noOfDays
+  coeff = 1000 * 60 * 60 * 24 * noOfDays;
   
   accidentsPerSomething = d3.nest()
                           .key(function(d) { return date_format(new Date(Math.round(new Date(d.key) / coeff) *coeff)); })
                           .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }); })
                           .sortKeys(d3.ascending)
-                          .entries(accidentsPerDay);
+                          .entries(updatedKeyValueArray);
 
   updateLineChart(accidentsPerSomething)
 }
@@ -370,12 +383,12 @@ function updateLineChart (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
 
-  console.log("minDate equals " + minDate);
-  console.log("maxDate equals " + maxDate);
+  // console.log("minDate equals " + minDate);
+  // console.log("maxDate equals " + maxDate);
 
   xScale_time_svg.domain([minDate, maxDate]);
   maxNo = d3.max(data.map(function(d) { return d.value; }));
-  console.log(maxNo);
+  // console.log(maxNo);
   yScale_time_svg.domain([0, maxNo]);
 
   var formatYear = d3.timeFormat("%Y");
@@ -404,6 +417,7 @@ function updateLineChart (data) {
           .transition()
           .duration(1000)
           .attr("d", line);
+  lineChartData = data;
 }
 
 function init_time_svg_slider() {
@@ -476,6 +490,7 @@ function brushed () {
   var b0 = sel_bar[0],
       b1 = sel_bar[1];      
 
+  brushedDataSet=[];
   var dotDate;
   dots.attr("class", function(d) {
     dotDate = xScale_time_svg(new Date(d.DATE));
@@ -485,6 +500,9 @@ function brushed () {
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
+        // console.log(d.DATE)
+        // console.log(d)
+        // brushedDataSet.push({key: d.DATE, value: 1});
         dataset[d.TIME]=dataset[d.TIME]+1;
         return "dot activeDot";
     } else { 
@@ -494,7 +512,10 @@ function brushed () {
   });
 
   change_bar_chart(dataset);
-
+  // updatedKeyValueArray = parseData(brushedDataSet);
+  // updateLineChart(updatedKeyValueArray);
+  // updatedKeyValueArray = fillWithNullDays(brushedDataSet);
+  // updateLineChart(updatedKeyValueArray);
   fromBar = false;
 }
 

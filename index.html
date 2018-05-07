@@ -104,31 +104,51 @@ function includeHTML() {
 
     <br/>
     <div class="text-center align-items-center">
-      <div id="d3_linechart" ></div>
-      <div class="text-center align-items-center">
-        <div id="time_svg_slider"></div>
-        <button type="button" class="btn-primary btn" id="reset_time_svg_slider" onclick="reset_time_svg_slider();">Reset</button>
+
+      <div class="row">
+        <div class="col-7 text-center align-items-center">
+          <h5>Timeseries of accidents</h5>
+          <div class="row justify-content-md-center pt-1" >
+            <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
+            <div class="col col-md-auto" id="time_svg_slider"></div>
+            <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="reset_time_svg_slider();">Reset</button>
+          </div>  
+          
+          <div id="d3_linechart"></div>
+
+          <h5>Bar Chart of accidents per hour</h5>
+<!--           <button type="button" id="d3_bar_button" class="btn btn-default" onclick="hideShow('d3_bar')">Show/hide Bar Chart</button> -->
+          <p id="d3_bar_text">
+          Move or clear the brush to change data showned in bar chart.<br/>
+          Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
+
+          <div class="text-center">
+            <div id="d3_bar"></div>
+          </div>
+        </div>
+          
+        <div class="col-5">
+          <h5>Map of accidents at location</h5>
+<!--           <button type="button"  id="d3_map_button" class="btn btn-default" onclick="hideShow('d3_map')">Show/hide Map</button> -->
+          <span id="d3_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</span>
+
+          <div class="text-center">
+            <div id="d3_map" ></div>
+          </div> 
+
+          <div>
+            Her kan være billeder af cykel, bil, fodgænger, som så kan aktivere forskellige dots, alt efter om det har været involveret?
+          </div>
+        </div>      
+
       </div>
-    </div>
 
-    <h3>Map of murders at location</h3>
-    <button type="button"  id="d3_map_button" class="btn btn-default" onclick="hideShow('d3_map')">Show/hide Map</button>
-    <p id="d3_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
-
-    <div class="text-center">
-      <div id="d3_map" ></div>
     </div>
 
 
-    <h3>Bar Chart of Murders per hour</h3>
-    <button type="button" id="d3_bar_button" class="btn btn-default" onclick="hideShow('d3_bar')">Show/hide Bar Chart</button>
-    <p id="d3_bar_text">
-    Move or clear the brush to change data showned in bar chart.<br/>
-    Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
 
-    <div class="text-center">
-      <div id="d3_bar"></div>
-    </div>
+
+
 
     <hr class="line" />
     <div>
