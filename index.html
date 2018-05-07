@@ -9,6 +9,8 @@
     <script src="js/d3.v4.min.js"></script>
     <script src="js/lodash.min.js"></script>
 
+    <script src="https://unpkg.com/d3-simple-slider@0.2.1/build/d3-simple-slider.js"></script>
+
     <!--jQuery CDN-->
     <script src="js/jquery-3.3.1.min.js"></script>
     <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
@@ -101,26 +103,31 @@ function includeHTML() {
     </div>
 
     <br/>
-    <div class="text-center">
-      <div id="part2_linechart" ></div>
+    <div class="text-center align-items-center">
+      <div id="d3_linechart" ></div>
+      <div class="text-center align-items-center">
+        <div id="time_svg_slider"></div>
+        <button type="button" class="btn-primary btn" id="reset_time_svg_slider" onclick="reset_time_svg_slider();">Reset</button>
+      </div>
     </div>
 
     <h3>Map of murders at location</h3>
-    <button type="button"  id="part2_map_button" class="btn btn-default" onclick="hideShow('part2_map')">Show/hide Map</button>
-    <p id="part2_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
+    <button type="button"  id="d3_map_button" class="btn btn-default" onclick="hideShow('d3_map')">Show/hide Map</button>
+    <p id="d3_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
 
     <div class="text-center">
-      <div id="part2_map" ></div>
+      <div id="d3_map" ></div>
     </div>
 
+
     <h3>Bar Chart of Murders per hour</h3>
-    <button type="button" id="part2_bar_button" class="btn btn-default" onclick="hideShow('part2_bar')">Show/hide Bar Chart</button>
-    <p id="part2_bar_text">
+    <button type="button" id="d3_bar_button" class="btn btn-default" onclick="hideShow('d3_bar')">Show/hide Bar Chart</button>
+    <p id="d3_bar_text">
     Move or clear the brush to change data showned in bar chart.<br/>
     Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
 
     <div class="text-center">
-      <div id="part2_bar"></div>
+      <div id="d3_bar"></div>
     </div>
 
     <hr class="line" />
@@ -138,6 +145,7 @@ function includeHTML() {
   showHide('explainer-content', 'none');
   includeHTML();
 </script>
+
 
 
   </body>

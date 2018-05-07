@@ -8,7 +8,7 @@ var dur = 100;
 var projection = d3.geoMercator()
         .scale(50000)
         .center([-74, 40.71])
-        .translate([w/2, h/2]);
+        .translate([w * 0.5, h * 0.5]);
 
 //Define path generator
 var path = d3.geoPath()
@@ -20,7 +20,7 @@ var color = d3.scaleOrdinal()
 var barPadding = 1;
 
 //Create SVG element
-map_svg = d3.select("#part2_map")
+map_svg = d3.select("#d3_map")
             .append("svg")
             .attr("width", w)
             .attr("height", h)
@@ -28,7 +28,8 @@ map_svg = d3.select("#part2_map")
 
 var dataset_all= [320, 292, 280, 260, 285, 198, 99, 88, 101, 83, 102, 108, 167, 144, 152, 178, 140, 207, 237, 246, 247, 309, 343, 323];
 var dataset = dataset_all;
-var hours=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
+// var hours=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
+var hours = _.range(24);
 var barH = 200
 var barW = 800
 
@@ -57,13 +58,13 @@ yBarScale = d3.scaleLinear()
               .range([barH,20]);           
 
 //Define X axis
-xAxis = d3.axisBottom(xBarScale);
+xAxis_bar = d3.axisBottom(xBarScale);
         
 //Define Y axis
-yAxis = d3.axisLeft(yBarScale)
-          .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5));
+yAxis_bar = d3.axisLeft(yBarScale)
+          .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
-bar_svg = d3.select("#part2_bar")
+bar_svg = d3.select("#d3_bar")
             .append("svg")
             .attr("width", barW + bar_m.l + bar_m.r)
             .attr("height", barH + bar_m.t + bar_m.b);
@@ -108,17 +109,17 @@ bar_svg.selectAll("text")
 bar_svg.append("g")
        .attr("class", "x axis")
        .attr("transform", "translate(0," + barH + ")")
-       .call(xAxis);
+       .call(xAxis_bar);
 
 //Create Y axis
 bar_svg.append("g")
        .attr("class", "y axis")
        .attr("transform", "translate(60," + 0 + ")")
-       .call(yAxis.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5)));    
+       .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));;    
 
 // Create xAxis label
 bar_svg.append("text")
-       .attr("transform", "translate(" + (barW/2 + bar_m.l) + " ," + (barH + bar_m.t + bar_m.b) + ")")
+       .attr("transform", "translate(" + (barW * 0.5 + bar_m.l) + " ," + (barH + bar_m.t + bar_m.b) + ")")
        .style("text-anchor", "middle")
        .text("Hours");    
 
@@ -126,7 +127,7 @@ bar_svg.append("text")
 bar_svg.append("text")
        .attr("transform", "rotate(-90)")
        .attr("y", 0 - 0)
-       .attr("x", 0 - (barH / 2))
+       .attr("x", 0 - (barH * 0.5))
        .attr("dy", "1em")
        .style("text-anchor", "middle")
        .text("# of Murders"); 
@@ -138,6 +139,8 @@ d3.json("data/boroughs.json", function(json) {
   }));
 
   //Bind data and create one path per GeoJSON feature
+
+  json_fet = json.features
   map_svg.selectAll("path")
          .data(json.features)
          .enter()
@@ -147,13 +150,23 @@ d3.json("data/boroughs.json", function(json) {
           return color(d.properties.BoroCode)
          });
 
-  d3.csv("data/all_murder.csv", function (data) {
+  d3.csv("data/road_rage.csv", function (data) {
       
   date_format = d3.timeFormat("%Y-%m-%d");
-
   data.forEach (function(d) {
-    d.RPT_DT = date_format(new Date(d.RPT_DT));
+    //console.log(d.ON_STREET_NAME);
+    d.DATE = date_format(new Date(d.DATE));
+    d.TIME = d.TIME.split(":")[0];
   }); 
+
+  // data = data.filter (function(d, i) {
+  //   if (i%4 != 0) {
+  //     return false;
+  //   }
+  //   else {
+  //     return true;
+  //   }
+  // });
 
   dots = map_svg.selectAll("circle")
                 .data(data)
@@ -161,15 +174,15 @@ d3.json("data/boroughs.json", function(json) {
                 .append("circle")
                 .attr("class", "dot activeDot")
                 .attr("cx", function(d) {
-                    return projection([d.Longitude, d.Latitude])[0];
+                    return projection([d.LONGITUDE, d.LATITUDE])[0];
                 })
                 .attr("cy", function(d) {
-                    return projection([d.Longitude, d.Latitude])[1];
+                    return projection([d.LONGITUDE, d.LATITUDE])[1];
                 })
                 .attr("r", 2)
                 .append("title")         //Simple tooltip
                 .text(function(d) {
-                     return d.RPT_DT;
+                     return d.ON_STREET_NAME;
                 });
 
   map_svg.selectAll("text")
@@ -184,33 +197,23 @@ d3.json("data/boroughs.json", function(json) {
          })
          .attr("text-anchor", "middle")
          .text(function(d) {
-             return d.properties.BoroName;
+             return d.properties.BOROUGH;
          });
 
   // Counting murders per day
-  murdersPerDay = d3.nest()
-                    .key(function(d) { return d.RPT_DT; })
-                    .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-                    .sortKeys(d3.ascending)
-                    .entries(data);
+  accidentsPerDay = d3.nest()
+                      .key(function(d) { return d.DATE; })
+                      .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+                      .sortKeys(d3.ascending)
+                      .entries(data);
 
-  createLineChart(murdersPerDay)
-  
+  accidentsPerDay = fillWithNullDays(accidentsPerDay);
+
+  createLineChart(accidentsPerDay)
   });
 });
 
-function createLineChart (data) {
-  // Margins
-  var m = {
-      top: 10,
-      right: 40,
-      bottom: 30,
-      left: 40
-  }
-
-  var w = 800;
-  var h = 200;
-
+function fillWithNullDays (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
 
@@ -224,45 +227,62 @@ function createLineChart (data) {
     return _.find(data, { key: date_format(day) }) || { key: date_format(day), value: 0 };
   });
 
-  xScale = d3.scaleTime()
+  return data;
+}
+
+
+function createLineChart (data) {
+  // Margins
+  var m = {
+      top: 10,
+      right: 40,
+      bottom: 30,
+      left: 40
+  }
+
+  var w = 800;
+  var h = 200;
+
+  xScale_time_svg = d3.scaleTime()
              .domain([minDate, maxDate])
              .range([0, w]);
 
-  yScale = d3.scaleLinear()
-             .domain([0, d3.max(data.map(function(d) { return d.value; }))])
+  maxValue = d3.max(data.map(function(d) { return d.value; }));
+  console.log(maxValue);
+
+  yScale_time_svg = d3.scaleLinear()
+             .domain([0, maxValue])
              .range([h, 0]);
 
   var formatYear = d3.timeFormat("%Y");
 
-  xAxis = d3.axisBottom()
-            .scale(xScale)
+  xAxis_time_svg = d3.axisBottom()
+            .scale(xScale_time_svg)
             .tickFormat(formatYear);
 
-  yAxis = d3.axisLeft()
-            .scale(yScale);
+  yAxis_time_svg = d3.axisLeft()
+            .scale(yScale_time_svg);  
 
   line = d3.line()
-           .x(function(d) { return xScale(new Date(d.key)); })
-           .y(function(d) { return yScale(new Date(d.value)); });
+           .x(function(d) { return xScale_time_svg(new Date(d.key)); })
+           .y(function(d) { return yScale_time_svg(d.value); });
 
   // access div element
-  time_svg = d3.select("#part2_linechart")
+  time_svg = d3.select("#d3_linechart")
                .append("svg")
                .attr("width", w + m.left + m.right)
                .attr("height", h + m.top + m.bottom*2)
                .append("g")
                .attr("transform", "translate(" + m.left + "," + m.top + ")");
 
-  console.log(time_svg)
-  console.log("hall")
   time_svg.append("g")
-          .attr("class", "axis")
+          .attr("class", "x axis")
           .attr("transform", "translate(0," + h + ")")
-          .call(xAxis);
+          .call(xAxis_time_svg);
 
   time_svg.append("g")
-          .attr("class", "axis")
-          .call(yAxis);
+          .attr("class", "y axis")
+          .call(yAxis_time_svg);
 
   // append bins
   time_svg.append("path")
@@ -272,16 +292,16 @@ function createLineChart (data) {
 
   // append labels
   time_svg.append("text")
-          .attr("x", 0-(h / 2))
-          .attr("y", 0-m.left)
+          .attr("x", 0-(h * 0.5))
+          .attr("y", 0-m.left-2)
           .attr("dy", "1em")
           .attr("transform", "rotate(-90)")
           .style("text-anchor", "middle")
-          .text("# of Murders Committed");
+          .text("# of Traffic accidentes");
 
   time_svg.append("text")
           .attr("transform",
-              "translate(" + (w / 2) + " ," +
+              "translate(" + (w * 0.5) + " ," +
               (h + m.bottom) + ")")
           .style("text-anchor", "middle")
           .text("Day");
@@ -315,11 +335,103 @@ function createLineChart (data) {
           .call(map_brush);
 
   time_svg.select('.brush')
-      .call(brush);
+          .call(brush);
 
   time_svg.select(".brush").call(brush.move, [0,0]);
 
-  change_bar_chart(dataset_all);      
+  change_bar_chart(dataset_all);  
+  init_time_svg_slider();    
+}
+
+function updateLineChartFromDays (noOfDays) {
+  var coeff = 1000 * 60 * 60 * 24 * noOfDays;
+  
+  accidentsPerSomething = d3.nest()
+                          .key(function(d) { return date_format(new Date(Math.round(new Date(d.key) / coeff) *coeff)); })
+                          .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }); })
+                          .sortKeys(d3.ascending)
+                          .entries(accidentsPerDay);
+
+  updateLineChart(accidentsPerSomething)
+}
+
+function updateLineChart (data) {
+  // Margins
+  var m = {
+      top: 10,
+      right: 40,
+      bottom: 30,
+      left: 40
+  }
+
+  var w = 800;
+  var h = 200;
+
+  minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
+  maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
+
+  console.log("minDate equals " + minDate);
+  console.log("maxDate equals " + maxDate);
+
+  xScale_time_svg.domain([minDate, maxDate]);
+  maxNo = d3.max(data.map(function(d) { return d.value; }));
+  console.log(maxNo);
+  yScale_time_svg.domain([0, maxNo]);
+
+  var formatYear = d3.timeFormat("%Y");
+
+  xAxis_time_svg.scale(xScale_time_svg);
+  yAxis_time_svg.scale(yScale_time_svg);  
+
+  line = d3.line()
+           .x(function(d) { return xScale_time_svg(new Date(d.key)); })
+           .y(function(d) { return yScale_time_svg(d.value); });
+
+  time_svg.select(".y.axis")
+          .transition()
+          .duration(500)
+          .call(yAxis_time_svg)
+
+  time_svg.select(".x.axis")
+          .transition()
+          .duration(500)
+          .call(xAxis_time_svg)
+
+  time_svg.select(".line")
+          .datum(data)
+
+  time_svg.select(".line")
+          .transition()
+          .duration(1000)
+          .attr("d", line);
+}
+
+function init_time_svg_slider() {
+
+  time_svg_slider = d3.sliderHorizontal()
+    .min(1)
+    .max(30)
+    .step(1)
+    .width(300)
+    .on('end', val => {
+      d3.select("#time_svg_time_interval").text(val);
+      updateLineChartFromDays(val);
+    });
+
+  var g = d3.select("div#time_svg_slider").append("svg")
+    .attr("width", 350)
+    .attr("height", 100)
+    .append("g")
+    .attr("transform", "translate(30,30)");
+
+  g.call(time_svg_slider);
+
+  d3.select("#time_svg_time_interval").text((time_svg_slider.value()));
+}
+
+function reset_time_svg_slider () {
+  time_svg_slider.value(1);
+  updateLineChartFromDays(1);
 }
 
 fromBar = false;
@@ -366,16 +478,17 @@ function brushed () {
 
   var dotDate;
   dots.attr("class", function(d) {
-    dotDate = xScale(new Date(d.RPT_DT));
-    var cx = d3.select(this).attr("cx");
-    var cy = d3.select(this).attr("cy");
+    dotDate = xScale_time_svg(new Date(d.DATE));
+    var cx = parseFloat(d3.select(this).attr("cx"));
+    var cy = parseFloat(d3.select(this).attr("cy"));
 
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
-    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.CMPLNT_FR_TM) && xBarScale(d.CMPLNT_FR_TM) <= b1){
-        dataset[d.CMPLNT_FR_TM]=dataset[d.CMPLNT_FR_TM]+1;
+    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
+        dataset[d.TIME]=dataset[d.TIME]+1;
         return "dot activeDot";
     } else { 
+     
         return "dot noneActiveDot";
     }        
   });
@@ -388,8 +501,8 @@ function brushed () {
 function change_bar_chart (dataset) {
   ymax=d3.max(dataset);
   yBarScale.domain([0, ymax]);
-  yAxis = d3.axisLeft(yBarScale)
-            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5));
+  yAxis_bar = d3.axisLeft(yBarScale)
+            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
   bar_svg.selectAll("rect")
          .data(dataset)
@@ -420,7 +533,7 @@ function change_bar_chart (dataset) {
    bar_svg.select(".y.axis")
       .transition()
       .duration(dur)
-      .call(yAxis.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax/5)));
+      .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
 function fill_dots () {
@@ -448,15 +561,15 @@ function animate_time (brushSize, speed) {
     transVar = 5000;
   }
   
-  console.log("Brush size = " + brushSize);
-  console.log("Transition variation = " + transVar);
+  // console.log("Brush size = " + brushSize);
+  // console.log("Transition variation = " + transVar);
 
   time_svg.select(".brush").call(brush.move, [0,brushSize]);
   time_svg.select(".brush")
           .transition()
           .ease(d3.easeLinear)
           .duration(transVar)
-          .call(brush.move, [xScale.range()[1] - brushSize, xScale.range()[1]]);
+          .call(brush.move, [xScale_time_svg.range()[1] - brushSize, xScale_time_svg.range()[1]]);
 }
 
 function hideShow (id) {
