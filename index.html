@@ -5,23 +5,63 @@
     <meta charset="utf-8" />
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
 
-    <script src="https://d3js.org/d3.v4.js"></script>
-    <!-- <script src="js/d3.v4.min.js"></script> -->
+    <!-- <script src="https://d3js.org/d3.v4.js"></script> -->
+    <script src="js/d3.v4.min.js"></script>
     <script src="js/lodash.min.js"></script>
 
     <!--jQuery CDN-->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
 
     <!--Bootstrap-->
-    <!-- <link rel="stylesheet" type="text/css" href="style/bootstrap.min.css" > -->
-    <!-- <script type="text/javascript" src="js/bootstrap.min.js"> </script> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link  href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
 
     <link rel="stylesheet" type="text/css" href="style/main.css">
+
+    <script type="text/javascript">
+      function showHide(className, displayState) {
+        var elements = document.getElementsByClassName(className);
+        
+        for (var i = 0; i < elements.length; i++){
+            elements[i].style.display = displayState;
+        }
+      }
+
+function includeHTML() {
+  var z, i, elmnt, file, xhttp;
+  /*loop through a collection of all HTML elements:*/
+  z = document.getElementsByTagName("*");
+  for (i = 0; i < z.length; i++) {
+    elmnt = z[i];
+    /*search for elements with a certain atrribute:*/
+    file = elmnt.getAttribute("w3-include-html");
+    if (file) {
+      /*make an HTTP request using the attribute value as the file name:*/
+      xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+          /*remove the attribute, and call this function once more:*/
+          elmnt.removeAttribute("w3-include-html");
+          includeHTML();
+        }
+      }      
+      xhttp.open("GET", file, true);
+      xhttp.send();
+      /*exit the function:*/
+      return;
+    }
+  }
+};      
+    </script>
   </head>
   <body>
+
 
 
 <div id="content" class="container">
@@ -31,49 +71,73 @@
 
   <h4 class="subtitle">Project B - 02806 Social Data Analysis and Visualizations F18 at DTU</h4>
 
-  <p>
-    You can pick brush size and transition variation or just click ANIMATE to use default values. RESET BRUSH will remove the brush and activate all dots again
-  </p>
-
-  <div class="container">
-    <div class="row">
-        <input class="col list-group-item" type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" />
-        <input class="col list-group-item" type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" />
-        <button type="button" class="col list-group-item btn btn-default" onclick="animate_time()">Animate</button>
-        <button type="button" class="col list-group-item btn btn-default" onclick="reset_brush()">Reset brush</button>
-    </div>
+  <div class="justify-content-center text-center explainer-content">
+    <button class="btn btn-link" type="button" onclick="showHide('main-d3-content', 'block'); showHide('explainer-content', 'none');" >Show Main Project Page</button>
+  </div>
+  <div class="justify-content-center text-center main-d3-content">
+    <button class="btn btn-link"   type="button" onclick="showHide('main-d3-content', 'none'); showHide('explainer-content', 'block');">Show Explainer book</button>
   </div>
 
   <br/>
-  <div class="text-center">
-    <div id="part2_linechart" ></div>
+
+  <div class="explainer-content">
+    <div w3-include-html="explainer.html"></div> 
   </div>
 
-  <h3>Map of murders at location</h3>
-  <button type="button"  id="part2_map_button" class="btn btn-default" onclick="hideShow('part2_map')">Show/hide Map</button>
-  <p id="part2_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
+  <!-- MAIN CONTENT -->
+  <div class="main-d3-content">
+    <p>
+      You can pick brush size and transition variation or just click ANIMATE to use default values. RESET BRUSH will remove the brush and activate all dots again
+    </p>
 
-  <div class="text-center">
-    <div id="part2_map" ></div>
+    <div class="container">
+      <div class="row">
+          <input class="col list-group-item" type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" />
+          <input class="col list-group-item" type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" />
+          <button type="button" class="col list-group-item btn btn-default" onclick="animate_time()">Animate</button>
+          <button type="button" class="col list-group-item btn btn-default" onclick="reset_brush()">Reset brush</button>
+      </div>
+    </div>
+
+    <br/>
+    <div class="text-center">
+      <div id="part2_linechart" ></div>
+    </div>
+
+    <h3>Map of murders at location</h3>
+    <button type="button"  id="part2_map_button" class="btn btn-default" onclick="hideShow('part2_map')">Show/hide Map</button>
+    <p id="part2_map_text">Hold over dots to see tooltips with date. Move or clear the brush to change data showned in map.</p>
+
+    <div class="text-center">
+      <div id="part2_map" ></div>
+    </div>
+
+    <h3>Bar Chart of Murders per hour</h3>
+    <button type="button" id="part2_bar_button" class="btn btn-default" onclick="hideShow('part2_bar')">Show/hide Bar Chart</button>
+    <p id="part2_bar_text">
+    Move or clear the brush to change data showned in bar chart.<br/>
+    Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
+
+    <div class="text-center">
+      <div id="part2_bar"></div>
+    </div>
+
+    <hr class="line" />
+    <div>
+      Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
+    </div> 
   </div>
-
-  <h3>Bar Chart of Murders per hour</h3>
-  <button type="button" id="part2_bar_button" class="btn btn-default" onclick="hideShow('part2_bar')">Show/hide Bar Chart</button>
-  <p id="part2_bar_text">
-  Move or clear the brush to change data showned in bar chart.<br/>
-  Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
-
-  <div class="text-center">
-    <div id="part2_bar"></div>
-  </div>
-
-  <hr class="line" />
-  <div>
-    Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
-  </div> 
-
 </div> <!-- end of content -->
 
 <script type="text/javascript" src="js/final_assignment.js"> </script>
+
+
+<script type="text/javascript">
+  showHide('main-d3-content', 'block'); 
+  showHide('explainer-content', 'none');
+  includeHTML();
+</script>
+
+
   </body>
 </html>

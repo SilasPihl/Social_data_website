@@ -62,27 +62,31 @@ div.tooltip {
 
 
 
-#content{
+/*#content{
     width: 100%;
     margin: 0 auto;
-}
+}*/
 
-#chart{
+/*#chart{
      width: 600px;
      display: inline-block;
-}
-#legend{
+}*/
+/*#legend{
      padding-top: 150px;
      display: inline-block;
-}
-.browser text {
+}*/
+
+/*.browser text {
   text-anchor: end;
-}
+}*/
+
+
 .borough{
     font-weight: bold;
     font-size: 16px;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
+
 div.bar{
     display: inline-block;
     width: 20px;
