@@ -1,0 +1,175 @@
+body {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+div.bar {
+  display: inline-block;
+  width: 20px;
+  height: 75px; /* We'll override height later */
+  margin-right: 2px;
+  background-color: teal;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1.5;
+  shape-rendering: crispEdges;
+}
+
+.p {
+  color: black;
+}
+
+.line {
+fill: none;
+stroke: teal;
+stroke-width: 0.5;
+}
+
+div.tooltip { 
+    z-index: 99;
+    opacity: 1;
+    position: absolute;     
+    text-align: center;     
+    width: 120px;          
+    height: 38px;         
+    padding: 2px;       
+    font: 12px sans-serif;    
+    background: lightsteelblue; 
+    border: 0px;    
+    border-radius: 8px;     
+    pointer-events: none;     
+}
+
+.map-label{
+    font-size: 20px;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+.activeDot {
+  fill: yellow;
+  stroke: gray;
+  stroke-width: 0.75;
+}
+
+.noneActiveDot {
+  fill: transparent;
+  stroke: transparent;
+}
+
+
+
+#content{
+    width: 100%;
+    margin: 0 auto;
+}
+
+#chart{
+     width: 600px;
+     display: inline-block;
+}
+#legend{
+     padding-top: 150px;
+     display: inline-block;
+}
+.browser text {
+  text-anchor: end;
+}
+.borough{
+    font-weight: bold;
+    font-size: 16px;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+div.bar{
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    background-color: teal;
+    border: 2px;
+    margin-right: 2px;
+}
+
+.thick{
+    border-top: 4px solid rgba(0,0,0,.9);
+    margin-top: 5px;
+}
+ .links a{
+    color: #447777;
+    font-weight: bold;
+    text-decoration: none;
+    padding-right: 10px;
+    font-size:12px;
+}
+
+.header{
+    width: 688px;
+    color: #202020;
+    font-family: Serif;
+    font-size: 48px;
+    font-style: italic;
+    font-weight: normal;
+    letter-spacing: -3px;
+    text-decoration: none;
+    margin: 0;
+}
+
+.subheader{
+    font-size: 10px;
+    margin-bottom: 5px;
+    padding: 0px 0;
+}
+
+.title{
+    width: 688px;
+    color: #202020;
+    font-family: Georgia;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: -3px;
+    text-decoration: none;
+    margin-bottom: 50px;
+}
+
+.subtitle{
+    width: 688px;
+    color: #202020;
+    font-family: Georgia;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    text-decoration: none;
+    margin-bottom: 50px;
+}
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.line {
+  fill: none;
+  stroke-dasharray: 2;
+  stroke-width: 1px;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    width: 130px;
+    height: 96px;
+    padding: 10px;
+    color: white;
+    font: 12px sans-serif;
+    background: steelblue;
+    border: 2px;
+    border-radius: 8px;
+    pointer-events: none;
+}

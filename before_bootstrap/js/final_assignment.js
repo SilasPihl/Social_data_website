@@ -253,8 +253,6 @@ function createLineChart (data) {
                .append("g")
                .attr("transform", "translate(" + m.left + "," + m.top + ")");
 
-  console.log(time_svg)
-  console.log("hall")
   time_svg.append("g")
           .attr("class", "axis")
           .attr("transform", "translate(0," + h + ")")
