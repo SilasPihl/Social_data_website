@@ -1,4 +1,3 @@
-
 //Width and height
 
 var chartDiv = document.getElementById("d3_map");
@@ -6,7 +5,11 @@ var w = chartDiv.clientWidth;
 // var w = 500;
 var h = 550;
 var dur = 100;
-
+var bronxActive=true;
+var manhattanActive=true;
+var queensActive=true;
+var brooklynActive=true;
+var statenIslandActive=true;
 //Define map projection
 var projection = d3.geoMercator()
         // .scale(50000)
@@ -29,6 +32,9 @@ map_svg = d3.select("#d3_map")
             .attr("width", w)
             .attr("height", h)
             .append("g");
+
+
+
 
 var dataset_all= [320, 292, 280, 260, 285, 198, 99, 88, 101, 83, 102, 108, 167, 144, 152, 178, 140, 207, 237, 246, 247, 309, 343, 323];
 var dataset = dataset_all;
@@ -156,8 +162,19 @@ d3.json("data/boroughs.json", function(json) {
           return color(d.properties.BoroCode)
          });
 
-  d3.csv("data/road_rage.csv", function (data) {
-      
+
+//Bronx
+//Manhattan
+//Queens
+//StatenIsland
+//Brooklyn
+  d3.csv("data/all1718Bronx.csv", function (bronx) {
+    d3.csv("data/all1718Manhattan.csv", function (manhattan) {
+      d3.csv("data/all1718Queens.csv", function (queens) {
+        d3.csv("data/all1718StatenIsland.csv", function (statenIsland) {
+          d3.csv("data/all1718Brooklyn.csv", function (brooklyn) {
+  data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn);  
+  console.log("data: + "+ data.length + " bronx: "+ bronx.length+ " manhattan: "+ manhattan.length);  
   date_format = d3.timeFormat("%Y-%m-%d");
   data.forEach (function(d) {
     //console.log(d.ON_STREET_NAME);
@@ -185,12 +202,18 @@ d3.json("data/boroughs.json", function(json) {
                     return projection([d.LONGITUDE, d.LATITUDE])[1];
                 })
                 .attr("r", 2)
-                .append("title")         //Simple tooltip
-                .text(function(d) {
-                     return d.ON_STREET_NAME;
+                .on("mouseover", function(d) {
+                  if(d3.select(this).attr("class")=="dot activeDot"){
+                  console.log(""+d.UNIQUE_KEY);
+                  }
+                //})
+               // .append("title")         //Simple tooltip
+                //.text(function(d) {
+                  //   return "Street Name "+d.ON_STREET_NAME+ " key " + d.UNIQUE_KEY;
                 });
 
-  map_svg.selectAll("text")
+
+ /* map_svg.selectAll("text")
          .data(json_fet)
          .enter()
          .append("text")
@@ -203,15 +226,15 @@ d3.json("data/boroughs.json", function(json) {
          .attr("text-anchor", "middle")
          .text(function(d) {
              return d.properties.BoroName;
-         });
+         });*/
 
-  // Counting murders per day
+  // Counting Accidents per day
   accidentsPerDay = parseData(data);
 
   updatedKeyValueArray = accidentsPerDay;
   createLineChart(accidentsPerDay)
   });
-});
+});});});});});
 
 function parseData(data) {
   // Counting murders per day
@@ -266,7 +289,7 @@ function createLineChart (data) {
              .domain([0, maxValue])
              .range([h, 0]);
 
-  var formatYear = d3.timeFormat("%Y");
+  var formatYear = d3.timeFormat("%b-%y");
 
   xAxis_time_svg = d3.axisBottom()
             .scale(xScale_time_svg)
@@ -316,7 +339,7 @@ function createLineChart (data) {
               "translate(" + (w * 0.5) + " ," +
               (h + m.bottom) + ")")
           .style("text-anchor", "middle")
-          .text("Day");
+          .text("Months");
 
   // make brush for timeline
   brush = d3.brushX()
@@ -342,7 +365,7 @@ function createLineChart (data) {
           .call(bar_brush);
 
   // map brush
-  map_svg.append("g")
+ /* map_svg.append("g")
           .attr("class", "brush")
           .call(map_brush);
 
@@ -352,7 +375,7 @@ function createLineChart (data) {
   time_svg.select(".brush").call(brush.move, [0,0]);
 
   change_bar_chart(dataset_all);  
-  init_time_svg_slider();    
+  init_time_svg_slider();    */
 }
 
 function updateLineChartFromDays (noOfDays) {
@@ -447,7 +470,6 @@ function reset_time_svg_slider () {
   time_svg_slider.value(1);
   updateLineChartFromDays(1);
 }
-
 fromBar = false;
 
 function from_bar_brushed() {
@@ -455,6 +477,42 @@ function from_bar_brushed() {
   brushed();
 }
 
+function toggleBrooklyn(){
+  brooklynActive = !brooklynActive;
+  updateDots();
+}
+function toggleBronx(){
+  bronxActive = !bronxActive;
+  updateDots();
+}
+function toggleManhattan(){
+  manhattanActive = !manhattanActive;
+  updateDots();
+}
+function toggleStatenIsland(){
+  statenIslandActive = !statenIslandActive;
+  updateDots();
+}
+function toggleQueens(){
+  queensActive = !queensActive;
+  updateDots();
+}
+function updateDots(){
+  dots = d3.selectAll('.dot');
+  console.log(brooklynActive)
+    dots.attr("class", function(d) {
+      if(bronxActive && d.BOROUGH=="BRONX" ||
+       manhattanActive && d.BOROUGH=="MANHATTAN" ||
+       queensActive && d.BOROUGH=="QUEENS" ||
+       brooklynActive && d.BOROUGH=="BROOKLYN" ||
+       statenIslandActive && d.BOROUGH=="STATEN ISLAND"){
+          this.parentNode.appendChild(this); 
+       return "dot activeDot";
+      } else { 
+        return "dot noneActiveDot";
+        }
+  });
+}
 function brushed () {
   sel = d3.event.selection
   
