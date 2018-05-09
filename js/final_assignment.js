@@ -8,17 +8,14 @@ var statenIslandActive=true;
 color = d3.scaleOrdinal()
               .range(["rgb(12, 150, 50)","rgb(0, 128, 128) ","rgb(0, 0, 128) ","rgb(128, 0, 0)", "rgb(200, 150, 180)"])
 
-dataset_all= [320, 292, 280, 260, 285, 198, 99, 88, 101, 83, 102, 108, 167, 144, 152, 178, 140, 207, 237, 246, 247, 309, 343, 323];
-dataset = dataset_all;
-// var hours=['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'];
 hours = _.range(24);
 
 sel_map = [[0,0], [100000,100000]];
 sel_time = [0,1000000];
 sel_bar = [0,1000000];
-fromBar = false;
+accidentsPerHour = new Uint32Array(24);
 
-formatYear = d3.timeFormat("%b-%y");
+formatMonthYear = d3.timeFormat("%b-%y");
 date_format = d3.timeFormat("%Y-%m-%d");
 
 //Load in GeoJSON data
@@ -54,7 +51,17 @@ d3.json("data/boroughs.json", function(json) {
               }
             });
 
-            init_all(data,json)
+
+            // Counting Accidents per day
+            accidentsPerDay = getAccidentsPerDay(data);
+            // accidentsPerHour = getAccidentsPerHour(data);
+
+            updatedKeyValueArray = accidentsPerDay;
+            
+            initLineChart(accidentsPerDay)
+            initMapChart(data, json) // this before initBarChart
+            accidentsPerHour_all = accidentsPerHour
+            initBarChart(accidentsPerHour)
 
           });
         });
@@ -63,30 +70,17 @@ d3.json("data/boroughs.json", function(json) {
   });
 });
 
-function init_all(data,json) {
+function getAccidentsPerDay(data) {
+  // Counting accidents per day
+  data_per_day = d3.nest()
+                   .key(function(d) { return d.DATE; })
+                   .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+                   .sortKeys(d3.ascending)
+                   .entries(data);
 
-  initMapChart(data, json)
+  data_per_day = fillWithNullDays(data_per_day);
 
-  // Counting Accidents per day
-  accidentsPerDay = parseData(data);
-
-  updatedKeyValueArray = accidentsPerDay;
-  
-  initLineChart(accidentsPerDay)
-
-  initBarChart();
-}
-
-function parseData(data) {
-  // Counting murders per day
-  data = d3.nest()
-           .key(function(d) { return d.DATE; })
-           .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-           .sortKeys(d3.ascending)
-           .entries(data);
-
-  data = fillWithNullDays(data);
-  return data;
+  return data_per_day;
 }
 
 function fillWithNullDays (data) {
@@ -130,7 +124,6 @@ function initMapChart (data, json) {
               .attr("height", map_h)
               .append("g");
 
-  json_fet = json.features
   map_svg.selectAll("path")
          .data(json.features)
          .enter()
@@ -144,7 +137,10 @@ function initMapChart (data, json) {
                 .data(data)
                 .enter()
                 .append("circle")
-                .attr("class", "dot activeDot")
+                .attr("class", function(d) { 
+                  accidentsPerHour[d.TIME] = accidentsPerHour[d.TIME] + 1;
+                  return "dot activeDot";
+                })
                 .attr("cx", function(d) {
                     return projection([d.LONGITUDE, d.LATITUDE])[0];
                 })
@@ -163,7 +159,7 @@ function initMapChart (data, json) {
                 });
 
   map_svg.selectAll("text")
-         .data(json_fet)
+         .data(json.features)
          .enter()
          .append("text")
          .attr("fill", "black")
@@ -179,7 +175,7 @@ function initMapChart (data, json) {
 
   // make brush for map
   map_brush = d3.brush()
-                .on("brush end", brushed);
+                .on("brush end", brushed_mapChart);
 
   // map brush
   map_svg.append("g")
@@ -213,7 +209,7 @@ function initLineChart (data) {
   yScale_time_svg = d3.scaleLinear().domain([0, maxValue]).range([time_h, 0]);
 
   // Axes
-  xAxis_time_svg = d3.axisBottom().scale(xScale_time_svg).tickFormat(formatYear);
+  xAxis_time_svg = d3.axisBottom().scale(xScale_time_svg).tickFormat(formatMonthYear);
   yAxis_time_svg = d3.axisLeft().scale(yScale_time_svg);  
   time_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + time_h + ")").call(xAxis_time_svg);
   time_svg.append("g").attr("class", "y axis").call(yAxis_time_svg);
@@ -246,7 +242,7 @@ function initLineChart (data) {
   // make brush for timeline
   time_brush = d3.brushX()
                 .extent([[0, 0],[time_w, time_h - 1]])
-                .on("brush end", brushed);
+                .on("brush end", brushed_timeChart);
 
   // timeline brush
   time_svg.append("g")
@@ -258,106 +254,107 @@ function initLineChart (data) {
 
   // time_svg.select(".brush").call(time_brush.move, [0,0]);
 
-  // change_bar_chart(dataset_all);  
-  // init_time_svg_slider();    
+  init_time_svg_slider();    
 }
 
-function initBarChart () {
-    var chartDiv = document.getElementById("d3_bar");
-    barW = chartDiv.clientWidth;
-    barH = 200;
+function initBarChart (data) {
+  var chartDiv = document.getElementById("d3_bar");
+  barW = chartDiv.clientWidth;
+  barH = 200;
 
-    // Margins
-    bar_m = {
-        t: 10,
-        r: 40,
-        b: 30,
-        l: 40
-    }
+  // Margins
+  bar_m = {
+      t: 10,
+      r: 40,
+      b: 30,
+      l: 40
+  }
 
-    //Create scale functions
-    xBarScale = d3.scaleBand()
-                  .domain(hours.map(function(d) { return d; }))
-                  .range([60, barW])
-                  .paddingInner(0.001);
-    console.log(dataset)
-    var ymax = d3.max(dataset);
+  //Create scale functions
+  xBarScale = d3.scaleBand()
+                .domain(hours.map(function(d) { return d; }))
+                .range([60, barW])
+                .paddingInner(0.001);
 
-    yBarScale = d3.scaleLinear()
-                  .domain([0 , ymax])
-                  .range([barH,20]);           
+  var ymax = d3.max(data);
 
-    //Define X axis
-    xAxis_bar = d3.axisBottom(xBarScale);
-            
-    //Define Y axis
-    yAxis_bar = d3.axisLeft(yBarScale)
-              .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
+  yBarScale = d3.scaleLinear()
+                .domain([0 , ymax])
+                .range([barH,20]);           
 
-    bar_svg = d3.select("#d3_bar")
-                .append("svg")
-                .attr("width", barW + bar_m.l + bar_m.r)
-                .attr("height", barH + bar_m.t + bar_m.b);
+  //Define X axis
+  xAxis_bar = d3.axisBottom(xBarScale);
+          
+  //Define Y axis
+  yAxis_bar = d3.axisLeft(yBarScale)
+            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
-    bar_svg.selectAll("rect")
-           .data(dataset)
-           .enter()
-           .append("rect")
-           .attr("x", function(d, i) {
-              return xBarScale(i);
-           })
-           .attr("y", function(d) {
-              return yBarScale(d);
-           })
-           .attr("width", xBarScale.bandwidth()-4)
-           .attr("height", function(d) {
-              return barH - yBarScale(d)
-           })
-           .attr("fill", function(d) {
-            return "rgb(0, 0, " + Math.round(yBarScale(d)) + ")";
-           });
+  bar_svg = d3.select("#d3_bar")
+              .append("svg")
+              .attr("width", barW + bar_m.l + bar_m.r)
+              .attr("height", barH + bar_m.t + bar_m.b);
 
-    bar_svg.selectAll("text")
-           .data(dataset)
-           .enter()
-           .append("text")
-           .text(function(d) {
-              return d;
-           })
-           .attr("text-anchor", "middle")
-           .attr("x", function(d, i) {
-              return xBarScale(i)+barW/50;
-           })
-           .attr("y", function(d) {
-              return barH - yBarScale(d) - 20;
-           })
-           .attr("font-family", "sans-serif")
-           .attr("font-size", "10px")
-           .attr("fill", "white");
+  bar_svg.selectAll("rect")
+         .data(data)
+         .enter()
+         .append("rect")
+         .attr("x", function(d, i) {
+            return xBarScale(i);
+         })
+         .attr("y", function(d) {
+            return yBarScale(d);
+         })
+         .attr("width", xBarScale.bandwidth()-4)
+         .attr("height", function(d) {
+            return barH - yBarScale(d)
+         })
+         .attr("fill", function(d) {
+          return "rgb(0, 0, " + Math.round(yBarScale(d)) + ")";
+         });
 
-    //Create Axes
-    bar_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + barH + ")").call(xAxis_bar);
-    bar_svg.append("g").attr("class", "y axis").attr("transform", "translate(60," + 0 + ")").call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));;    
+  bar_svg.selectAll("text")
+         .data(data)
+         .enter()
+         .append("text")
+         .text(function(d) {
+            return d;
+         })
+         .attr("text-anchor", "middle")
+         .attr("x", function(d, i) {
+            return xBarScale(i)+barW/70;
+         })
+         .attr("y", function(d) {
+            return barH - yBarScale(d) - 20;
+         })
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "10px")
+         .attr("fill", "white");
 
-    // Create Axes labels
-    bar_svg.append("text").style("text-anchor", "middle").text("Hours")
-           .attr("transform", "translate(" + (barW * 0.5 + bar_m.l) + " ," + (barH + bar_m.t + bar_m.b) + ")");    
-    bar_svg.append("text")
-           .attr("transform", "rotate(-90)")
-           .attr("y", 0 - 0)
-           .attr("x", 0 - (barH * 0.5))
-           .attr("dy", "1em")
-           .style("text-anchor", "middle")
-           .text("No of accidents"); 
+  //Create Axes
+  bar_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + barH + ")").call(xAxis_bar);
+  bar_svg.append("g").attr("class", "y axis").attr("transform", "translate(60," + 0 + ")").call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));;    
+
+  // Create Axes labels
+  bar_svg.append("text").style("text-anchor", "middle").text("Hours")
+         .attr("transform", "translate(" + (barW * 0.5 + bar_m.l) + " ," + (barH + bar_m.t + bar_m.b) + ")");    
+  bar_svg.append("text")
+         .attr("transform", "rotate(-90)")
+         .attr("y", 0 - 0)
+         .attr("x", 0 - (barH * 0.5))
+         .attr("dy", "1em")
+         .style("text-anchor", "middle")
+         .text("No of accidents"); 
 
   // make brush for bar chart
   bar_brush = d3.brushX()
                 .extent([[0, 0],[barW, barH - 1]])
-                .on("brush end", from_bar_brushed);
+                .on("brush end", brushed_barChart);
 
   bar_svg.append("g")
           .attr("class", "brush")
-          .call(bar_brush);                
+          .call(bar_brush);   
+
+  updateBarChart(data);             
 }
 
 function updateLineChartFromDays (noOfDays) {
@@ -385,33 +382,66 @@ function updateLineChart (data) {
   // console.log(maxNo);
   yScale_time_svg.domain([0, maxNo]);
 
-  var formatYear = d3.timeFormat("%Y");
+  var formatMonthYear = d3.timeFormat("%Y");
 
+  // Axes
   xAxis_time_svg.scale(xScale_time_svg);
   yAxis_time_svg.scale(yScale_time_svg);  
+  time_svg.select(".y.axis").transition().duration(500).call(yAxis_time_svg)
+  time_svg.select(".x.axis").transition().duration(500).call(xAxis_time_svg)
 
+  // lines
   line = d3.line()
            .x(function(d) { return xScale_time_svg(new Date(d.key)); })
            .y(function(d) { return yScale_time_svg(d.value); });
-
-  time_svg.select(".y.axis")
-          .transition()
-          .duration(500)
-          .call(yAxis_time_svg)
-
-  time_svg.select(".x.axis")
-          .transition()
-          .duration(500)
-          .call(xAxis_time_svg)
-
+  
   time_svg.select(".line")
           .datum(data)
-
+  
   time_svg.select(".line")
           .transition()
           .duration(1000)
           .attr("d", line);
+  
   lineChartData = data;
+}
+
+function updateBarChart (dataset) {
+  ymax=d3.max(dataset);
+  yBarScale.domain([0, ymax]);
+  yAxis_bar = d3.axisLeft(yBarScale)
+            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
+
+  bar_svg.selectAll("rect")
+         .data(dataset)
+         .transition()
+         .duration(dur)
+         .attr("y", function(d) {
+          return yBarScale(d);
+          })
+         .attr("height", function(d) {
+          return barH - yBarScale(d);
+          })
+         .attr("fill", function(d) {
+          return "rgb(0, 0, " + Math.round(255-yBarScale(d)) + ")";
+         });
+
+  //Update all labels
+  bar_svg.selectAll("text")
+         .data(dataset)
+         .transition()
+         .duration(dur)
+         .text(function(d) {
+            return d;
+         })
+         .attr("y", function(d) {
+            return yBarScale(d)+15;
+         });
+
+   bar_svg.select(".y.axis")
+      .transition()
+      .duration(dur)
+      .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
 function init_time_svg_slider() {
@@ -440,11 +470,6 @@ function init_time_svg_slider() {
 function reset_time_svg_slider () {
   time_svg_slider.value(1);
   updateLineChartFromDays(1);
-}
-
-function from_bar_brushed() {
-  fromBar = true;
-  brushed();
 }
 
 function toggleBrooklyn(){
@@ -484,27 +509,32 @@ function updateDots(){
   });
 }
 
-function brushed () {
+function brushed_timeChart () {
   sel = d3.event.selection
-  
-  dataset = new Uint32Array(24);
-  
+  sel_time = sel ? sel : [0,1000000];
+  brushed()
+}
+
+function brushed_barChart () {
+  sel = d3.event.selection
+  sel_bar = sel ? sel : [0,1000000];
+  brushed()
+}
+
+function brushed_mapChart () {
+  sel = d3.event.selection
   if (sel == null) {
     sel_map = [[0,0], [100000,100000]];
-    sel_time = [0,1000000];
-    sel_bar = [0,1000000];
+    fillDots();
   }
   else {
-    if (fromBar) {
-      sel_bar = sel;
-    }
-    else if (sel[0].length) {
-      sel_map = sel;
-    }
-    else {
-      sel_time = sel;
-    }
+    sel_map = sel;
   }
+  brushed()
+}
+
+function brushed (from) {
+  var perHour = new Uint32Array(24);
 
   dots = d3.selectAll('.dot');
 
@@ -529,10 +559,7 @@ function brushed () {
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
-        // console.log(d.DATE)
-        // console.log(d)
-        // brushedDataSet.push({key: d.DATE, value: 1});
-        dataset[d.TIME]=dataset[d.TIME]+1;
+        perHour[d.TIME]=perHour[d.TIME]+1;
         return "dot activeDot";
     } else { 
      
@@ -540,53 +567,12 @@ function brushed () {
     }        
   });
 
-  change_bar_chart(dataset);
-  // updatedKeyValueArray = parseData(brushedDataSet);
-  // updateLineChart(updatedKeyValueArray);
-  // updatedKeyValueArray = fillWithNullDays(brushedDataSet);
-  // updateLineChart(updatedKeyValueArray);
-  fromBar = false;
+  updateBarChart(perHour);
 }
 
-function change_bar_chart (dataset) {
-  ymax=d3.max(dataset);
-  yBarScale.domain([0, ymax]);
-  yAxis_bar = d3.axisLeft(yBarScale)
-            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
-  bar_svg.selectAll("rect")
-         .data(dataset)
-         .transition()
-         .duration(dur)
-         .attr("y", function(d) {
-          return yBarScale(d);
-          })
-         .attr("height", function(d) {
-          return barH - yBarScale(d);
-          })
-         .attr("fill", function(d) {
-          return "rgb(0, 0, " + Math.round(255-yBarScale(d)) + ")";
-         });
 
-  //Update all labels
-  bar_svg.selectAll("text")
-         .data(dataset)
-         .transition()
-         .duration(dur)
-         .text(function(d) {
-            return d;
-         })
-         .attr("y", function(d) {
-            return yBarScale(d)+15;
-         });
-
-   bar_svg.select(".y.axis")
-      .transition()
-      .duration(dur)
-      .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
-}
-
-function fill_dots () {
+function fillDots () {
     d3.selectAll('.dot')
       .attr("class", "dot activeDot");
 }
@@ -594,8 +580,8 @@ function fill_dots () {
 function reset_brush() {
   time_svg.select(".brush").call(brush.move, [0,0]);
   // map_svg.select(".brush").call(brush.move, [[0,0],[0,0]]);
-  fill_dots();
-  change_bar_chart(dataset_all);
+  fillDots();
+  updateBarChart(accidentsPerHour_all);
 }
 
 function animate_time (brushSize, speed) {
@@ -613,7 +599,6 @@ function animate_time (brushSize, speed) {
   
   // console.log("Brush size = " + brushSize);
   // console.log("Transition variation = " + transVar);
-
   time_svg.select(".brush").call(brush.move, [0,brushSize]);
   time_svg.select(".brush")
           .transition()
