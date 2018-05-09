@@ -394,7 +394,6 @@ function updateLineChart (data) {
   lineChartData = data;
 }
 
-function updateBarChart (dataset) {
 function updateBarChart (data) {
   ymax=d3.max(data);
   yBarScale.domain([0, ymax]);
@@ -402,7 +401,7 @@ function updateBarChart (data) {
             .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
   bar_svg.selectAll("rect")
-         .data(dataset)
+         .data(data)
          .transition()
          .duration(dur)
          .attr("y", function(d) {
