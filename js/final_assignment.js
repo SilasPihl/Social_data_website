@@ -216,19 +216,16 @@ function initLineChart (data) {
 
   // Axis labels
   time_svg.append("text")
+          .attr("y", 0-line_m.left*1.2)
           .attr("x", 0-(time_h * 0.5))
-          .attr("y", 0-line_m.left-6)
           .attr("dy", "1em")
           .attr("transform", "rotate(-90)")
           .style("text-anchor", "middle")
           .text("No. of Traffic accidentes");
 
-  time_svg.append("text")
-          .attr("transform",
-              "translate(" + (time_w * 0.5) + " ," +
-              (time_h + line_m.bottom) + ")")
-          .style("text-anchor", "middle")
-          .text("Months");
+  time_svg.append("text").style("text-anchor", "middle").text("Months")
+          .attr("transform", 
+            "translate(" + (time_w * 0.5) + " ," + (time_h + line_m.top + line_m.bottom) + ")");
 
   // Line path
   line = d3.line()
@@ -264,35 +261,23 @@ function initBarChart (data) {
 
   // Margins
   bar_m = {
-      t: 10,
-      r: 40,
-      b: 30,
-      l: 40
+      top: 10,
+      right: 40,
+      bot: 30,
+      left: 40
   }
 
   //Create scale functions
-  xBarScale = d3.scaleBand()
-                .domain(hours.map(function(d) { return d; }))
-                .range([60, barW])
-                .paddingInner(0.001);
-
   var ymax = d3.max(data);
-
-  yBarScale = d3.scaleLinear()
-                .domain([0 , ymax])
-                .range([barH,20]);           
-
-  //Define X axis
-  xAxis_bar = d3.axisBottom(xBarScale);
-          
-  //Define Y axis
-  yAxis_bar = d3.axisLeft(yBarScale)
-            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
+  xBarScale = d3.scaleBand().range([0, barW]).domain(hours.map(function(d) { return d; })).paddingInner(0.001);
+  yBarScale = d3.scaleLinear().range([barH,20]).domain([0 , ymax]);           
 
   bar_svg = d3.select("#d3_bar")
               .append("svg")
-              .attr("width", barW + bar_m.l + bar_m.r)
-              .attr("height", barH + bar_m.t + bar_m.b);
+              .attr("width", barW + bar_m.left + bar_m.right)
+              .attr("height", barH + bar_m.top + bar_m.bot*2)
+              .append("g")
+              .attr("transform", "translate(" + bar_m.left + "," + bar_m.top + ")");
 
   bar_svg.selectAll("rect")
          .data(data)
@@ -312,6 +297,7 @@ function initBarChart (data) {
           return "rgb(0, 0, " + Math.round(yBarScale(d)) + ")";
          });
 
+  // value labels
   bar_svg.selectAll("text")
          .data(data)
          .enter()
@@ -330,20 +316,22 @@ function initBarChart (data) {
          .attr("font-size", "10px")
          .attr("fill", "white");
 
-  //Create Axes
+  // Axes
+  xAxis_bar = d3.axisBottom(xBarScale);
+  yAxis_bar = d3.axisLeft(yBarScale).tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
   bar_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + barH + ")").call(xAxis_bar);
-  bar_svg.append("g").attr("class", "y axis").attr("transform", "translate(60," + 0 + ")").call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));;    
+  bar_svg.append("g").attr("class", "y axis").call(yAxis_bar);    
 
-  // Create Axes labels
-  bar_svg.append("text").style("text-anchor", "middle").text("Hours")
-         .attr("transform", "translate(" + (barW * 0.5 + bar_m.l) + " ," + (barH + bar_m.t + bar_m.b) + ")");    
+  // Axes labels
   bar_svg.append("text")
-         .attr("transform", "rotate(-90)")
-         .attr("y", 0 - 0)
-         .attr("x", 0 - (barH * 0.5))
+         .attr("y", 0- bar_m.left*1.20)
+         .attr("x", 0-(barH * 0.5))
          .attr("dy", "1em")
+         .attr("transform", "rotate(-90)")
          .style("text-anchor", "middle")
-         .text("No of accidents"); 
+         .text("No. of accidents"); 
+  bar_svg.append("text").style("text-anchor", "middle").text("Hours")
+         .attr("transform", "translate(" + (barW * 0.5 ) + " ," + (barH + bar_m.top + bar_m.bot) + ")");    
 
   // make brush for bar chart
   bar_brush = d3.brushX()
@@ -407,7 +395,8 @@ function updateLineChart (data) {
 }
 
 function updateBarChart (dataset) {
-  ymax=d3.max(dataset);
+function updateBarChart (data) {
+  ymax=d3.max(data);
   yBarScale.domain([0, ymax]);
   yAxis_bar = d3.axisLeft(yBarScale)
             .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
@@ -428,7 +417,7 @@ function updateBarChart (dataset) {
 
   //Update all labels
   bar_svg.selectAll("text")
-         .data(dataset)
+         .data(data)
          .transition()
          .duration(dur)
          .text(function(d) {
@@ -534,7 +523,7 @@ function brushed_mapChart () {
 }
 
 function brushed (from) {
-  var perHour = new Uint32Array(24);
+  accidentsPerHour = new Uint32Array(24);
 
   dots = d3.selectAll('.dot');
 
@@ -559,7 +548,7 @@ function brushed (from) {
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
-        perHour[d.TIME]=perHour[d.TIME]+1;
+        accidentsPerHour[d.TIME]=accidentsPerHour[d.TIME]+1;
         return "dot activeDot";
     } else { 
      
@@ -567,7 +556,7 @@ function brushed (from) {
     }        
   });
 
-  updateBarChart(perHour);
+  updateBarChart(accidentsPerHour);
 }
 
 
@@ -578,10 +567,16 @@ function fillDots () {
 }
 
 function reset_brush() {
-  time_svg.select(".brush").call(brush.move, [0,0]);
+  sel_time = [0,1000000];
+  sel_bar = [0,1000000];
+  sel_map = [[0,0], [100000,100000]];
+  
+  // time_svg.select(".brush").call(brush.move, [0,0]);
+  // bar_svg.select(".brush").call(brush.move, [0,0]);
   // map_svg.select(".brush").call(brush.move, [[0,0],[0,0]]);
+
   fillDots();
-  updateBarChart(accidentsPerHour_all);
+  brushed()
 }
 
 function animate_time (brushSize, speed) {
