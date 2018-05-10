@@ -621,26 +621,13 @@ function hideShow (id) {
   } 
 }
 
-// var htmlMap = document.getElementById("fixedarea");
+d3.graphScroll()
+  .sections(d3.selectAll('#steps > .step'))
+  .on('active', function(i){
+    console.log("Section " + i) 
+})
 
-// d3.graphScroll()
-//   .sections(d3.selectAll('#steps > .step'))
-//   .on('active', function(i){
-//     console.log("Section " + i) 
-// })
-
-// // d3.graphScroll()
-// //   .sections(d3.selectAll('#sections > div'))
-// //   .on('active', function(i){
-// //     if(i>1){
-// //       htmlMap.style.position="fixed";
-// //     }else{
-// //       htmlMap.style.position="static"
-// //     }
-// //     console.log(i + 'th section active') 
-// // });
-
-// d3.graphScroll()
-//   .graph(d3.select('#fixedarea'))
-//   .container(d3.select('#fixedcontainer'))  
+d3.graphScroll()
+  .graph(d3.select('#fixedarea'))
+  .container(d3.select('#fixedcontainer'))  
 

@@ -66,7 +66,7 @@ function includeHTML() {
   <body>
 
     <div class="row" style="margin-left:20px">
-      <div class="col-2">a</div>
+      <div class="col-2"></div>
       <div class="col-8">
         <div class="row">
           <h1 class="col-9 header">An insight into accidents in New York</h1>
@@ -106,7 +106,7 @@ function includeHTML() {
 
 
       </div>  <!-- end of title, middle column -->
-      <div class="col-2">c</div>
+      <div class="col-2"></div>
 
     </div>
 
@@ -142,9 +142,9 @@ function includeHTML() {
               <div class="row justify-content-md-center pt-1" >
                 <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
                 <div class="col col-md-auto" id="line_svg_slider"></div>
-                <button type="button" class="btn-outline-primary btn col-md-auto mt-3" id="reset_line_svg_slider" style="height: 40px;" onclick="reset_line_svg_slider();">Reset</button>
+                <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3" id="reset_line_svg_slider"  onclick="reset_line_svg_slider();">Reset</button>
               </div>  
-              
+              <!-- style="height: 40px;" -->
               <div id="d3_linechart"></div>
 
               <h5>Bar Chart of accidents per hour</h5>
@@ -159,7 +159,7 @@ function includeHTML() {
               
             <div class="col-5">
               <h5>Map of accidents at location</h5>
-               <div class="btn-group btn-group-toggle-xm" id ="carbutton">
+               <div class="btn-group btn-group-toggle-xm" style="width:">
                 <button type="button" data-toggle="button" 
                 class="active btn-outline-primary btn borough-button" 
                 onclick="toggleBrooklyn();">Brooklyn</button>
@@ -245,13 +245,12 @@ function includeHTML() {
 
 
 <script type="text/javascript" src="js/final_assignment.js"> </script>
-<script type="text/javascript" src="js/sticky.js"> </script>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   showHide('main-d3-content', 'block'); 
   showHide('explainer-content', 'none');
   includeHTML();
-</script> -->
+</script>
 
   </body>
 </html>
