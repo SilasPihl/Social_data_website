@@ -18,6 +18,8 @@ accidentsPerHour = new Uint32Array(24);
 formatMonthYear = d3.timeFormat("%b-%y");
 date_format = d3.timeFormat("%Y-%m-%d");
 
+
+
 //Load in GeoJSON data
 d3.json("data/boroughs.json", function(json) {
   color.domain(json.features.map(function(j) {
@@ -94,7 +96,7 @@ function fillWithNullDays (data) {
 
 function initMapChart (data, json) {
   var chartDiv = document.getElementById("d3_map");
-  map_w = chartDiv.clientWidth;
+  map_w = chartDiv.clientWidth-20;
   map_h = 550;
 
   //Define map projection
@@ -587,12 +589,12 @@ function animate_time (brushSize, speed) {
   
   // console.log("Brush size = " + brushSize);
   // console.log("Transition variation = " + transVar);
-  line_svg.select(".brush").call(brush.move, [0,brushSize]);
+  line_svg.select(".brush").call(line_brush.move, [0,brushSize]);
   line_svg.select(".brush")
           .transition()
           .ease(d3.easeLinear)
           .duration(transVar)
-          .call(brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
+          .call(line_brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
 }
 
 function hideShow (id) {
@@ -614,3 +616,27 @@ function hideShow (id) {
     xButton.value = "Show" + xButton.text;
   } 
 }
+
+// var htmlMap = document.getElementById("fixedarea");
+
+// d3.graphScroll()
+//   .sections(d3.selectAll('#steps > .step'))
+//   .on('active', function(i){
+//     console.log("Section " + i) 
+// })
+
+// // d3.graphScroll()
+// //   .sections(d3.selectAll('#sections > div'))
+// //   .on('active', function(i){
+// //     if(i>1){
+// //       htmlMap.style.position="fixed";
+// //     }else{
+// //       htmlMap.style.position="static"
+// //     }
+// //     console.log(i + 'th section active') 
+// // });
+
+// d3.graphScroll()
+//   .graph(d3.select('#fixedarea'))
+//   .container(d3.select('#fixedcontainer'))  
+

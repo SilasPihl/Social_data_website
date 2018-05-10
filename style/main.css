@@ -1,6 +1,4 @@
 .borough-button {
-    /*height: 30px;*/
-    /*width:30;*/
     border:solid 1px black;
 }
 
@@ -15,6 +13,47 @@ div.bar {
   height: 75px; /* We'll override height later */
   margin-right: 2px;
   background-color: teal;
+}
+
+#d3_map{
+  position: relative;
+}
+
+.right-skip {
+  margin-top:50vh;
+}
+
+#steps > .step{
+  opacity: .3;
+} 
+
+#steps .step.graph-scroll-active{
+  opacity: 1;
+}
+
+#steps {
+  width: 250px;
+  position:relative;
+  /*top: 0px;*/
+  /*z-index: 90;*/
+}
+
+#fixedcontainer {
+  margin-left:10px;
+}
+
+#fixedarea{
+  margin-left: 0px;
+  width: 82%;
+  position: sticky;
+  top: 0px;
+  float: right;
+}
+
+#box {
+  width: 200px;
+  height: 200px;
+  background: grey;
 }
 
 .axis path,
@@ -65,8 +104,6 @@ div.tooltip {
   fill: transparent;
   stroke: transparent;
 }
-
-
 
 /*#content{
     width: 100%;
