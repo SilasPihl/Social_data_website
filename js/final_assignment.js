@@ -477,6 +477,7 @@ function toggleQueens(){
   updateDots();
 }
 function updateDots(){
+  accidentsPerHour = new Uint32Array(24);
   dots = d3.selectAll('.dot');
   console.log(brooklynActive)
     dots.attr("class", function(d) {
@@ -485,12 +486,15 @@ function updateDots(){
        queensActive && d.BOROUGH=="QUEENS" ||
        brooklynActive && d.BOROUGH=="BROOKLYN" ||
        statenIslandActive && d.BOROUGH=="STATEN ISLAND"){
+          accidentsPerHour[d.TIME] = accidentsPerHour[d.TIME] + 1;
           this.parentNode.appendChild(this); 
        return "dot activeDot";
       } else { 
         return "dot noneActiveDot";
         }
   });
+    console.log("ud");
+  updateBarChart(accidentsPerHour);
 }
 
 function brushed_timeChart () {
