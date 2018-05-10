@@ -144,7 +144,7 @@ function initMapChart (data, json) {
                 .attr("r", 2)
                 .on("mouseover", function(d) {
                   if(d3.select(this).attr("class")=="dot activeDot"){
-                  console.log(""+d.UNIQUE_KEY);
+               //   console.log(""+d.UNIQUE_KEY);
                   }
                 //})
                // .append("title")         //Simple tooltip
@@ -458,25 +458,25 @@ function reset_line_svg_slider () {
 
 function toggleBrooklyn(){
   brooklynActive = !brooklynActive;
-  updateDots();
+  brushed();
 }
 function toggleBronx(){
   bronxActive = !bronxActive;
-  updateDots();
+  brushed();
 }
 function toggleManhattan(){
   manhattanActive = !manhattanActive;
-  updateDots();
+  brushed();
 }
 function toggleStatenIsland(){
   statenIslandActive = !statenIslandActive;
-  updateDots();
+  brushed();
 }
 function toggleQueens(){
   queensActive = !queensActive;
-  updateDots();
+  brushed();
 }
-function updateDots(){
+/*function updateDots(){
   accidentsPerHour = new Uint32Array(24);
   dots = d3.selectAll('.dot');
   console.log(brooklynActive)
@@ -495,7 +495,7 @@ function updateDots(){
   });
     console.log("ud");
   updateBarChart(accidentsPerHour);
-}
+}*/
 
 function brushed_timeChart () {
   sel = d3.event.selection
@@ -522,6 +522,7 @@ function brushed_mapChart () {
 }
 
 function brushed (from) {
+  console.log("brush");
   accidentsPerHour = new Uint32Array(24);
 
   dots = d3.selectAll('.dot');
@@ -546,7 +547,12 @@ function brushed (from) {
 
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
-    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
+    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1 
+      && (bronxActive && d.BOROUGH=="BRONX" ||
+       manhattanActive && d.BOROUGH=="MANHATTAN" ||
+       queensActive && d.BOROUGH=="QUEENS" ||
+       brooklynActive && d.BOROUGH=="BROOKLYN" ||
+       statenIslandActive && d.BOROUGH=="STATEN ISLAND")){
         accidentsPerHour[d.TIME]=accidentsPerHour[d.TIME]+1;
         return "dot activeDot";
     } else { 
