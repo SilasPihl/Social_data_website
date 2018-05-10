@@ -355,13 +355,13 @@ function updateLineChartFromDays (noOfDays) {
 }
 
 function updateLineChart (data) {
-  minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
-  maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
+ // minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
+  //maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
 
   // console.log("minDate equals " + minDate);
   // console.log("maxDate equals " + maxDate);
 
-  xScale_line_svg.domain([minDate, maxDate]);
+  //xScale_line_svg.domain([minDate, maxDate]);
   maxNo = d3.max(data.map(function(d) { return d.value; }));
   // console.log(maxNo);
   yScale_line_svg.domain([0, maxNo]);
@@ -369,10 +369,10 @@ function updateLineChart (data) {
   var formatMonthYear = d3.timeFormat("%Y");
 
   // Axes
-  xAxis_line_svg.scale(xScale_line_svg);
+ // xAxis_line_svg.scale(xScale_line_svg);
   yAxis_line_svg.scale(yScale_line_svg);  
   line_svg.select(".y.axis").transition().duration(500).call(yAxis_line_svg)
-  line_svg.select(".x.axis").transition().duration(500).call(xAxis_line_svg)
+  //line_svg.select(".x.axis").transition().duration(500).call(xAxis_line_svg)
 
   // lines
   line = d3.line()
@@ -522,8 +522,8 @@ function brushed_mapChart () {
 }
 
 function brushed (from) {
-  console.log("brush");
   accidentsPerHour = new Uint32Array(24);
+  var activeData = [];
 
   dots = d3.selectAll('.dot');
 
@@ -554,14 +554,20 @@ function brushed (from) {
        brooklynActive && d.BOROUGH=="BROOKLYN" ||
        statenIslandActive && d.BOROUGH=="STATEN ISLAND")){
         accidentsPerHour[d.TIME]=accidentsPerHour[d.TIME]+1;
+       activeData.push(d);
         return "dot activeDot";
     } else { 
      
         return "dot noneActiveDot";
     }        
   });
-
+  //console.log(activeData);
   updateBarChart(accidentsPerHour);
+  accidentsPerDay = getAccidentsPerDay(activeData);
+  //if(accidentsPerDay.length > 0){
+    updateLineChart(accidentsPerDay);
+  //}
+  
 }
 
 
@@ -597,8 +603,7 @@ function animate_time (brushSize, speed) {
     transVar = 5000;
   }
   
-  // console.log("Brush size = " + brushSize);
-  // console.log("Transition variation = " + transVar);
+
   line_svg.select(".brush").call(line_brush.move, [0,brushSize]);
   line_svg.select(".brush")
           .transition()
@@ -614,7 +619,7 @@ function hideShow (id) {
   var xText = document.getElementById(id_text);
   var xButton = document.getElementById(id_button);
 
-  console.log("Changing visability of: " + id);
+  //console.log("Changing visability of: " + id);
 
   if (x.style.display === "none") {
     x.style.display = "block";
@@ -630,7 +635,7 @@ function hideShow (id) {
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
-    console.log("Section " + i) 
+   // console.log("Section " + i) 
 })
 
 d3.graphScroll()
