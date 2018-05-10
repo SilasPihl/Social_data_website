@@ -29,44 +29,36 @@ d3.json("data/boroughs.json", function(json) {
   //Queens
   //StatenIsland
   //Brooklyn
-  d3.csv("data/all1718Bronx.csv", function (bronx) {
-    d3.csv("data/all1718Manhattan.csv", function (manhattan) {
-      d3.csv("data/all1718Queens.csv", function (queens) {
-        d3.csv("data/all1718StatenIsland.csv", function (statenIsland) {
-          d3.csv("data/all1718Brooklyn.csv", function (brooklyn) {
-            data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn);  
-            console.log("data: + "+ data.length + " bronx: "+ bronx.length+ " manhattan: "+ manhattan.length);  
-            data.forEach (function(d) {
-              //console.log(d.ON_STREET_NAME);
-              d.DATE = date_format(new Date(d.DATE));
-              d.TIME = d.TIME.split(":")[0];
-            }); 
 
-            data = data.filter (function(d, i) {
-              if (i%20 != 0) {
-                return false;
-              }
-              else {
-                return true;
-              }
-            });
+  d3.csv("data/accidentsInNewYork.csv", function (data) {
+    // data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn);  
+    // console.log("data: + "+ data.length + " bronx: "+ bronx.length+ " manhattan: "+ manhattan.length);  
+    data.forEach (function(d) {
+      //console.log(d.ON_STREET_NAME);
+      d.DATE = date_format(new Date(d.DATE));
+      d.TIME = d.TIME.split(":")[0];
+    }); 
 
-
-            // Counting Accidents per day
-            accidentsPerDay = getAccidentsPerDay(data);
-            // accidentsPerHour = getAccidentsPerHour(data);
-
-            updatedKeyValueArray = accidentsPerDay;
-            
-            initLineChart(accidentsPerDay)
-            initMapChart(data, json) // this before initBarChart
-            accidentsPerHour_all = accidentsPerHour
-            initBarChart(accidentsPerHour)
-
-          });
-        });
-      });
+    data = data.filter (function(d, i) {
+      if (i%20 != 0) {
+        return false;
+      }
+      else {
+        return true;
+      }
     });
+
+    // Counting Accidents per day
+    accidentsPerDay = getAccidentsPerDay(data);
+    // accidentsPerHour = getAccidentsPerHour(data);
+
+    updatedKeyValueArray = accidentsPerDay;
+    
+    initLineChart(accidentsPerDay)
+    initMapChart(data, json) // this before initBarChart
+    accidentsPerHour_all = accidentsPerHour
+    initBarChart(accidentsPerHour)
+
   });
 });
 
@@ -189,74 +181,76 @@ function initLineChart (data) {
       top: 10,
       right: 40,
       bottom: 30,
-      left: 40
+      left: 45
   }
-  var chartDiv = document.getElementById("d3_linechart");
-  var time_w = chartDiv.clientWidth;
-  var time_h = 200;
 
-  // create time_svg
-  time_svg = d3.select("#d3_linechart")
+  var chartDiv = document.getElementById("d3_linechart");
+  var line_w = chartDiv.clientWidth-30;
+  var line_h = 200;
+
+  // create line_svg
+  line_svg = d3.select("#d3_linechart")
                .append("svg") 
-               .attr("width", time_w + line_m.left + line_m.right)
-               .attr("height", time_h + line_m.top + line_m.bottom*2)
+               .attr("width", line_w + line_m.left + line_m.right)
+               .attr("height", line_h + line_m.top + line_m.bottom*2)
+               // .attr("style", "paddingRight: '50'")
                .append("g")
                .attr("transform", "translate(" + line_m.left + "," + line_m.top + ")");
 
   // Scales
   maxValue = d3.max(data.map(function(d) { return d.value; }));
-  xScale_time_svg = d3.scaleTime().domain([minDate, maxDate]).range([0, time_w]);
-  yScale_time_svg = d3.scaleLinear().domain([0, maxValue]).range([time_h, 0]);
+  xScale_line_svg = d3.scaleTime().domain([minDate, maxDate]).range([0, line_w]);
+  yScale_line_svg = d3.scaleLinear().domain([0, maxValue]).range([line_h, 0]);
 
   // Axes
-  xAxis_time_svg = d3.axisBottom().scale(xScale_time_svg).tickFormat(formatMonthYear);
-  yAxis_time_svg = d3.axisLeft().scale(yScale_time_svg);  
-  time_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + time_h + ")").call(xAxis_time_svg);
-  time_svg.append("g").attr("class", "y axis").call(yAxis_time_svg);
+  xAxis_line_svg = d3.axisBottom().scale(xScale_line_svg).tickFormat(formatMonthYear);
+  yAxis_line_svg = d3.axisLeft().scale(yScale_line_svg);  
+  line_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + line_h + ")").call(xAxis_line_svg);
+  line_svg.append("g").attr("class", "y axis").call(yAxis_line_svg);
 
   // Axis labels
-  time_svg.append("text")
-          .attr("y", 0-line_m.left*1.2)
-          .attr("x", 0-(time_h * 0.5))
+  line_svg.append("text")
+          .attr("y", 0-line_m.left - 5)
+          .attr("x", 0-(line_h * 0.5))
           .attr("dy", "1em")
           .attr("transform", "rotate(-90)")
           .style("text-anchor", "middle")
           .text("No. of Traffic accidentes");
 
-  time_svg.append("text").style("text-anchor", "middle").text("Months")
+  line_svg.append("text").style("text-anchor", "middle").text("Months")
           .attr("transform", 
-            "translate(" + (time_w * 0.5) + " ," + (time_h + line_m.top + line_m.bottom) + ")");
+            "translate(" + (line_w * 0.5) + " ," + (line_h + line_m.top + line_m.bottom) + ")");
 
   // Line path
   line = d3.line()
-           .x(function(d) { return xScale_time_svg(new Date(d.key)); })
-           .y(function(d) { return yScale_time_svg(d.value); });
-  time_svg.append("path")
+           .x(function(d) { return xScale_line_svg(new Date(d.key)); })
+           .y(function(d) { return yScale_line_svg(d.value); });
+  line_svg.append("path")
           .datum(data)
           .attr("class", "line")
           .attr("d", line);
 
   // make brush for timeline
-  time_brush = d3.brushX()
-                .extent([[0, 0],[time_w, time_h - 1]])
+  line_brush = d3.brushX()
+                .extent([[0, 0],[line_w, line_h - 1]])
                 .on("brush end", brushed_timeChart);
 
   // timeline brush
-  time_svg.append("g")
+  line_svg.append("g")
           .attr("class", "brush")
-          .call(time_brush);
+          .call(line_brush);
 
-  time_svg.select('.brush')
-          .call(time_brush);
+  line_svg.select('.brush')
+          .call(line_brush);
 
-  // time_svg.select(".brush").call(time_brush.move, [0,0]);
+  // line_svg.select(".brush").call(line_brush.move, [0,0]);
 
-  init_time_svg_slider();    
+  init_line_svg_slider();    
 }
 
 function initBarChart (data) {
   var chartDiv = document.getElementById("d3_bar");
-  barW = chartDiv.clientWidth;
+  barW = chartDiv.clientWidth-30;
   barH = 200;
 
   // Margins
@@ -264,7 +258,7 @@ function initBarChart (data) {
       top: 10,
       right: 40,
       bot: 30,
-      left: 40
+      left: 45
   }
 
   //Create scale functions
@@ -313,7 +307,7 @@ function initBarChart (data) {
             return barH - yBarScale(d) - 20;
          })
          .attr("font-family", "sans-serif")
-         .attr("font-size", "10px")
+         .attr("font-size", "6px")
          .attr("fill", "white");
 
   // Axes
@@ -324,7 +318,7 @@ function initBarChart (data) {
 
   // Axes labels
   bar_svg.append("text")
-         .attr("y", 0- bar_m.left*1.20)
+         .attr("y", 0- bar_m.left-5)
          .attr("x", 0-(barH * 0.5))
          .attr("dy", "1em")
          .attr("transform", "rotate(-90)")
@@ -365,28 +359,28 @@ function updateLineChart (data) {
   // console.log("minDate equals " + minDate);
   // console.log("maxDate equals " + maxDate);
 
-  xScale_time_svg.domain([minDate, maxDate]);
+  xScale_line_svg.domain([minDate, maxDate]);
   maxNo = d3.max(data.map(function(d) { return d.value; }));
   // console.log(maxNo);
-  yScale_time_svg.domain([0, maxNo]);
+  yScale_line_svg.domain([0, maxNo]);
 
   var formatMonthYear = d3.timeFormat("%Y");
 
   // Axes
-  xAxis_time_svg.scale(xScale_time_svg);
-  yAxis_time_svg.scale(yScale_time_svg);  
-  time_svg.select(".y.axis").transition().duration(500).call(yAxis_time_svg)
-  time_svg.select(".x.axis").transition().duration(500).call(xAxis_time_svg)
+  xAxis_line_svg.scale(xScale_line_svg);
+  yAxis_line_svg.scale(yScale_line_svg);  
+  line_svg.select(".y.axis").transition().duration(500).call(yAxis_line_svg)
+  line_svg.select(".x.axis").transition().duration(500).call(xAxis_line_svg)
 
   // lines
   line = d3.line()
-           .x(function(d) { return xScale_time_svg(new Date(d.key)); })
-           .y(function(d) { return yScale_time_svg(d.value); });
+           .x(function(d) { return xScale_line_svg(new Date(d.key)); })
+           .y(function(d) { return yScale_line_svg(d.value); });
   
-  time_svg.select(".line")
+  line_svg.select(".line")
           .datum(data)
   
-  time_svg.select(".line")
+  line_svg.select(".line")
           .transition()
           .duration(1000)
           .attr("d", line);
@@ -411,7 +405,7 @@ function updateBarChart (data) {
           return barH - yBarScale(d);
           })
          .attr("fill", function(d) {
-          return "rgb(0, 0, " + Math.round(255-yBarScale(d)) + ")";
+          return "rgb("+ Math.round(255-yBarScale(d)) +", "+ Math.round(yBarScale(d)) +", 0)";  
          });
 
   //Update all labels
@@ -432,31 +426,31 @@ function updateBarChart (data) {
       .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
-function init_time_svg_slider() {
+function init_line_svg_slider() {
 
-  time_svg_slider = d3.sliderHorizontal()
+  line_svg_slider = d3.sliderHorizontal()
     .min(1)
     .max(30)
     .step(1)
     .width(300)
     .on('end', val => {
-      d3.select("#time_svg_time_interval").text(val);
+      d3.select("#line_svg_line_interval").text(val);
       updateLineChartFromDays(val);
     });
 
-  var g = d3.select("div#time_svg_slider").append("svg")
+  var g = d3.select("div#line_svg_slider").append("svg")
     .attr("width", 350)
     .attr("height", 100)
     .append("g")
     .attr("transform", "translate(30,30)");
 
-  g.call(time_svg_slider);
+  g.call(line_svg_slider);
 
-  d3.select("#time_svg_time_interval").text((time_svg_slider.value()));
+  d3.select("#line_svg_line_interval").text((line_svg_slider.value()));
 }
 
-function reset_time_svg_slider () {
-  time_svg_slider.value(1);
+function reset_line_svg_slider () {
+  line_svg_slider.value(1);
   updateLineChartFromDays(1);
 }
 
@@ -540,7 +534,7 @@ function brushed (from) {
   brushedDataSet=[];
   var dotDate;
   dots.attr("class", function(d) {
-    dotDate = xScale_time_svg(new Date(d.DATE));
+    dotDate = xScale_line_svg(new Date(d.DATE));
     var cx = parseFloat(d3.select(this).attr("cx"));
     var cy = parseFloat(d3.select(this).attr("cy"));
 
@@ -570,7 +564,7 @@ function reset_brush() {
   sel_bar = [0,1000000];
   sel_map = [[0,0], [100000,100000]];
   
-  // time_svg.select(".brush").call(brush.move, [0,0]);
+  // line_svg.select(".brush").call(brush.move, [0,0]);
   // bar_svg.select(".brush").call(brush.move, [0,0]);
   // map_svg.select(".brush").call(brush.move, [[0,0],[0,0]]);
 
@@ -593,12 +587,12 @@ function animate_time (brushSize, speed) {
   
   // console.log("Brush size = " + brushSize);
   // console.log("Transition variation = " + transVar);
-  time_svg.select(".brush").call(brush.move, [0,brushSize]);
-  time_svg.select(".brush")
+  line_svg.select(".brush").call(brush.move, [0,brushSize]);
+  line_svg.select(".brush")
           .transition()
           .ease(d3.easeLinear)
           .duration(transVar)
-          .call(brush.move, [xScale_time_svg.range()[1] - brushSize, xScale_time_svg.range()[1]]);
+          .call(brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
 }
 
 function hideShow (id) {

@@ -106,12 +106,12 @@ function includeHTML() {
     <div class="text-center align-items-center">
 
       <div class="row">
-        <div class="col-7 text-center align-items-center">
+        <div class="col-7 text-center align-items-center ">
           <h5>Timeseries of accidents</h5>
           <div class="row justify-content-md-center pt-1" >
             <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
-            <div class="col col-md-auto" id="time_svg_slider"></div>
-            <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="reset_time_svg_slider();">Reset</button>
+            <div class="col col-md-auto" id="line_svg_slider"></div>
+            <button type="button" class="btn-outline-primary btn col-md-auto mt-3" id="reset_line_svg_slider" style="height: 40px;" onclick="reset_line_svg_slider();">Reset</button>
           </div>  
           
           <div id="d3_linechart"></div>
@@ -139,24 +139,34 @@ function includeHTML() {
           <div>
             Her kan være billeder af cykel, bil, fodgænger, som så kan aktivere forskellige dots, alt efter om det har været involveret?
           </div>
-          <div class="TEST" id ="carbutton">
-            <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="toggleBrooklyn();">Brooklyn</button>
-          <!--  <img src="suv.png" alt="Din Mor" id ="carbutton" style="width:50px;height:50px;"></button>-->
-          <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="toggleQueens();">Queens</button>
-          <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="toggleBronx();">Bronx</button>
-          <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="toggleStatenIsland();">Staten Island</button>
-          <button type="button" class="btn-primary btn col-md-auto mt-3" id="reset_time_svg_slider" style="height: 40px;" onclick="toggleManhattan();">Manhattan</button>
+          <div class="btn-group btn-group-toggle-xm" id ="carbutton">
+            <button type="button" data-toggle="button" 
+            class="active btn-outline-primary btn borough-button" 
+            id="reset_line_svg_slider"  onclick="toggleBrooklyn();">Brooklyn</button>
+          <!--  <img src="suv.png" alt="" id ="carbutton" style="width:50px;height:50px;"></button>-->
+          <button type="button" data-toggle="button" 
+            class="active btn-outline-primary btn borough-button" 
+            id="reset_line_svg_slider"  onclick="toggleQueens();">
+          Queens</button>
+          <button type="button" data-toggle="button" 
+            class="active btn-outline-primary btn borough-button" 
+            id="reset_line_svg_slider"  onclick="toggleBronx();">
+          Bronx</button>
+
+          <button type="button" data-toggle="button" 
+            class="active btn-outline-primary btn borough-button" 
+            id="reset_line_svg_slider"  onclick="toggleStatenIsland();">
+          Staten Island</button>
+          <button type="button" data-toggle="button" 
+            class="active btn-outline-primary btn borough-button" 
+            id="reset_line_svg_slider"  onclick="toggleManhattan();">
+          Manhattan</button>
           </div>
         </div>      
 
       </div>
 
     </div>
-
-
-
-
-
 
     <hr class="line" />
     <div>
@@ -167,14 +177,11 @@ function includeHTML() {
 
 <script type="text/javascript" src="js/final_assignment.js"> </script>
 
-
 <script type="text/javascript">
   showHide('main-d3-content', 'block'); 
   showHide('explainer-content', 'none');
   includeHTML();
 </script>
-
-
 
   </body>
 </html>
