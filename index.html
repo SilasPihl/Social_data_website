@@ -62,195 +62,193 @@ function includeHTML() {
   }
 };      
     </script>
-  </head>
-  <body>
+</head>
+<body>
+  <div class="row" style="margin-left:20px">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="row">
+        <h1 class="col-9 header">An insight into accidents in New York</h1>
+        <div class="col-3">
+            <div class="justify-content-center text-center explainer-content">
+              <button class="btn btn-link" type="button" onclick="showHide('main-d3-content', 'block'); showHide('explainer-content', 'none');" >Show Main Project Page</button>
+            </div>
+            <div class="justify-content-center text-center main-d3-content">
+              <button class="btn btn-link"   type="button" onclick="showHide('main-d3-content', 'none'); showHide('explainer-content', 'block');">Show Explainer book</button>
+            </div>
+        </div>
+      </div>
 
-    <div class="row" style="margin-left:20px">
-      <div class="col-2"></div>
-      <div class="col-8">
-        <div class="row">
-          <h1 class="col-9 header">An insight into accidents in New York</h1>
-          <div class="col-3">
-              <div class="justify-content-center text-center explainer-content">
-                <button class="btn btn-link" type="button" onclick="showHide('main-d3-content', 'block'); showHide('explainer-content', 'none');" >Show Main Project Page</button>
-              </div>
-              <div class="justify-content-center text-center main-d3-content">
-                <button class="btn btn-link"   type="button" onclick="showHide('main-d3-content', 'none'); showHide('explainer-content', 'block');">Show Explainer book</button>
-              </div>
+      <hr class="line thick" />
+
+      <h4 class="subtitle">Project B - 02806 Social Data Analysis and Visualizations F18 at DTU</h4>
+
+      <div class="explainer-content">
+        <div w3-include-html="explainer.html"></div> 
+      </div>
+
+      <p>
+        Her kommer lidt for historie
+      </p>
+      <p>
+        Her kommer lidt for historie
+      </p>
+      <p>
+        Her kommer lidt for historie
+      </p>
+      <p>
+        Her kommer lidt for historie
+      </p>
+      <p>
+        Her kommer lidt for historie
+      </p>
+
+
+    </div>  <!-- end of title, middle column -->
+    <div class="col-2"></div>
+
+  </div>  <!-- end of title panel row -->
+
+  <div id="fixedcontainer">
+
+
+    <div class="" id="fixedarea">
+      <div class="row">
+        <div class="col-10">
+          <p style="text-align:left">
+            You can pick brush size and transition variation or just click ANIMATE to use default values. RESET BRUSH will remove the brush and activate all dots again
+          </p>
+
+          <div class="container">
+            <div class="row">
+                <input class="col list-group-item" type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" />
+                <input class="col list-group-item" type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" />
+                <button type="button" class="col list-group-item btn btn-default" onclick="animate_time()">Animate</button>
+                <button type="button" class="col list-group-item btn btn-default" onclick="reset_brush()">Reset brush</button>
+            </div>
           </div>
-        </div>
 
-        <hr class="line thick" />
+          <div class="text-center align-items-center">
 
-        <h4 class="subtitle">Project B - 02806 Social Data Analysis and Visualizations F18 at DTU</h4>
+            <div class="row">
+              <div class="col-7 text-center align-items-center ">
+                <h5>Timeseries of accidents</h5>
+                <div class="row justify-content-md-center pt-1" >
+                  <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
+                  <div class="col col-md-auto" id="line_svg_slider"></div>
+                  <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3" id="reset_line_svg_slider"  onclick="reset_line_svg_slider();">Reset</button>
+                </div>  
+                <!-- style="height: 40px;" -->
+                <div id="d3_linechart"></div>
 
-        <div class="explainer-content">
-          <div w3-include-html="explainer.html"></div> 
-        </div>
+                <h5>Bar Chart of accidents per hour</h5>
+                <p id="d3_bar_text">
+                Move or clear the brush to change data showned in bar chart.<br/>
+                Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
 
-        <p>
-          Her kommer lidt for historie
-        </p>
-        <p>
-          Her kommer lidt for historie
-        </p>
-        <p>
-          Her kommer lidt for historie
-        </p>
-        <p>
-          Her kommer lidt for historie
-        </p>
-        <p>
-          Her kommer lidt for historie
-        </p>
-
-
-      </div>  <!-- end of title, middle column -->
-      <div class="col-2"></div>
-
-    </div>
-
-
-        
-
-        
-
-    <div id="fixedcontainer">
-
-
-      <div class="" id="fixedarea">
-        <div class="row">
-          <div class="col-10">
-            <p style="text-align:left">
-              You can pick brush size and transition variation or just click ANIMATE to use default values. RESET BRUSH will remove the brush and activate all dots again
-            </p>
-
-            <div class="container">
-              <div class="row">
-                  <input class="col list-group-item" type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" />
-                  <input class="col list-group-item" type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" />
-                  <button type="button" class="col list-group-item btn btn-default" onclick="animate_time()">Animate</button>
-                  <button type="button" class="col list-group-item btn btn-default" onclick="reset_brush()">Reset brush</button>
-              </div>
-            </div>
-
-            <div class="text-center align-items-center">
-
-              <div class="row">
-            <div class="col-7 text-center align-items-center ">
-              <h5>Timeseries of accidents</h5>
-              <div class="row justify-content-md-center pt-1" >
-                <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
-                <div class="col col-md-auto" id="line_svg_slider"></div>
-                <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3" id="reset_line_svg_slider"  onclick="reset_line_svg_slider();">Reset</button>
-              </div>  
-              <!-- style="height: 40px;" -->
-              <div id="d3_linechart"></div>
-
-              <h5>Bar Chart of accidents per hour</h5>
-              <p id="d3_bar_text">
-              Move or clear the brush to change data showned in bar chart.<br/>
-              Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
-
-              <div class="text-center">
-                <div id="d3_bar"></div>
-              </div>
-            </div>
-              
-            <div class="col-5">
-              <h5>Map of accidents at location</h5>
-               <div class="btn-group btn-group-toggle-xm" style="width:">
-                <button type="button" data-toggle="button" 
-                class="active btn-outline-primary btn borough-button" 
-                onclick="toggleBrooklyn();">Brooklyn</button>
-                <!--  <img src="suv.png" alt="" id ="carbutton" style="width:50px;height:50px;"></button>-->
-                <button type="button" data-toggle="button" 
-                  class="active btn-outline-primary btn borough-button" 
-                  onclick="toggleQueens();">
-                Queens</button>
-                <button type="button" data-toggle="button" 
-                  class="active btn-outline-primary btn borough-button" 
-                  onclick="toggleBronx();">
-                Bronx</button>
-
-                <button type="button" data-toggle="button" 
-                  class="active btn-outline-primary btn borough-button" 
-                  onclick="toggleStatenIsland();">
-                Staten Island</button>
-                <button type="button" data-toggle="button" 
-                  class="active btn-outline-primary btn borough-button" 
-                  onclick="toggleManhattan();">
-                Manhattan</button>
+                <div class="text-center">
+                  <div id="d3_bar"></div>
                 </div>
+              </div>
+                
+              <div class="col-5">
+                <h5>Map of accidents at location</h5>
+                 <div class="btn-group btn-group-toggle-xm" style="width:">
+                  <button type="button" data-toggle="button" 
+                  class="active btn-outline-primary btn borough-button" 
+                  onclick="toggleBrooklyn();">Brooklyn</button>
+                  <!--  <img src="suv.png" alt="" id ="carbutton" style="width:50px;height:50px;"></button>-->
+                  <button type="button" data-toggle="button" 
+                    class="active btn-outline-primary btn borough-button" 
+                    onclick="toggleQueens();">
+                  Queens</button>
+                  <button type="button" data-toggle="button" 
+                    class="active btn-outline-primary btn borough-button" 
+                    onclick="toggleBronx();">
+                  Bronx</button>
 
-              <div class="text-center">
-                <div id="d3_map" ></div>
-              </div> 
+                  <button type="button" data-toggle="button" 
+                    class="active btn-outline-primary btn borough-button" 
+                    onclick="toggleStatenIsland();">
+                  Staten Island</button>
+                  <button type="button" data-toggle="button" 
+                    class="active btn-outline-primary btn borough-button" 
+                    onclick="toggleManhattan();">
+                  Manhattan</button>
+                  </div>
 
-              <p>
-                Her kan være billeder af cykel, bil, fodgænger, som så kan aktivere forskellige dots, alt efter om det har været involveret?
-              </p>
-            </div>      
+                <div class="text-center">
+                  <div id="d3_map" ></div>
+                </div> 
 
-              </div> <!-- end of 7-5 row -->
+                <p>
+                  Her kan være billeder af cykel, bil, fodgænger, som så kan aktivere forskellige dots, alt efter om det har været involveret?
+                </p>
+              </div>      
+            </div> <!-- end of 7-5 row -->
+
+            <hr class="line" />
+            <div>
+              Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
             </div> 
+          </div> 
 
 
-          </div>
-          <div class="col-2">
-            <div class="right-skip" >SKIP</div>
+        </div>
+        <div class="col-2">
+          <div class="right-skip" >
+            <div class="btn-group btn-group-vertical">
+              <button class="go-to-bottom btn btn-outline-primary">Bottom</button>
+            </div>
           </div>
         </div>
       </div>
-      <div id="steps" class="text-center">
-        <div class="step">Section 0
-          
-
-          <p>0</p><p>0</p><p>0</p><p>0</p><p>0</p>
-        </div>
-        <div class="step">Section 1
-          <p>1</p><p>1</p><p>1</p><p>1</p><p>1</p><p>1</p>
-        </div>
-        <div class="step">Section 2
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-        <div class="step">Section 3
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-        <div class="step">Section 3
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-        <div class="step">Section 3
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-        <div class="step">Section 3
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-        <div class="step">Section 3
-          <p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p><p>2</p>
-        </div>
-
-
+    </div>    <!-- end of fixedarea -->  
+    <div id="steps" class="text-center">
+      <div class="step storybox">
       </div>
-    </div>    
+
+      <div class="step storybox">
+        <h1>Section 1</h1>
+        <p>
+          Historie
+        </p>
+      </div>
+      <div class="step storybox">
+        <h1>Section 2</h1>
+        <p>
+          Historie
+        </p>
+      </div>
+      <div class="step storybox">
+        <h1>Section 3</h1>
+        <p>
+          Historie
+        </p>
+      </div>
+      <div class="step storybox">
+        <h1>Section 4</h1>
+        <p>
+          Historie
+        </p>
+      </div>
+    </div>    <!-- end of steps -->
+  </div><!-- end of fixedcontainer -->
 
 
+  <div class="row" style="margin-left:20px">
+    <div class="col-2"></div>
+    <div class="col-8"></div>  <!-- end of title, middle column -->
+    <div class="col-2"></div>
+  </div>
 
+  <script type="text/javascript" src="js/final_assignment.js"> </script>
 
+  <script type="text/javascript">
+    showHide('main-d3-content', 'block'); 
+    showHide('explainer-content', 'none');
+    includeHTML();
+  </script>
 
-
-<script type="text/javascript" src="js/final_assignment.js"> </script>
-
-<script type="text/javascript">
-  showHide('main-d3-content', 'block'); 
-  showHide('explainer-content', 'none');
-  includeHTML();
-</script>
-
-  </body>
+</body>
 </html>

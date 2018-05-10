@@ -24,8 +24,26 @@ div.bar {
   text-align:center;
 }
 
+.storybox > p {
+  text-align: left;
+}
+
+.storybox > h1 {
+  font-weight: : bold;
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.storybox > div {
+  font-weight: bold;
+  text-align: left;
+}
+
 #steps > .step{
   opacity: .3;
+  min-height: 200px;
+  padding-bottom: 300px;
 } 
 
 #steps .step.graph-scroll-active{
@@ -34,6 +52,7 @@ div.bar {
 
 #steps {
   width: 250px;
+  margin-left:10px;
   position:relative;
   /*top: 0px;*/
   /*z-index: 90;*/
@@ -41,12 +60,14 @@ div.bar {
 
 #fixedcontainer {
   margin-left:10px;
+  margin-bottom: 20px;
 }
 
 #fixedarea{
   margin-left: 0px;
   width: 82%;
   position: sticky;
+  position:-webkit-sticky;
   top: 0px;
   float: right;
 }

@@ -635,10 +635,20 @@ function hideShow (id) {
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
-   // console.log("Section " + i) 
+    currentSection = i
+    // if (i==3) {
+    //   animate_time();
+    // }
+    console.log("Section " + i) 
 })
 
 d3.graphScroll()
   .graph(d3.select('#fixedarea'))
   .container(d3.select('#fixedcontainer'))  
 
+
+$('.go-to-bottom').click( function(e) {
+  e.preventDefault(); 
+  document.body.scrollIntoView(false);
+  return false; 
+});
