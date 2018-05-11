@@ -1,10 +1,25 @@
-.borough-button {
-    border:solid 1px black;
+.borough-button[aria-pressed="false"] {
+    opacity: 0.5;
 }
+.borough-button, .borough-button .active {
+    border:solid 1px black;
+    padding:5px;
+    color: black!important;
+}
+
+.std-button {
+    height:40px;
+    font-size: 0.8em;
+}
+
 
 body {
     padding-top: 2rem;
     padding-bottom: 2rem;
+}
+
+.chart_info {
+    font-size: 0.65em;
 }
 
 div.bar {
@@ -24,26 +39,25 @@ div.bar {
   text-align:center;
 }
 
-.storybox > p {
+.step > p {
+  font-weight: : normal;
   text-align: left;
 }
 
-.storybox > h1 {
+.step > h1 {
+  text-align:center;
   font-weight: : bold;
   display: block;
   font-size: 20px;
   font-weight: bold;
 }
 
-.storybox > div {
-  font-weight: bold;
-  text-align: left;
-}
-
 #steps > .step{
   opacity: .3;
   min-height: 200px;
-  padding-bottom: 300px;
+  margin-bottom: 300px;
+  padding-right: 20px;
+  padding-left: 20px;
 } 
 
 #steps .step.graph-scroll-active{
@@ -52,7 +66,7 @@ div.bar {
 
 #steps {
   width: 250px;
-  margin-left:10px;
+  /*margin-left:10px;*/
   position:relative;
   /*top: 0px;*/
   /*z-index: 90;*/

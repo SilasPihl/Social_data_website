@@ -457,7 +457,7 @@ function init_line_svg_slider() {
 
   var g = d3.select("div#line_svg_slider").append("svg")
     .attr("width", 350)
-    .attr("height", 100)
+    .attr("height", 65)
     .append("g")
     .attr("transform", "translate(30,30)");
 
@@ -473,6 +473,7 @@ function reset_line_svg_slider () {
 
 function toggleBrooklyn(){
   brooklynActive = !brooklynActive;
+
   brushed();
 }
 function toggleBronx(){

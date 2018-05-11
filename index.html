@@ -113,37 +113,23 @@ function includeHTML() {
     <div class="" id="fixedarea">
       <div class="row">
         <div class="col-10">
-          <p style="text-align:left">
-            You can pick brush size and transition variation or just click ANIMATE to use default values. RESET BRUSH will remove the brush and activate all dots again
-          </p>
-
-          <div class="container">
-            <div class="row">
-                <input class="col list-group-item" type="text" name="textbox_brushSize" id="textbox_brushSize" value="" placeholder="Brush Size" />
-                <input class="col list-group-item" type="email" name="textbox_brushSpeed" id="textbox_brushSpeed" value="" placeholder="Transition Variation" />
-                <button type="button" class="col list-group-item btn btn-default" onclick="animate_time()">Animate</button>
-                <button type="button" class="col list-group-item btn btn-default" onclick="reset_brush()">Reset brush</button>
-            </div>
-          </div>
-
           <div class="text-center align-items-center">
 
             <div class="row">
               <div class="col-7 text-center align-items-center ">
                 <h5>Timeseries of accidents</h5>
                 <div class="row justify-content-md-center pt-1" >
-                  <div class="col col-md-auto pt-3" >Avg. over no. of days</div>
+                  <div class="col col-md-auto pt-3 std-button" >Avg. over no. of days</div>
                   <div class="col col-md-auto" id="line_svg_slider"></div>
-                  <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3" id="reset_line_svg_slider"  onclick="reset_line_svg_slider();">Reset</button>
+                  <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3 std-button" id="reset_line_svg_slider"  onclick="reset_line_svg_slider();">Reset</button>
+                  <button type="button" class="btn-outline-primary btn btn-xs col-md-auto mt-3 std-button" id="animate_button"  onclick="animate_time();">Animate</button>
                 </div>  
                 <!-- style="height: 40px;" -->
                 <div id="d3_linechart"></div>
 
-                <h5>Bar Chart of accidents per hour</h5>
-                <p id="d3_bar_text">
-                Move or clear the brush to change data showned in bar chart.<br/>
-                Try to Hide the Map and use the brush and animation to see the bar chart change.</p>
-
+                <h5>Bar chart of accidents per hour</h5>
+                <p class="chart_info">
+                Move or clear the brush to change data showned in bar chart.
                 <div class="text-center">
                   <div id="d3_bar"></div>
                 </div>
@@ -151,7 +137,7 @@ function includeHTML() {
                 
               <div class="col-5">
                 <h5>Map of accidents at location</h5>
-                 <div class="btn-group btn-group-toggle-xm" style="width:">
+                 <div>
                   <button type="button" data-toggle="button" 
                   class="active btn-outline-primary btn borough-button"
                   id="BrooklynBtn"
@@ -179,12 +165,11 @@ function includeHTML() {
                     onclick="toggleManhattan();">
                   Manhattan</button>
                   </div>
-
                 <div class="text-center">
                   <div id="d3_map" ></div>
                 </div> 
 
-                <p>
+                <p class="chart_info">
                   Her kan være billeder af cykel, bil, fodgænger, som så kan aktivere forskellige dots, alt efter om det har været involveret?
                 </p>
               </div>      
@@ -208,28 +193,28 @@ function includeHTML() {
       </div>
     </div>    <!-- end of fixedarea -->  
     <div id="steps" class="text-center">
-      <div class="step storybox">
+      <div class="step ">
       </div>
 
-      <div class="step storybox">
+      <div class="step ">
         <h1>Section 1</h1>
         <p>
           The southeastern part of Queens, which seems free from accidents, is bare because of JFK International Airport.
         </p>
       </div>
-      <div class="step storybox">
+      <div class="step ">
         <h1>Section 2</h1>
         <p>
           The northwestern part of Staten Island is not completely free of accidents. However, due to our filtering of only using data which has a designated borough, this part is removed. This seems to indicate a systematic error in inputting data.
         </p>
       </div>
-      <div class="step storybox">
+      <div class="step ">
         <h1>Section 3</h1>
         <p>
           Across the dataset we see peak accident hours are 14:00-15:00 and 16:00-18:00. This must mean that rush hour, when people are travelling home from work, is the most dangerous.
         </p>
       </div>
-      <div class="step storybox">
+      <div class="step ">
         <h1>Section 4</h1>
         <p>
           We looked for a correlation between population density and the amount of accidents per inhabitant. Following this hypothesis we thought Manhattan would be the most dangerous. But we were unable to find any correlation. On the contrary, Queens with the second lowest density was the most dangerous and the Bronx, with the second highest density, was the most dangerous.
