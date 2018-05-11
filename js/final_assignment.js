@@ -1,3 +1,5 @@
+initBubbles()
+
 var dur = 100;
 var bronxActive=true;
 var manhattanActive=true;
@@ -32,8 +34,6 @@ accidentsPerHour = new Uint32Array(24);
 
 formatMonthYear = d3.timeFormat("%b-%y");
 date_format = d3.timeFormat("%Y-%m-%d");
-
-
 
 //Load in GeoJSON data
 d3.json("data/boroughs.json", function(json) {
@@ -79,6 +79,8 @@ d3.json("data/boroughs.json", function(json) {
   });
 });
 
+
+
 function getAccidentsPerDay(data) {
   // Counting accidents per day
   data_per_day = d3.nest()
@@ -112,7 +114,7 @@ function fillWithNullDays (data) {
 function initMapChart (data, json) {
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
-  map_h = 550;
+  map_h = chartDiv.clientWidth-20;
 
   //Define map projection
   var projection = d3.geoMercator()
@@ -263,6 +265,95 @@ function initLineChart (data) {
   // line_svg.select(".brush").call(line_brush.move, [0,0]);
 
   init_line_svg_slider();    
+}
+
+// d3.csv("data/countAllUniqueContributingFactors.csv", function (data) {   
+//   initFactorsChart2(data);
+// });
+
+
+
+
+
+function initFactorsChart (data) {
+  var chartDiv = document.getElementById("d3_factors");
+  w = chartDiv.clientWidth-30;
+  h = 200;
+
+  // Margins
+  margin = {
+      top: 10,
+      right: 40,
+      bot: 30,
+      left: 45
+  }
+
+  //Create scale functions
+  var ymax = d3.max(data);
+  xScale = d3.scaleBand().range([0, w]).domain(hours.map(function(d) { return d; })).paddingInner(0.001);
+  yScale = d3.scaleLinear().range([h,20]).domain([0 , ymax]);           
+
+  factors_svg = d3.select("#d3_factors")
+              .append("svg")
+              .attr("width", w + margin.left + margin.right)
+              .attr("height", h + margin.top + margin.bot*2)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  factors_svg.selectAll("rect")
+         .data(data)
+         .enter()
+         .append("rect")
+         .attr("x", function(d, i) {
+            return xScale(i);
+         })
+         .attr("y", function(d) {
+            return yScale(d);
+         })
+         .attr("width", xScale.bandwidth()-4)
+         .attr("height", function(d) {
+            return h - yScale(d)
+         })
+         .attr("fill", function(d) {
+          return "rgb(0, 0, " + Math.round(yScale(d)) + ")";
+         });
+
+  // value labels
+  factors_svg.selectAll("text")
+         .data(data)
+         .enter()
+         .append("text")
+         .text(function(d) {
+            return d;
+         })
+         .attr("text-anchor", "middle")
+         .attr("x", function(d, i) {
+            return xScale(i)+w/70;
+         })
+         .attr("y", function(d) {
+            return h - yScale(d) - 20;
+         })
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "6px")
+         .attr("fill", "white");
+
+  // Axes
+  xAxis = d3.axisBottom(xScale);
+  yAxis = d3.axisLeft(yScale).tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
+  factors_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + h + ")").call(xAxis);
+  factors_svg.append("g").attr("class", "y axis").call(yAxis);    
+
+  // Axes labels
+  factors_svg.append("text")
+         .attr("y", 0- margin.left-5)
+         .attr("x", 0-(h * 0.5))
+         .attr("dy", "1em")
+         .attr("transform", "rotate(-90)")
+         .style("text-anchor", "middle")
+         .text("No. of accidents"); 
+  factors_svg.append("text").style("text-anchor", "middle").text("Hours")
+         .attr("transform", "translate(" + (w * 0.5 ) + " ," + (h + margin.top + margin.bot) + ")");    
+
 }
 
 function initBarChart (data) {
@@ -668,3 +759,78 @@ $('.go-to-bottom').click( function(e) {
   document.body.scrollIntoView(false);
   return false; 
 });
+
+
+
+
+
+
+
+
+
+
+function initBubbles() {
+
+d3.csv("data/countAllUniqueContributingFactor.csv", function(d) {
+  d.value = +d.value;
+  if (d.value) return d;
+}, function(error, classes) {
+  if (error) throw error;
+
+var factors_svg = d3.select("#d3_factors"),
+    width = +factors_svg.attr("width"),
+    height = +factors_svg.attr("height");
+
+var format = d3.format(",d");
+var color = d3.scaleOrdinal(d3.schemeCategory20c);
+var pack = d3.pack()
+    .size([width, height])
+    .padding(1.5);
+
+
+  var root = d3.hierarchy({children: classes})
+      .sum(function(d) { return d.value; })
+      .each(function(d) {
+        if (id = d.data.id) {
+          var id, i = id.lastIndexOf(".");
+          d.id = id;
+          d.package = id.slice(0, i);
+          d.class = id.slice(i + 1);
+        }
+      });
+
+  var node = factors_svg.selectAll(".node")
+    .data(pack(root).leaves())
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  node.append("circle")
+      .attr("id", function(d) { return d.id; })
+      .attr("r", function(d) { return d.r; })
+      .style("font-size", function(d) {
+        return "30px";
+      })
+      .style("fill", function(d) { return color(d.package); });
+
+  node.append("text")
+      // .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+      .selectAll("tspan")
+      .data(function(d) { 
+        return d.class.split(/(?=[A-Z][^A-Z])/g); 
+      })
+      .enter().append("tspan")
+
+      .style("font-size", function(d) { 
+        var val = (this.parentNode.__data__.data.percent)*5 + 0.6;
+        return val + "em"
+      })
+      .attr("x", 0)
+      .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10*(1+this.parentNode.__data__.data.percent*5); })
+      .text(function(d) { return d; });
+
+  node.append("title")
+      .text(function(d) { return d.id + "\nNo.:" + format(d.value) + "\nPercent: " + Number((this.parentNode.__data__.data.percent)).toFixed(2) + "%"; });
+});
+
+}

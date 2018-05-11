@@ -78,6 +78,7 @@ div.bar {
 }
 
 #fixedarea{
+  padding-top:15px;
   margin-left: 0px;
   width: 82%;
   position: sticky;
