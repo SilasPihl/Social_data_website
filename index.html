@@ -34,33 +34,33 @@
         }
       }
 
-function includeHTML() {
-  var z, i, elmnt, file, xhttp;
-  /*loop through a collection of all HTML elements:*/
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    /*search for elements with a certain atrribute:*/
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      /*make an HTTP request using the attribute value as the file name:*/
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-          /*remove the attribute, and call this function once more:*/
-          elmnt.removeAttribute("w3-include-html");
-          includeHTML();
+      function includeHTML() {
+        var z, i, elmnt, file, xhttp;
+        /*loop through a collection of all HTML elements:*/
+        z = document.getElementsByTagName("*");
+        for (i = 0; i < z.length; i++) {
+          elmnt = z[i];
+          /*search for elements with a certain atrribute:*/
+          file = elmnt.getAttribute("w3-include-html");
+          if (file) {
+            /*make an HTTP request using the attribute value as the file name:*/
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4) {
+                if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+                if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
+                /*remove the attribute, and call this function once more:*/
+                elmnt.removeAttribute("w3-include-html");
+                includeHTML();
+              }
+            }      
+            xhttp.open("GET", file, true);
+            xhttp.send();
+            /*exit the function:*/
+            return;
+          }
         }
-      }      
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      /*exit the function:*/
-      return;
-    }
-  }
-};      
+      };      
     </script>
 </head>
 <body>
@@ -87,6 +87,8 @@ function includeHTML() {
         <div w3-include-html="explainer.html"></div> 
       </div>
 
+<div class="main-d3-content" >
+        
       <p>
         New York City has been scored to be the third most congested city in the world by <a href="http://inrix.com/scorecard/">Inrix</a>. In fact it has become so bad that a new initiative, <a href="http://www1.nyc.gov/site/visionzero/index.page">Vision Zero</a>, was launched in 2014, with a goal of reducing annual traffic deaths by 50% by the year 2025. It has succeeded in reducing the total number of people killed anually in traffic. It is still not completely safe to be in traffic in New York. 
       </p>
@@ -105,6 +107,7 @@ function includeHTML() {
       </p>
       <p>
       </p>
+</div> <!-- end of main-d3-content -->
 
     <hr>
 
@@ -112,6 +115,8 @@ function includeHTML() {
     <div class="col-2"></div>
 
   </div>  <!-- end of title panel row -->
+
+<div class="main-d3-content" >
 
   <div id="fixedcontainer">
 
@@ -235,6 +240,8 @@ function includeHTML() {
     <div class="col-8"></div>  <!-- end of title, middle column -->
     <div class="col-2"></div>
   </div>
+
+</div> <!-- end of main-d3-content -->
 
   <script type="text/javascript" src="js/final_assignment.js"> </script>
   <!-- <script type="text/javascript" src="js/bubbles.js"> </script> -->

@@ -855,9 +855,12 @@ d3.csv("data/countAllUniqueContributingFactor.csv", function(d) {
 }, function(error, classes) {
   if (error) throw error;
 
-var factors_svg = d3.select("#d3_factors"),
-    width = +factors_svg.attr("width"),
-    height = +factors_svg.attr("height");
+var width = 500,
+    height = 500;
+
+var factors_svg = d3.select("#d3_factors")
+                    .attr("height", height)
+                    .attr("width", height);
 
 var format = d3.format(",d");
 var color = d3.scaleOrdinal(d3.schemeCategory20c);
@@ -908,7 +911,7 @@ var pack = d3.pack()
       .text(function(d) { return d; });
 
   node.append("title")
-      .text(function(d) { return d.id + "\nNo.:" + format(d.value) + "\nPercent: " + Number((this.parentNode.__data__.data.percent)).toFixed(2) + "%"; });
+      .text(function(d) { return d.id + "\nNo. of accidents: " + format(d.value) + "\nPercent of total: " + (Number(this.parentNode.__data__.data.percent)*100.00).toFixed(1) + "%"; });
 });
 
 }
