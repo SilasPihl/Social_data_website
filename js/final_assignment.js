@@ -6,6 +6,7 @@ var brooklynActive=true;
 var statenIslandActive=true;
 
 var groups;
+var rects;
 var colors = d3.scaleOrdinal(d3.schemeCategory10);
 color = d3.scaleOrdinal()
               .range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
@@ -321,10 +322,9 @@ function initBarChart2 (data) {
     var stack = d3.stack()
               .keys([ "bronx", "manhattan", "queens", "brooklyn", "statenIsland" ])
               .order(d3.stackOrderDescending);
-  console.log(data);
+
   //Data, stacked
   var series = stack(data);
-  console.log(series)
 
   var ymax=d3.max(data, function(d) {
             return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
@@ -353,12 +353,10 @@ function initBarChart2 (data) {
         .enter()
         .append("g")
         .style("fill", function(d, i) {
-          console.log(i);
-          console.log(colors(i))
           return colors(i);
         });
 
-  var rects = groups.selectAll("rect")
+  rects = groups.selectAll("rect")
          .data(function(d) { return d; })
          .enter()
          .append("rect")
@@ -567,24 +565,42 @@ function updateBarChart2 (data) {
   console.log(data);
   //Data, stacked
   var series = stack(data);
-
-  ymax=d3.max(data, function(d) {
+  var ymax=d3.max(data, function(d) {
             return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
           });
-  yBarScale.domain([0, ymax]);
+  xBarScale = d3.scaleBand()
+              .range([0, barW])
+              .domain(d3.range(data.length))
+              .paddingInner(0.001);
+
+  yBarScale = d3.scaleLinear()
+              .range([barH,20])
+              .domain([0,       
+                d3.max(data, function(d) {
+                  return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
+                })
+              ]); 
   yAxis_bar = d3.axisLeft(yBarScale)
             .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
-  bar_svg.selectAll("rect")
-         .data(data)
+        groups.data(series)
+        .enter()
+        .style("fill", function(d, i) {
+          console.log(i);
+          console.log(colors(i))
+          return colors(i);
+        });
+
+          
+          rects.data(function(d) { return d; })
          .transition()
          .duration(dur)
          .attr("y", function(d) {
           return yBarScale(d[1]);
           })
          .attr("height", function(d) {
-          return barH - yBarScale(d[1]);
-          });
+            return yBarScale(d[0]) - yBarScale(d[1])
+         });
 
   //Update all labels
   bar_svg.selectAll("text")
@@ -803,6 +819,7 @@ function brushed (from) {
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
       if(bronxActive && d.BOROUGH=="BRONX"){
+        
           accidentsPerHour[d.TIME].bronx=accidentsPerHour[d.TIME].bronx+1;
           activeData.push(d);
           return "dot activeDot";
@@ -831,8 +848,9 @@ function brushed (from) {
       for (var i = 0; i < 24; i++) {
      data1.push(accidentsPerHour[0][i]+accidentsPerHour[1][i]+accidentsPerHour[2][i]+accidentsPerHour[3][i]+accidentsPerHour[4][i]);
     };
- console.log(data1);*/
- // updateBarChart2(accidentsPerHour);
+*/
+ console.log(accidentsPerHour);
+ updateBarChart2(accidentsPerHour);
 
   accidentsPerDay = getAccidentsPerDay(activeData);
   //if(accidentsPerDay.length > 0){
