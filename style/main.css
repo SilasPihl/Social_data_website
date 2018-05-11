@@ -65,6 +65,7 @@ div.bar {
 }
 
 #steps {
+  /*padding-top:400px;*/
   width: 250px;
   /*margin-left:10px;*/
   position:relative;

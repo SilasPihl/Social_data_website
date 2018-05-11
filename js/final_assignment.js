@@ -1,4 +1,4 @@
-initBubbles()
+initBubbles();
 
 var dur = 100;
 var bronxActive=true;
@@ -628,7 +628,11 @@ function brushed_mapChart () {
   brushed()
 }
 
-function brushed (from) {
+function brushed () {
+
+  //for debugging
+  // console.log("Selection: " + sel)
+
   accidentsPerHour = new Uint32Array(24);
   var activeData = [];
 
@@ -689,27 +693,19 @@ function reset_brush() {
   sel_bar = [0,1000000];
   sel_map = [[0,0], [100000,100000]];
   
-  // line_svg.select(".brush").call(brush.move, [0,0]);
-  // bar_svg.select(".brush").call(brush.move, [0,0]);
-  // map_svg.select(".brush").call(brush.move, [[0,0],[0,0]]);
-
-  fillDots();
+  line_svg.select(".brush").call(line_brush.move, [0,0]);
+  bar_svg.select(".brush").call(bar_brush.move, [0,0]);
+  map_svg.select(".brush").call(map_brush.move, [[0,0],[0,0]]);
   brushed()
 }
+
+
 
 function animate_time (brushSize, speed) {
   var brushSize, transVar;
 
-  brushSize = document.getElementById('textbox_brushSize').value
-  transVar = document.getElementById('textbox_brushSpeed').value
-
-  if(!brushSize) {
-    brushSize = 100;
-  }
-  if(!transVar) {
-    transVar = 5000;
-  }
-  
+  brushSize = 100;
+  transVar = 5000;
 
   line_svg.select(".brush").call(line_brush.move, [0,brushSize]);
   line_svg.select(".brush")
@@ -719,28 +715,13 @@ function animate_time (brushSize, speed) {
           .call(line_brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
 }
 
-function hideShow (id) {
-  var id_button = id + "_button";
-  var id_text = id + "_text";
-  var x = document.getElementById(id);
-  var xText = document.getElementById(id_text);
-  var xButton = document.getElementById(id_button);
-
-  //console.log("Changing visability of: " + id);
-
-  if (x.style.display === "none") {
-    x.style.display = "block";
-    xText.style.display = "block";
-    xButton.value = "Hide" + xButton.text;
-  } else {
-    x.style.display = "none";
-    xText.style.display = "none";
-    xButton.value = "Show" + xButton.text;
-  } 
-}
-
 function animateSection1(){
-
+  map_svg.select(".brush").call(map_brush.move, [[300,200],[350,250]])
+  map_svg.select(".brush")
+         .transition()
+         .ease(d3.easeLinear)
+         .duration(5000)
+         .call(map_brush.move, [[369,279.00000762939453],[433,329.00000762939453]]);
 }
 
 function animateSection2(){
