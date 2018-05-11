@@ -648,10 +648,51 @@ function hideShow (id) {
   } 
 }
 
+function animateSection1(){
+
+}
+
+function animateSection2(){
+
+}
+
+function animateSection3(){
+
+}
+
+function animateSection4(){
+
+}
+
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
     currentSection = i
+    switch (currentSection){
+      case 1:
+        //Lav brush på det sydøstlige hjørne af Queens
+        animateSection1();
+        break;
+      case 2:
+        //Lav brush på det nordvestlige hjørne af Staten Island
+        animateSection2();
+        break;
+      case 3:
+        //Vis alt data og lav bar chart brush på 14-18
+        animateSection3();
+        break;
+      case 4:
+        //1. Sæt Queens til eneste datasæt
+        //2. Vent
+        //3. Sæt Bronx til eneste datasæt
+        //4. Vent
+        //5. Nulstil
+        animateSection4();
+        break;
+
+    }
+
+
     // if (i==3) {
     //   animate_time();
     // }
