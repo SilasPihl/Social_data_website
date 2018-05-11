@@ -49,7 +49,7 @@ d3.json("data/boroughs.json", function(json) {
   //StatenIsland
   //Brooklyn
 
-  d3.csv("data/accidentsInNewYork.csv", function (data) {
+  d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
     // data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn);  
     // console.log("data: + "+ data.length + " bronx: "+ bronx.length+ " manhattan: "+ manhattan.length);  
     data.forEach (function(d) {
@@ -58,14 +58,14 @@ d3.json("data/boroughs.json", function(json) {
       d.TIME = d.TIME.split(":")[0];
     }); 
 
-    data = data.filter (function(d, i) {
-      if (i%40 != 0) {
-        return false;
-      }
-      else {
-        return true;
-      }
-    });
+    // data = data.filter (function(d, i) {
+    //   if (i%40 != 0) {
+    //     return false;
+    //   }
+    //   else {
+    //     return true;
+    //   }
+    // });
 
     // Counting Accidents per day
     accidentsPerDay = getAccidentsPerDay(data);
