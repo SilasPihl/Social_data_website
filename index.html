@@ -88,19 +88,17 @@ function includeHTML() {
       </div>
 
       <p>
-        Her kommer lidt for historie
+        New York City has been scored to be the third most congested city in the world by <a href="http://inrix.com/scorecard/">Inrix</a>. In fact it has become so bad that a new initiative, <a href="http://www1.nyc.gov/site/visionzero/index.page">Vision Zero</a>, was launched in 2014, with a goal of reducing annual traffic deaths by 50% by the year 2025. It has succeeded in reducing the total number of people killed anually in traffic. It is still not completely safe to be in traffic in New York. 
       </p>
       <p>
-        Her kommer lidt for historie
+        But where is the least safe? And since it is so congested where are you most likely to have your new car dented?
       </p>
       <p>
-        Her kommer lidt for historie
+        The data set from <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">OpenNYC</a> has been used. It has been filtered to only include the years 2017 and 2018 and only include data that has a designated borough. The borough-less data accounts for roughly 33% of the original dataset.
       </p>
       <p>
-        Her kommer lidt for historie
       </p>
       <p>
-        Her kommer lidt for historie
       </p>
 
 
@@ -155,24 +153,29 @@ function includeHTML() {
                 <h5>Map of accidents at location</h5>
                  <div class="btn-group btn-group-toggle-xm" style="width:">
                   <button type="button" data-toggle="button" 
-                  class="active btn-outline-primary btn borough-button" 
+                  class="active btn-outline-primary btn borough-button"
+                  id="BrooklynBtn"
                   onclick="toggleBrooklyn();">Brooklyn</button>
                   <!--  <img src="suv.png" alt="" id ="carbutton" style="width:50px;height:50px;"></button>-->
                   <button type="button" data-toggle="button" 
-                    class="active btn-outline-primary btn borough-button" 
+                    class="active btn-outline-primary btn borough-button"
+                    id="QueensBtn" 
                     onclick="toggleQueens();">
                   Queens</button>
                   <button type="button" data-toggle="button" 
-                    class="active btn-outline-primary btn borough-button" 
+                    class="active btn-outline-primary btn borough-button"
+                    id="BronxBtn" 
                     onclick="toggleBronx();">
                   Bronx</button>
 
                   <button type="button" data-toggle="button" 
-                    class="active btn-outline-primary btn borough-button" 
+                    class="active btn-outline-primary btn borough-button"
+                    id="StatenIslandBtn" 
                     onclick="toggleStatenIsland();">
                   Staten Island</button>
                   <button type="button" data-toggle="button" 
-                    class="active btn-outline-primary btn borough-button" 
+                    class="active btn-outline-primary btn borough-button"
+                    id="ManhattanBtn" 
                     onclick="toggleManhattan();">
                   Manhattan</button>
                   </div>
@@ -188,9 +191,9 @@ function includeHTML() {
             </div> <!-- end of 7-5 row -->
 
             <hr class="line" />
-            <div>
+            <!-- <div>
               Data from: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a>
-            </div> 
+            </div>  -->
           </div> 
 
 
@@ -211,25 +214,25 @@ function includeHTML() {
       <div class="step storybox">
         <h1>Section 1</h1>
         <p>
-          Historie
+          The southeastern part of Queens, which seems free from accidents, is bare because of JFK International Airport.
         </p>
       </div>
       <div class="step storybox">
         <h1>Section 2</h1>
         <p>
-          Historie
+          The northwestern part of Staten Island, however, is not completely free of accidents. However, due to our filtering of only using data which has a designated borough, this part is removed. This seems to indicate a systematic error in inputting data.
         </p>
       </div>
       <div class="step storybox">
         <h1>Section 3</h1>
         <p>
-          Historie
+          Across the dataset we see peak accident hours are 14:00-15:00 and 16:00-18:00. This must mean that rush hour, when people are travelling home from work, is the most dangerous.
         </p>
       </div>
       <div class="step storybox">
         <h1>Section 4</h1>
         <p>
-          Historie
+
         </p>
       </div>
     </div>    <!-- end of steps -->

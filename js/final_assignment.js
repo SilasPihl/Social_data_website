@@ -6,9 +6,24 @@ var brooklynActive=true;
 var statenIslandActive=true;
 
 color = d3.scaleOrdinal()
-              .range(["rgb(12, 150, 50)","rgb(0, 128, 128) ","rgb(0, 0, 128) ","rgb(128, 0, 0)", "rgb(200, 150, 180)"])
+              .range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
 
 hours = _.range(24);
+
+var statenIslandBtn = document.getElementById("StatenIslandBtn");
+statenIslandBtn.style.backgroundColor = '#ffb3a6';
+
+var brooklynBtn = document.getElementById("BrooklynBtn");
+brooklynBtn.style.backgroundColor = '#f3c3f0';
+
+var manhattanBtn = document.getElementById("ManhattanBtn");
+manhattanBtn.style.backgroundColor = '#b4a591';
+
+var bronxBtn = document.getElementById("BronxBtn");
+bronxBtn.style.backgroundColor = '#aaffc9';
+
+var queensBtn = document.getElementById("QueensBtn");
+queensBtn.style.backgroundColor = '#a9baff';
 
 sel_map = [[0,0], [100000,100000]];
 sel_time = [0,1000000];
