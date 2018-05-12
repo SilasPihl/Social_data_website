@@ -50,7 +50,7 @@ d3.json("data/boroughs.json", function(json) {
   //StatenIsland
   //Brooklyn
 
-  d3.csv("data/accidentsInNewYork.csv", function (data) {
+  d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
     // data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn); 
          var accidentsPerHour = [
         { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
@@ -78,6 +78,16 @@ d3.json("data/boroughs.json", function(json) {
         { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
         { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 }
       ]; 
+
+    // data = data.filter (function(d, i) {
+    //   if (i%20 != 0) {
+    //     return false;
+    //   }
+    //   else {
+    //     return true;
+    //   }
+    // });      
+    console.log(data)
     data.forEach (function(d) {
       d.DATE = date_format(new Date(d.DATE));
       d.TIME = d.TIME.split(":")[0];
@@ -96,14 +106,7 @@ d3.json("data/boroughs.json", function(json) {
           accidentsPerHour[d.TIME].statenIsland=accidentsPerHour[d.TIME].statenIsland+1;
       }
     });
-    data = data.filter (function(d, i) {
-      if (i%20 != 0) {
-        return false;
-      }
-      else {
-        return true;
-      }
-    });
+
 
     // Counting Accidents per day
     accidentsPerDay = getAccidentsPerDay(data);
@@ -345,9 +348,10 @@ function initBarChart2 (data) {
   bar_svg = d3.select("#d3_bar")
               .append("svg")
               .attr("width", barW + bar_m.left + bar_m.right)
-              .attr("height", barH + bar_m.top + bar_m.bot*2);
-            //  .append("g")
-              //.attr("transform", "translate(" + bar_m.left + "," + bar_m.top + ")");
+              .attr("height", barH + bar_m.top + bar_m.bot*2)
+              .append("g")
+              .attr("transform", "translate(" + bar_m.left + "," + bar_m.top + ")");
+  
   groups = bar_svg.selectAll("g")
         .data(series)
         .enter()
@@ -839,6 +843,10 @@ function brushed (from) {
           accidentsPerHour[d.TIME].statenIsland=accidentsPerHour[d.TIME].statenIsland+1;
           activeData.push(d);
           return "dot activeDot";
+      }
+      else {
+        return "dot noneActiveDot";
+
       }
     }else { 
         return "dot noneActiveDot";
