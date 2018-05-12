@@ -785,28 +785,22 @@ function wait(ms){
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
-    console.log(i)
-    // currentSection = i
-    // switch (currentSection){
-    //   case 1:
-    //     animateSection1();
-    //     break;
-    //   case 2:
-    //     animateSection2();
-    //     break;
-    //   case 3:
-    //     animateSection3();
-    //     break;
-    //   case 4:
-    //     animateSection4();
-    //     break;
+    currentSection = i
+    switch (currentSection){
+      case 1:
+        animateSection1();
+        break;
+      case 2:
+        animateSection2();
+        break;
+      case 3:
+        animateSection3();
+        break;
+      case 4:
+        animateSection4();
+        break;
 
-    // }
-
-
-    // if (i==3) {
-    //   animate_time();
-    // }
+    }
 })
 
 d3.graphScroll()
