@@ -264,7 +264,8 @@ function updateBarChart (data) {
 
   rects.data(function(d) { return d; })
          .transition()
-         .duration(dur)
+         .ease(d3.easeLinear)
+         .duration(1000)
          .attr("y", function(d) {
           return yBarScale(d[1]);
           })
@@ -276,7 +277,8 @@ function updateBarChart (data) {
   bar_svg.selectAll("text")
          .data(data)
          .transition()
-         .duration(dur)
+         .ease(d3.easeLinear)
+         .duration(1000)
          .text(function(d) {
             return d;
          })
@@ -286,7 +288,7 @@ function updateBarChart (data) {
 
    bar_svg.select(".y.axis")
       .transition()
-      .duration(dur)
+      .duration(1000)
       .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
@@ -348,7 +350,6 @@ function initMapChart (data, json) {
          .append("path")
          .attr("d", path)
          .style("fill", function (d) {
-          console.log(d)
           return colors(d.properties.BoroCode)
          });
 
