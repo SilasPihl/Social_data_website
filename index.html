@@ -186,7 +186,14 @@
           <div class="col-2">
             <div class="right-skip" >
               <div class="btn-group btn-group-vertical">
-                <button class="go-to-bottom btn btn-outline-primary">Bottom</button>
+                <button class="rounded go-to-bottom btn btn-outline-primary">Bottom</button>
+                <button type="button" data-toggle="button" 
+                        class="rounded active btn-outline-primary btn borough-button"
+                        id="toggleAnimations" 
+                        style="margin-top: 5px;"
+                        onclick="toggleAutomateAnimations();">
+                      Animate<br/>
+                    on scroll</button>
               </div>
             </div>
           </div>
@@ -195,29 +202,58 @@
       <div id="steps" class="text-center">
         <div class="step"></div>
         <div class="step" >
-          <h1>Section 1</h1>
+          <h1>Intro</h1>
+          <p>
+             Fell free to change the graphs at any time. Brush any area and see the changes. When you scroll down a new information box will appear. Go ahead.
+          </p>
+
+        </div>
+
+        <div class="step" >
+          <h1>Animations</h1>
+          <p>
+            Many of these information boxes will activate an animation in the charts. You can click to activate the animation again and you can also deactivate the automatic animation activation by clicking the button in the right pane "Animate on scroll".   
+          </p>
+
+        </div>
+
+        <div class="step" >
+          <h1>Airpot in Queens</h1>
           <p>
             The southeastern part of Queens, which seems free from accidents, is bare because of JFK International Airport.
           </p>
+          <button id="animateAirPort_btn" class="btn btn-outline-primary" onclick="animateAirPort();">See animation!</button>
+
         </div>
         <div class="step ">
-          <h1>Section 2</h1>
+          <h1>Staten Island</h1>
           <p>
             The northwestern part of Staten Island is not completely free of accidents. However, due to our filtering of only using data which has a designated borough, this part is removed. This seems to indicate a systematic error in inputting data.
           </p>
+          <button id="animateStatenIsland_btn" class="btn btn-outline-primary" onclick="animateStatenIsland();">See animation!</button>
         </div>
         <div class="step ">
-          <h1>Section 3</h1>
+          <h1>Rush hours</h1>
           <p>
             Across the dataset we see peak accident hours are 14:00-15:00 and 16:00-18:00. This must mean that rush hour, when people are travelling home from work, is the most dangerous.
           </p>
+          <button id="animateBarChart1418_btn" class="btn btn-outline-primary" onclick="animateBarChart1418();">See animation!</button>
         </div>
         <div class="step">
-          <h1>Section 4</h1>
+          <h1>Correlation across data set</h1>
           <p>
-            We looked for a correlation between population density and the amount of accidents per inhabitant. Following this hypothesis we thought Manhattan would be the most dangerous. But we were unable to find any correlation. On the contrary, Queens with the second lowest density was the most dangerous and the Bronx, with the second highest density, was the least dangerous.
+            We looked for a correlation between population density and the amount of accidents per inhabitant. Following this hypothesis we thought Manhattan would be the most dangerous. See next..
           </p>
+          <button id="animateButtons_1_btn"class="btn btn-outline-primary" onclick="animateButtons_1();">See animation!</button>
         </div>
+        <div class="step">
+          <h1>Correlation across data set</h1>
+          <p>
+            But we were unable to find any correlation. On the contrary, Queens with the second lowest density was the most dangerous and the Bronx, with the second highest density, was the least dangerous.
+          </p>
+          <button id="animateButtons_2_btn"class="btn btn-outline-primary" onclick="animateButtons_2();">See animation!</button>
+        </div>
+
         <div class="step"></div>
 
       </div>    <!-- end of steps -->

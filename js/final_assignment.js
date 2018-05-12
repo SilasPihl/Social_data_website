@@ -12,32 +12,7 @@ var rects;
 colors = d3.scaleOrdinal().range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
 colors_bar = d3.scaleOrdinal().range([ "rgb(170, 255, 201)","rgb(180, 165, 145)", "rgb(169, 186, 255) ", "rgb(243, 195, 240)","rgb(255, 179, 166) "])
 
-var accidentsPerHour_empty = [
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 },
-        { bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 }
-      ]; 
+var accidentsPerHour_empty = Array(24).fill({ bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 });
 
 hours = _.range(24);
 
@@ -216,7 +191,7 @@ function updateBarChart (data) {
               .order(d3.stackOrderDescending);
   //Data, stacked
   var series = stack(data);
-  // console.log(data);
+
   var ymax=d3.max(data, function(d) {
             return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
           });
@@ -276,6 +251,12 @@ function initMapChart (data, json) {
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
   map_h = chartDiv.clientWidth-20;
+
+  xScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_w]);
+  yScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_h]);
+
+  into_xScale_map = d3.scaleLinear().domain([0, 317]).range([0, 100]);
+  into_yScale_map = d3.scaleLinear().domain([0, 317]).range([0, 100]);
 
   //Define map projection
   var projection = d3.geoMercator()
@@ -541,6 +522,15 @@ function toggleQueens(){
   brushed();
 }
 
+function toggleOnlyManhattan(){
+  queensActive = false; changeAria("QueensBtn", "false");
+  bronxActive = false; changeAria("BronxBtn", "false");
+  manhattanActive = true; changeAria("ManhattanBtn", "true");
+  statenIslandActive = false; changeAria("StatenIslandBtn", "false");
+  brooklynActive = false; changeAria("BrooklynBtn", "false");
+  brushed();
+}
+
 function toggleOnlyQueens(){
   queensActive = true; changeAria("QueensBtn", "true");
   bronxActive = false; changeAria("BronxBtn", "false");
@@ -582,12 +572,14 @@ function brushed_timeChart () {
 
 function brushed_barChart () {
   sel = d3.event.selection
+  // console.log(sel)
   sel_bar = sel ? sel : [0,1000000];
   brushed()
 }
 
 function brushed_mapChart () {
   sel = d3.event.selection
+  // console.log(toGlobalMapScale(sel));
   if (sel == null) {
     sel_map = [[0,0], [100000,100000]];
   }
@@ -598,9 +590,6 @@ function brushed_mapChart () {
 }
 
 function brushed () {
-
-  console.log(sel)
-
   var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
   var activeData = [];
 
@@ -696,37 +685,74 @@ function animate_time (brushSize, speed) {
           .call(line_brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
 }
 
+function toLocalMapScale(x0, y0, x1, y1) {
+  return [[xScale_map(x0), yScale_map(y0)], [xScale_map(x1), yScale_map(y1)]]
+}
+
+function toGlobalMapScale(arr) {
+  return "" + into_xScale_map(arr[0][0]) + ", " + into_yScale_map(arr[0][1]) + ", " + into_xScale_map(arr[1][0]) + ", " + into_yScale_map(arr[1][1])
+}
+
+function beginAnimation (id) {
+  $("#" + id).html('Animating...');
+}
+
+function doneAnimation (id) {
+  $("#" + id).html('See animation!');
+}
+
+function animate (id, ms, _animateFunction) {
+  beginAnimation(id);
+  _animateFunction()
+  setTimeout(function() {
+    doneAnimation(id);
+  }, ms);
+}
+
 //Lav brush på det sydøstlige hjørne af Queens    
-function animateSection1(){
+function animateAirPort(){
+  animate ("animateAirPort_btn", 4000, () => animateAirPort_aux())
+}
+
+function animateAirPort_aux (){
   reset_brush();
-  map_svg.select(".brush").call(map_brush.move, [[10,10],[35,25]])
+  map_svg.select(".brush").call(map_brush.move, toLocalMapScale(50,50,10,10))
   map_svg.select(".brush")
          .transition()
          .ease(d3.easeLinear)
-         .duration(5000)
-         .call(map_brush.move, [[250,180],[300,230]]);
+         .duration(3000)
+         .call(map_brush.move, toLocalMapScale(78.86,56.78,94.63, 72.55));
 }
 
 //Lav brush på det nordvestlige hjørne af Staten Island
-function animateSection2(){
+function animateStatenIsland(){
+  animate ("animateStatenIsland_btn", 4000, () => animateStatenIsland_aux())
+}
+
+function animateStatenIsland_aux(){
   reset_brush();
+  map_svg.select(".brush").call(map_brush.move, toLocalMapScale(50,50,10,10))
   map_svg.select(".brush")
         .transition()
         .ease(d3.easeLinear)
-        .duration(5000)
-        .call(map_brush.move, [[40,200],[90,230]]);
+        .duration(3000)
+        .call(map_brush.move, toLocalMapScale(12.618296529968454, 63.09148264984227, 32.391167192429023, 74.55520504731862));
 }
 
 //Vis alt data og lav bar chart brush på 14-18
-function animateSection3(){
+function animateBarChart1418(){ 
+  animate ("animateBarChart1418_btn", 6000, () => animateBarChart1418_aux())
+
+}
+
+function animateBarChart1418_aux(){
   reset_brush();
-  //bar_svg.select(".brush").call(bar_brush.move, [260,359]);
-  bar_svg.select(".brush").call(bar_brush.move, [10,10])
+  bar_svg.select(".brush").call(bar_brush.move, [xBarScale(0),xBarScale(23)])
   bar_svg.select(".brush")
          .transition()
          .ease(d3.easeLinear)
          .duration(5000)
-         .call(bar_brush.move, [260,359]);
+         .call(bar_brush.move, [xBarScale(14),xBarScale(19)]);
 }
 
 //1. Sæt Queens til eneste datasæt
@@ -734,42 +760,58 @@ function animateSection3(){
 //3. Sæt Bronx til eneste datasæt
 //4. Vent
 //5. Nulstil
-function animateSection4(){
-  reset_brush();
-  toggleOnlyQueens();
-  wait(5000);
-  toggleOnlyBronx();
-  wait(5000);
-  toggleEverything();
-  reset_brush();
+function animateButtons_1(){
+  animate ("animateButtons_1_btn", 2000, () => animateButtons_1_aux())
 }
 
-function wait(ms){
-   var start = new Date().getTime();
-   var end = start;
-   while(end < start + ms) {
-     end = new Date().getTime();
-  }
+function animateButtons_1_aux(){
+  reset_brush();
+  toggleOnlyManhattan();
+}
+
+function animateButtons_2(){
+  animate ("animateButtons_2_btn", 15000, () => animateButtons_2_aux())
+}
+
+function animateButtons_2_aux(){
+  reset_brush();
+  toggleOnlyManhattan();
+
+  setTimeout(function() {
+    toggleQueens();
+    setTimeout(function() {
+      toggleEverything()
+    }, 5000);
+  }, 5000);
+}
+
+automateAnimations = true;
+function toggleAutomateAnimations () {
+  automateAnimations = !automateAnimations
 }
 
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
     currentSection = i
-    switch (currentSection){
-      case 1:
-        animateSection1();
-        break;
-      case 2:
-        animateSection2();
-        break;
+    if (automateAnimations) {
+      switch (currentSection){
       case 3:
-        animateSection3();
+        animateAirPort();
         break;
       case 4:
-        animateSection4();
+        animateStatenIsland();
         break;
-
+      case 5:
+        animateBarChart1418();
+        break;
+      case 6:
+        animateButtons_1();
+        break;
+      case 7:
+        animateButtons_2();
+        break;
+      }  
     }
 })
 
