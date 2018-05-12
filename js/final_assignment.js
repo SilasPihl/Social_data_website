@@ -10,7 +10,6 @@ var statenIslandActive=true;
 var groups;
 var rects;
 colors = d3.scaleOrdinal().range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
-// colors_bar = d3.scaleOrdinal().range([ "rgb(255, 179, 166) ", "rgb(170, 255, 201)", "rgb(243, 195, 240)","rgb(180, 165, 145)","rgb(169, 186, 255) "])
 colors_bar = d3.scaleOrdinal().range([ "rgb(170, 255, 201)","rgb(180, 165, 145)", "rgb(169, 186, 255) ", "rgb(243, 195, 240)","rgb(255, 179, 166) "])
 
 var accidentsPerHour_empty = [
@@ -292,20 +291,6 @@ function updateBarChart (data) {
       .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
-
-function getAccidentsPerDay(data) {
-  // Counting accidents per day
-  data_per_day = d3.nest()
-                   .key(function(d) { return d.DATE; })
-                   .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
-                   .sortKeys(d3.ascending)
-                   .entries(data);
-
-  data_per_day = fillWithNullDays(data_per_day);
-
-  return data_per_day;
-}
-
 function fillWithNullDays (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
@@ -474,19 +459,6 @@ function initLineChart (data) {
   init_line_svg_slider();    
 }
 
-function updateLineChartFromDays (noOfDays) {
-  noOfDays = noOfDays
-  coeff = 1000 * 60 * 60 * 24 * noOfDays;
-  
-  accidentsPerSomething = d3.nest()
-                          .key(function(d) { return date_format(new Date(Math.round(new Date(d.key) / coeff) *coeff)); })
-                          .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }); })
-                          .sortKeys(d3.ascending)
-                          .entries(updatedKeyValueArray);
-
-  updateLineChart(accidentsPerSomething)
-}
-
 function updateLineChart (data) {
   maxNo = d3.max(data.map(function(d) { return d.value; }));
   yScale_line_svg.domain([0, maxNo]);
@@ -513,6 +485,20 @@ function updateLineChart (data) {
   lineChartData = data;
 }
 
+function updateLineChartFromDays (noOfDays) {
+  noOfDays = noOfDays
+  coeff = 1000 * 60 * 60 * 24 * noOfDays;
+  
+  accidentsPerSomething = d3.nest()
+                          .key(function(d) { return date_format(new Date(Math.round(new Date(d.key) / coeff) *coeff)); })
+                          .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }); })
+                          .sortKeys(d3.ascending)
+                          .entries(updatedKeyValueArray);
+
+  updateLineChart(accidentsPerSomething)
+}
+
+// others
 function init_line_svg_slider() {
 
   line_svg_slider = d3.sliderHorizontal()
@@ -540,6 +526,19 @@ function init_line_svg_slider() {
 function reset_line_svg_slider () {
   line_svg_slider.value(1);
   updateLineChartFromDays(1);
+}
+
+function getAccidentsPerDay(data) {
+  // Counting accidents per day
+  data_per_day = d3.nest()
+                   .key(function(d) { return d.DATE; })
+                   .rollup(function(v) { return d3.sum(v, function(d) { return 1; }); })
+                   .sortKeys(d3.ascending)
+                   .entries(data);
+
+  data_per_day = fillWithNullDays(data_per_day);
+
+  return data_per_day;
 }
 
 function toggleBrooklyn(){
@@ -591,6 +590,7 @@ function toggleEverything(){
   brushed();
 }
 
+// brush stuff
 function brushed_timeChart () {
   sel = d3.event.selection
   sel_time = sel ? sel : [0,1000000];
@@ -689,6 +689,7 @@ function reset_brush() {
   brushed()
 }
 
+// animation stuff
 function animate_time (brushSize, speed) {
   var brushSize, transVar;
 
