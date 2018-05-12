@@ -107,7 +107,6 @@ d3.json("data/boroughs.json", function(json) {
 
     // Counting Accidents per day
     accidentsPerDay = getAccidentsPerDay(data);
-    updatedKeyValueArray = accidentsPerDay;
     initLineChart(accidentsPerDay)
     initMapChart(data, json) // this before initBarChart
     initBarChart(accidentsPerHour)
@@ -184,25 +183,6 @@ function initBarChart (data) {
             return yBarScale(d[0]) - yBarScale(d[1])
          });
 
-  // value labels
-  bar_svg.selectAll("text")
-         .data(data)
-         .enter()
-         .append("text")
-         .text(function(d) {
-            return d;
-         })
-         .attr("text-anchor", "middle")
-         .attr("x", function(d, i) {
-            return xBarScale(i)+barW/70;
-         })
-         .attr("y", function(d) {
-            return barH - yBarScale(d) - 20;
-         })
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "6px")
-         .attr("fill", "white");
-
   // Axes
   xAxis_bar = d3.axisBottom(xBarScale);
   yAxis_bar = d3.axisLeft(yBarScale).tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
@@ -270,19 +250,6 @@ function updateBarChart (data) {
           })
          .attr("height", function(d) {
             return yBarScale(d[0]) - yBarScale(d[1])
-         });
-
-  //Update all labels
-  bar_svg.selectAll("text")
-         .data(data)
-         .transition()
-         .ease(d3.easeLinear)
-         .duration(1000)
-         .text(function(d) {
-            return d;
-         })
-         .attr("y", function(d) {
-            return yBarScale(d)+15;
          });
 
    bar_svg.select(".y.axis")
@@ -493,7 +460,7 @@ function updateLineChartFromDays (noOfDays) {
                           .key(function(d) { return date_format(new Date(Math.round(new Date(d.key) / coeff) *coeff)); })
                           .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }); })
                           .sortKeys(d3.ascending)
-                          .entries(updatedKeyValueArray);
+                          .entries(accidentsPerDay);
 
   updateLineChart(accidentsPerSomething)
 }
@@ -631,6 +598,9 @@ function brushed_mapChart () {
 }
 
 function brushed () {
+
+  console.log(sel)
+
   var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
   var activeData = [];
 
