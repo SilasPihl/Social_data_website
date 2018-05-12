@@ -12,8 +12,6 @@ color = d3.scaleOrdinal()
 
 hours = _.range(24);
 
-var map_svg;
-
 var statenIslandBtn = document.getElementById("StatenIslandBtn");
 statenIslandBtn.style.backgroundColor = '#ffb3a6';
 
@@ -50,10 +48,7 @@ d3.json("data/boroughs.json", function(json) {
   //Brooklyn
 
   d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
-    // data = bronx.concat(manhattan).concat(queens).concat(statenIsland).concat(brooklyn);  
-    // console.log("data: + "+ data.length + " bronx: "+ bronx.length+ " manhattan: "+ manhattan.length);  
     data.forEach (function(d) {
-      //console.log(d.ON_STREET_NAME);
       d.DATE = date_format(new Date(d.DATE));
       d.TIME = d.TIME.split(":")[0];
     }); 
@@ -69,10 +64,7 @@ d3.json("data/boroughs.json", function(json) {
 
     // Counting Accidents per day
     accidentsPerDay = getAccidentsPerDay(data);
-    // accidentsPerHour = getAccidentsPerHour(data);
-
     updatedKeyValueArray = accidentsPerDay;
-    
     initLineChart(accidentsPerDay)
     initMapChart(data, json) // this before initBarChart
     accidentsPerHour_all = accidentsPerHour
@@ -80,8 +72,6 @@ d3.json("data/boroughs.json", function(json) {
 
   });
 });
-
-
 
 function getAccidentsPerDay(data) {
   // Counting accidents per day
@@ -99,9 +89,6 @@ function getAccidentsPerDay(data) {
 function fillWithNullDays (data) {
   minDate = d3.min(data.map(function(d) { return new Date(d.key); }));
   maxDate = d3.max(data.map(function(d) { return new Date(d.key); }));
-
-  // console.log("minDate equals " + minDate);
-  // console.log("maxDate equals " + maxDate);
 
   // this fill in zeroes in days without murders
   var dateRange = d3.timeDays(minDate, maxDate);
@@ -264,98 +251,7 @@ function initLineChart (data) {
   line_svg.select('.brush')
           .call(line_brush);
 
-  // line_svg.select(".brush").call(line_brush.move, [0,0]);
-
   init_line_svg_slider();    
-}
-
-// d3.csv("data/countAllUniqueContributingFactors.csv", function (data) {   
-//   initFactorsChart2(data);
-// });
-
-
-
-
-
-function initFactorsChart (data) {
-  var chartDiv = document.getElementById("d3_factors");
-  w = chartDiv.clientWidth-30;
-  h = 200;
-
-  // Margins
-  margin = {
-      top: 10,
-      right: 40,
-      bot: 30,
-      left: 45
-  }
-
-  //Create scale functions
-  var ymax = d3.max(data);
-  xScale = d3.scaleBand().range([0, w]).domain(hours.map(function(d) { return d; })).paddingInner(0.001);
-  yScale = d3.scaleLinear().range([h,20]).domain([0 , ymax]);           
-
-  factors_svg = d3.select("#d3_factors")
-              .append("svg")
-              .attr("width", w + margin.left + margin.right)
-              .attr("height", h + margin.top + margin.bot*2)
-              .append("g")
-              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  factors_svg.selectAll("rect")
-         .data(data)
-         .enter()
-         .append("rect")
-         .attr("x", function(d, i) {
-            return xScale(i);
-         })
-         .attr("y", function(d) {
-            return yScale(d);
-         })
-         .attr("width", xScale.bandwidth()-4)
-         .attr("height", function(d) {
-            return h - yScale(d)
-         })
-         .attr("fill", function(d) {
-          return "rgb(0, 0, " + Math.round(yScale(d)) + ")";
-         });
-
-  // value labels
-  factors_svg.selectAll("text")
-         .data(data)
-         .enter()
-         .append("text")
-         .text(function(d) {
-            return d;
-         })
-         .attr("text-anchor", "middle")
-         .attr("x", function(d, i) {
-            return xScale(i)+w/70;
-         })
-         .attr("y", function(d) {
-            return h - yScale(d) - 20;
-         })
-         .attr("font-family", "sans-serif")
-         .attr("font-size", "6px")
-         .attr("fill", "white");
-
-  // Axes
-  xAxis = d3.axisBottom(xScale);
-  yAxis = d3.axisLeft(yScale).tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
-  factors_svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + h + ")").call(xAxis);
-  factors_svg.append("g").attr("class", "y axis").call(yAxis);    
-
-  // Axes labels
-  factors_svg.append("text")
-         .attr("y", 0- margin.left-5)
-         .attr("x", 0-(h * 0.5))
-         .attr("dy", "1em")
-         .attr("transform", "rotate(-90)")
-         .style("text-anchor", "middle")
-         .text("No. of accidents"); 
-  factors_svg.append("text").style("text-anchor", "middle").text("Hours")
-         .attr("transform", "translate(" + (w * 0.5 ) + " ," + (h + margin.top + margin.bot) + ")");    
-
 }
 
 function initBarChart (data) {
@@ -548,9 +444,10 @@ function init_line_svg_slider() {
       updateLineChartFromDays(val);
     });
 
-  var g = d3.select("div#line_svg_slider").append("svg")
+  var g = d3.select("#line_svg_slider").append("svg")
     .attr("width", 350)
     .attr("height", 65)
+    .style("margin-top",'-20px')
     .append("g")
     .attr("transform", "translate(30,30)");
 
@@ -649,7 +546,6 @@ function brushed_mapChart () {
   sel = d3.event.selection
   if (sel == null) {
     sel_map = [[0,0], [100000,100000]];
-    fillDots();
   }
   else {
     sel_map = sel;
@@ -701,15 +597,10 @@ function brushed () {
         return "dot noneActiveDot";
     }        
   });
-  //console.log(activeData);
   updateBarChart(accidentsPerHour);
   accidentsPerDay = getAccidentsPerDay(activeData);
-  //if(accidentsPerDay.length > 0){
-    updateLineChart(accidentsPerDay);
-  //}
-  
+  updateLineChart(accidentsPerDay);
 }
-
 
 
 function fillDots () {
@@ -728,13 +619,15 @@ function reset_brush() {
   brushed()
 }
 
-
-
 function animate_time (brushSize, speed) {
   var brushSize, transVar;
 
   brushSize = 100;
   transVar = 5000;
+
+  line_svg.select(".brush").call(line_brush.move, [0,0]);
+  bar_svg.select(".brush").call(bar_brush.move, [0,0]);
+  map_svg.select(".brush").call(map_brush.move, [[0,0],[0,0]]);
 
   line_svg.select(".brush").call(line_brush.move, [0,brushSize]);
   line_svg.select(".brush")
@@ -803,28 +696,28 @@ function wait(ms){
 d3.graphScroll()
   .sections(d3.selectAll('#steps > .step'))
   .on('active', function(i){
-    currentSection = i
-    switch (currentSection){
-      case 1:
-        animateSection1();
-        break;
-      case 2:
-        animateSection2();
-        break;
-      case 3:
-        animateSection3();
-        break;
-      case 4:
-        animateSection4();
-        break;
+    console.log(i)
+    // currentSection = i
+    // switch (currentSection){
+    //   case 1:
+    //     animateSection1();
+    //     break;
+    //   case 2:
+    //     animateSection2();
+    //     break;
+    //   case 3:
+    //     animateSection3();
+    //     break;
+    //   case 4:
+    //     animateSection4();
+    //     break;
 
-    }
+    // }
 
 
     // if (i==3) {
     //   animate_time();
     // }
-    //console.log("Section " + i) 
 })
 
 d3.graphScroll()
@@ -838,80 +731,71 @@ $('.go-to-bottom').click( function(e) {
   return false; 
 });
 
-
-
-
-
-
-
-
-
-
 function initBubbles() {
 
-d3.csv("data/countAllUniqueContributingFactor.csv", function(d) {
-  d.value = +d.value;
-  if (d.value) return d;
-}, function(error, classes) {
-  if (error) throw error;
+  d3.csv("data/countAllUniqueContributingFactor.csv", function(d) {
+    d.value = +d.value;
+    if (d.value) return d;
+  }, function(error, classes) {
+    if (error) throw error;
 
-var width = 500,
-    height = 500;
+  var width = 500,
+      height = 500;
 
-var factors_svg = d3.select("#d3_factors")
-                    .attr("height", height)
-                    .attr("width", height);
+  var factors_svg = d3.select("#d3_bubbles")
+                      .attr("height", height)
+                      .attr("width", height);
 
-var format = d3.format(",d");
-var color = d3.scaleOrdinal(d3.schemeCategory20c);
-var pack = d3.pack()
-    .size([width, height])
-    .padding(1.5);
+  var format = d3.format(",d");
+  var color = d3.scaleOrdinal(d3.schemeCategory20c);
+  var pack = d3.pack()
+      .size([width, height])
+      .padding(1.5);
 
 
-  var root = d3.hierarchy({children: classes})
-      .sum(function(d) { return d.value; })
-      .each(function(d) {
-        if (id = d.data.id) {
-          var id, i = id.lastIndexOf(".");
-          d.id = id;
-          d.package = id.slice(0, i);
-          d.class = id.slice(i + 1);
-        }
-      });
+    var root = d3.hierarchy({children: classes})
+        .sum(function(d) { return d.value; })
+        .each(function(d) {
+          if (id = d.data.id) {
+            var id, i = id.lastIndexOf(".");
+            d.id = id;
+            d.package = id.slice(0, i);
+            d.class = id.slice(i + 1);
+          }
+        });
 
-  var node = factors_svg.selectAll(".node")
-    .data(pack(root).leaves())
-    .enter().append("g")
-      .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    var node = factors_svg.selectAll(".node")
+      .data(pack(root).leaves())
+      .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-  node.append("circle")
-      .attr("id", function(d) { return d.id; })
-      .attr("r", function(d) { return d.r; })
-      .style("font-size", function(d) {
-        return "30px";
-      })
-      .style("fill", function(d) { return color(d.package); });
+    node.append("circle")
+        .attr("id", function(d) { return d.id; })
+        .attr("r", function(d) { return d.r; })
+        .style("font-size", function(d) {
+          return "30px";
+        })
+        .style("fill", function(d) { return color(d.package); });
 
-  node.append("text")
-      // .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
-      .selectAll("tspan")
-      .data(function(d) { 
-        return d.class.split(/(?=[A-Z][^A-Z])/g); 
-      })
-      .enter().append("tspan")
+    node.append("text")
+        // .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+        .selectAll("tspan")
+        .data(function(d) { 
+          return d.class.split(/(?=[A-Z][^A-Z])/g); 
+        })
+        .enter().append("tspan")
 
-      .style("font-size", function(d) { 
-        var val = (this.parentNode.__data__.data.percent)*5 + 0.6;
-        return val + "em"
-      })
-      .attr("x", 0)
-      .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10*(1+this.parentNode.__data__.data.percent*5); })
-      .text(function(d) { return d; });
+        .style("font-size", function(d) { 
+          var val = (this.parentNode.__data__.data.percent)*5 + 0.6;
+          return val + "em"
+        })
+        .attr("x", 0)
+        .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10*(1+this.parentNode.__data__.data.percent*5); })
+        .text(function(d) { return d; });
 
-  node.append("title")
-      .text(function(d) { return d.id + "\nNo. of accidents: " + format(d.value) + "\nPercent of total: " + (Number(this.parentNode.__data__.data.percent)*100.00).toFixed(1) + "%"; });
-});
+    node.append("title")
+        .text(function(d) { return d.id + "\nNo. of accidents: " + format(d.value) + "\nPercent of top 20: " + (Number(this.parentNode.__data__.data.percent)*100.00).toFixed(1) + "%"; });
+  });
 
 }
