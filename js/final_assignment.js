@@ -541,9 +541,20 @@ function getAccidentsPerDay(data) {
   return data_per_day;
 }
 
+function reset_buttons() {
+  queensActive = true; changeAria("QueensBtn", "true");
+  bronxActive = true; changeAria("BronxBtn", "true");
+  manhattanActive = true; changeAria("ManhattanBtn", "true");
+  statenIslandActive = true; changeAria("StatenIslandBtn", "true");
+  brooklynActive = true; changeAria("BrooklynBtn", "true");
+}
+
+function changeAria(id, bool) {
+  $("#" + id).attr("aria-pressed",bool)
+}
+
 function toggleBrooklyn(){
   brooklynActive = !brooklynActive;
-
   brushed();
 }
 function toggleBronx(){
@@ -564,29 +575,34 @@ function toggleQueens(){
 }
 
 function toggleOnlyQueens(){
-  queensActive = true;
-  bronxActive = false;
-  manhattanActive = false;
-  statenIslandActive = false;
-  brooklynActive = false;
+  queensActive = true; changeAria("QueensBtn", "true");
+  bronxActive = false; changeAria("BronxBtn", "false");
+  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  statenIslandActive = false; changeAria("StatenIslandBtn", "false");
+  brooklynActive = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
 function toggleOnlyBronx(){
-  queensActive = false;
-  bronxActive = true;
-  manhattanActive = false;
-  statenIslandActive = false;
-  brooklynActive = false;
+  queensActive = false; changeAria("QueensBtn", "false");
+  bronxActive = true; changeAria("BronxBtn", "true");
+  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  statenIslandActive = false; changeAria("StatenIslandBtn", "false");
+  brooklynActive = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
 function toggleEverything(){
-  queensActive = true;
-  bronxActive = true;
-  manhattanActive = true;
-  statenIslandActive = true;
-  brooklynActive = true;
+  reset_buttons();
+  brushed();
+}
+
+function toggleNothing(){
+  queensActive = false; changeAria("QueensBtn", "false");
+  bronxActive = false; changeAria("BronxBtn", "false");
+  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  statenIslandActive = false; changeAria("StatenIslandBtn", "false");
+  brooklynActive = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
@@ -679,6 +695,8 @@ function fillDots () {
 }
 
 function reset_brush() {
+  reset_buttons()
+
   sel_time = [0,1000000];
   sel_bar = [0,1000000];
   sel_map = [[0,0], [100000,100000]];
