@@ -452,9 +452,10 @@ function init_line_svg_slider() {
   slider_w = chartDiv.clientWidth+30;
 
   line_svg_slider = d3.sliderHorizontal()
+    .step(1)
     .min(1)
     .max(30)
-    .step(1)
+    .ticks(5)
     .width(slider_w-50)
     .on('end', val => {
       d3.select("#line_svg_line_interval").text(val);

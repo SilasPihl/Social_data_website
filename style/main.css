@@ -10,7 +10,6 @@ table {
     margin: 0 auto;
 }
 
-
 .borough-button[aria-pressed="false"] {
     opacity: 0.5;
 }
@@ -29,10 +28,6 @@ table {
     height:30px;
     width: 60px;
     font-size: 0.8em;
-}
-
-.sm-btn {
-    font-size: 0.6em;
 }
 
 body {
