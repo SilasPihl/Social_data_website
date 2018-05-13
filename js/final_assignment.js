@@ -1,30 +1,28 @@
 initBubbles();
 
 var dur = 100;
-var bronxActive=true;
-var manhattanActive=true;
-var queensActive=true;
-var brooklynActive=true;
-var statenIslandActive=true;
+var bronxActive        = true;
+var manhattanActive    = true;
+var queensActive       = true;
+var brooklynActive     = true;
+var statenIslandActive = true;
 
 var groups;
 var rects;
-colors = d3.scaleOrdinal().range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
+colors     = d3.scaleOrdinal().range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
 colors_bar = d3.scaleOrdinal().range([ "rgb(170, 255, 201)","rgb(180, 165, 145)", "rgb(169, 186, 255) ", "rgb(243, 195, 240)","rgb(255, 179, 166) "])
 
 var accidentsPerHour_empty = Array(24).fill({ bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 });
 
-hours = _.range(24);
-
 var statenIslandBtn = document.getElementById("StatenIslandBtn");
-var brooklynBtn = document.getElementById("BrooklynBtn");
-var manhattanBtn = document.getElementById("ManhattanBtn");
-var bronxBtn = document.getElementById("BronxBtn");
-var queensBtn = document.getElementById("QueensBtn");
+var brooklynBtn     = document.getElementById("BrooklynBtn");
+var manhattanBtn    = document.getElementById("ManhattanBtn");
+var bronxBtn        = document.getElementById("BronxBtn");
+var queensBtn       = document.getElementById("QueensBtn");
 
-sel_map = [[0,0], [100000,100000]];
+sel_map  = [[0,0], [100000,100000]];
 sel_time = [0,1000000];
-sel_bar = [0,1000000];
+sel_bar  = [0,1000000];
 accidentsPerHour = new Uint32Array(24);
 
 formatMonthYear = d3.timeFormat("%b-%y");
@@ -36,49 +34,31 @@ d3.json("data/boroughs.json", function(json) {
       return j.properties.BoroCode;
   }));
   
-  manhattanBtn.style.backgroundColor = colors(1);
-  bronxBtn.style.backgroundColor = colors(2);
-  brooklynBtn.style.backgroundColor = colors(3);
-  queensBtn.style.backgroundColor = colors(4);
+  manhattanBtn.style.backgroundColor    = colors(1);
+  bronxBtn.style.backgroundColor        = colors(2);
+  brooklynBtn.style.backgroundColor     = colors(3);
+  queensBtn.style.backgroundColor       = colors(4);
   statenIslandBtn.style.backgroundColor = colors(5);
   
-  //Bronx
-  //Manhattan
-  //Queens
-  //StatenIsland
-  //Brooklyn
   d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
+    var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
+    
     data.forEach (function(d) {
       d.DATE = date_format(new Date(d.DATE));
       d.TIME = d.TIME.split(":")[0];
+
+      if (d.BOROUGH=="BRONX"){
+          accidentsPerHour[d.TIME].bronx += 1;
+      } else if(d.BOROUGH=="MANHATTAN"){
+          accidentsPerHour[d.TIME].manhattan += 1;
+      } else if(d.BOROUGH=="QUEENS"){
+          accidentsPerHour[d.TIME].queens += 1;
+      } else if(d.BOROUGH=="BROOKLYN"){
+          accidentsPerHour[d.TIME].brooklyn += 1;
+      } else if(d.BOROUGH=="STATEN ISLAND"){
+          accidentsPerHour[d.TIME].statenIsland += 1;
+      }
     }); 
-
-    // data = data.filter (function(d, i) {
-    //   if (i%40 != 0) {
-    //     return false;
-    //   }
-    //   else {
-    //     return true;
-    //   }
-    // });
-
-    var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
-
-    data.forEach (function(d) {
-
-        if(d.BOROUGH=="BRONX"){
-              accidentsPerHour[d.TIME].bronx=accidentsPerHour[d.TIME].bronx+1;
-          }else if(d.BOROUGH=="MANHATTAN"){
-                accidentsPerHour[d.TIME].manhattan=accidentsPerHour[d.TIME].manhattan+1;
-          }else if(d.BOROUGH=="QUEENS"){
-                accidentsPerHour[d.TIME].queens=accidentsPerHour[d.TIME].queens+1;
-          }else if(d.BOROUGH=="BROOKLYN"){
-             accidentsPerHour[d.TIME].brooklyn=accidentsPerHour[d.TIME].brooklyn+1;
-          }else if(d.BOROUGH=="STATEN ISLAND"){
-              accidentsPerHour[d.TIME].statenIsland=accidentsPerHour[d.TIME].statenIsland+1;
-          }
-    });
-
 
     // Counting Accidents per day
     accidentsPerDay = getAccidentsPerDay(data);
@@ -111,22 +91,20 @@ function initBarChart (data) {
   //Data, stacked
   var series = stack(data);
 
-  var ymax=d3.max(data, function(d) {
-            return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
-          });
+  var ymax = d3.max(data, function(d) {
+              return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
+             });
 
   xBarScale = d3.scaleBand()
-              .range([0, barW])
-              .domain(d3.range(data.length))
-              .paddingInner(0.001);
+                .range([0, barW])
+                .domain(d3.range(data.length))
+                .paddingInner(0.001);
 
   yBarScale = d3.scaleLinear()
-              .range([barH,20])
-              .domain([0,       
-                d3.max(data, function(d) {
+                .range([barH,20])
+                .domain([0, d3.max(data, function(d) {
                   return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
-                })
-              ]);          
+                })]);          
 
   bar_svg = d3.select("#d3_bar")
               .append("svg")
@@ -136,27 +114,27 @@ function initBarChart (data) {
               .attr("transform", "translate(" + bar_m.left + "," + bar_m.top + ")");
   
   groups = bar_svg.selectAll("g")
-        .data(series)
-        .enter()
-        .append("g")
-        .style("fill", function(d, i) {
-          return colors_bar(i);
-        });
+                  .data(series)
+                  .enter()
+                  .append("g")
+                  .style("fill", function(d, i) {
+                    return colors_bar(i);
+                  });
 
   rects = groups.selectAll("rect")
-         .data(function(d) { return d; })
-         .enter()
-         .append("rect")
-         .attr("x", function(d, i) {
-            return xBarScale(i);
-         })
-         .attr("y", function(d) {
-            return yBarScale(d[1]);
-         })
-         .attr("width", xBarScale.bandwidth()-4)
-         .attr("height", function(d) {
-            return yBarScale(d[0]) - yBarScale(d[1])
-         });
+                .data(function(d) { return d; })
+                .enter()
+                .append("rect")
+                .attr("x", function(d, i) {
+                   return xBarScale(i);
+                })
+                .attr("y", function(d) {
+                   return yBarScale(d[1]);
+                })
+                .attr("width", xBarScale.bandwidth()-4)
+                .attr("height", function(d) {
+                   return yBarScale(d[0]) - yBarScale(d[1])
+                });
 
   // Axes
   xAxis_bar = d3.axisBottom(xBarScale);
@@ -181,34 +159,35 @@ function initBarChart (data) {
                 .on("brush end", brushed_barChart);
 
   bar_svg.append("g")
-          .attr("class", "brush")
-          .call(bar_brush);   
+         .attr("class", "brush")
+         .call(bar_brush);   
 }
 
 function updateBarChart (data) {
   var stack = d3.stack()
-              .keys([ "bronx", "manhattan", "queens", "brooklyn", "statenIsland" ])
-              .order(d3.stackOrderDescending);
+                .keys([ "bronx", "manhattan", "queens", "brooklyn", "statenIsland" ])
+                .order(d3.stackOrderDescending);
+  
   //Data, stacked
   var series = stack(data);
 
-  var ymax=d3.max(data, function(d) {
-            return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
-          });
+  var ymax = d3.max(data, function(d) {
+              return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
+             });
+
+  // scaling
   xBarScale = d3.scaleBand()
-              .range([0, barW])
-              .domain(d3.range(data.length))
-              .paddingInner(0.001);
+                .range([0, barW])
+                .domain(d3.range(data.length))
+                .paddingInner(0.001);
 
   yBarScale = d3.scaleLinear()
-              .range([barH,20])
-              .domain([0,       
-                d3.max(data, function(d) {
+                .range([barH,20])
+                .domain([0, d3.max(data, function(d) {
                   return d.bronx + d.manhattan + d.queens+ d.brooklyn+ d.statenIsland;
-                })
-              ]); 
+                })]); 
   yAxis_bar = d3.axisLeft(yBarScale)
-            .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
+                .tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2));
 
   groups.data(series)
         .enter()
@@ -217,20 +196,20 @@ function updateBarChart (data) {
         });
 
   rects.data(function(d) { return d; })
-         .transition()
-         .ease(d3.easeLinear)
-         .duration(1000)
-         .attr("y", function(d) {
-          return yBarScale(d[1]);
-          })
-         .attr("height", function(d) {
-            return yBarScale(d[0]) - yBarScale(d[1])
-         });
+       .transition()
+       .ease(d3.easeLinear)
+       .duration(1000)
+       .attr("y", function(d) {
+        return yBarScale(d[1]);
+        })
+       .attr("height", function(d) {
+          return yBarScale(d[0]) - yBarScale(d[1])
+       });
 
    bar_svg.select(".y.axis")
-      .transition()
-      .duration(1000)
-      .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
+          .transition()
+          .duration(1000)
+          .call(yAxis_bar.tickValues(d3.range(0,ymax+1,(ymax < 5) ? 1 : ymax * 0.2)));
 }
 
 function fillWithNullDays (data) {
@@ -260,10 +239,9 @@ function initMapChart (data, json) {
 
   //Define map projection
   var projection = d3.geoMercator()
-          // .scale(50000)
-          .scale(90*map_w+1300)
-          .center([-74, 40.71])
-          .translate([map_w * 0.5, map_h * 0.5]);
+                     .scale(90*map_w+1300)
+                     .center([-74, 40.71])
+                     .translate([map_w * 0.5, map_h * 0.5]);
 
   //Define path generator
   var path = d3.geoPath()
@@ -291,7 +269,6 @@ function initMapChart (data, json) {
                 .enter()
                 .append("circle")
                 .attr("class", function(d) { 
-                  accidentsPerHour[d.TIME] = accidentsPerHour[d.TIME] + 1;
                   return "dot activeDot";
                 })
                 .attr("cx", function(d) {
@@ -303,12 +280,7 @@ function initMapChart (data, json) {
                 .attr("r", 2)
                 .on("mouseover", function(d) {
                   if(d3.select(this).attr("class")=="dot activeDot"){
-               //   console.log(""+d.UNIQUE_KEY);
                   }
-                //})
-               // .append("title")         //Simple tooltip
-                //.text(function(d) {
-                  //   return "Street Name "+d.ON_STREET_NAME+ " key " + d.UNIQUE_KEY;
                 });
 
   map_svg.selectAll("text")
@@ -332,8 +304,8 @@ function initMapChart (data, json) {
 
   // map brush
   map_svg.append("g")
-          .attr("class", "brush")
-          .call(map_brush); 
+         .attr("class", "brush")
+         .call(map_brush); 
 }
 
 function initLineChart (data) {
@@ -393,8 +365,8 @@ function initLineChart (data) {
 
   // make brush for timeline
   line_brush = d3.brushX()
-                .extent([[0, 0],[line_w, line_h - 1]])
-                .on("brush end", brushed_timeChart);
+                 .extent([[0, 0],[line_w, line_h - 1]])
+                 .on("brush end", brushed_timeChart);
 
   // timeline brush
   line_svg.append("g")
@@ -452,22 +424,22 @@ function init_line_svg_slider() {
   slider_w = chartDiv.clientWidth+30;
 
   line_svg_slider = d3.sliderHorizontal()
-    .step(1)
-    .min(1)
-    .max(30)
-    .ticks(5)
-    .width(slider_w-50)
-    .on('end', val => {
-      d3.select("#line_svg_line_interval").text(val);
-      updateLineChartFromDays(val);
-    });
+                      .step(1)
+                      .min(1)
+                      .max(30)
+                      .ticks(5)
+                      .width(slider_w-50)
+                      .on('end', val => {
+                        d3.select("#line_svg_line_interval").text(val);
+                        updateLineChartFromDays(val);
+                      });
 
   var g = d3.select("#line_svg_slider").append("svg")
-    .attr("width", slider_w)
-    .attr("height", 65)
-    .style("margin-top",'-20px')
-    .append("g")
-    .attr("transform", "translate(30,30)");
+            .attr("width", slider_w)
+            .attr("height", 65)
+            .style("margin-top",'-20px')
+            .append("g")
+            .attr("transform", "translate(30,30)");
 
   g.call(line_svg_slider);
 
@@ -493,11 +465,11 @@ function getAccidentsPerDay(data) {
 }
 
 function reset_buttons() {
-  queensActive = true; changeAria("QueensBtn", "true");
-  bronxActive = true; changeAria("BronxBtn", "true");
-  manhattanActive = true; changeAria("ManhattanBtn", "true");
+  queensActive       = true; changeAria("QueensBtn", "true");
+  bronxActive        = true; changeAria("BronxBtn", "true");
+  manhattanActive    = true; changeAria("ManhattanBtn", "true");
   statenIslandActive = true; changeAria("StatenIslandBtn", "true");
-  brooklynActive = true; changeAria("BrooklynBtn", "true");
+  brooklynActive     = true; changeAria("BrooklynBtn", "true");
 }
 
 function changeAria(id, bool) {
@@ -526,29 +498,29 @@ function toggleQueens(){
 }
 
 function toggleOnlyManhattan(){
-  queensActive = false; changeAria("QueensBtn", "false");
-  bronxActive = false; changeAria("BronxBtn", "false");
-  manhattanActive = true; changeAria("ManhattanBtn", "true");
+  queensActive       = false; changeAria("QueensBtn", "false");
+  bronxActive        = false; changeAria("BronxBtn", "false");
+  manhattanActive    = true;  changeAria("ManhattanBtn", "true");
   statenIslandActive = false; changeAria("StatenIslandBtn", "false");
-  brooklynActive = false; changeAria("BrooklynBtn", "false");
+  brooklynActive     = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
 function toggleOnlyQueens(){
-  queensActive = true; changeAria("QueensBtn", "true");
-  bronxActive = false; changeAria("BronxBtn", "false");
-  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  queensActive       = true;  changeAria("QueensBtn", "true");
+  bronxActive        = false; changeAria("BronxBtn", "false");
+  manhattanActive    = false; changeAria("ManhattanBtn", "false");
   statenIslandActive = false; changeAria("StatenIslandBtn", "false");
-  brooklynActive = false; changeAria("BrooklynBtn", "false");
+  brooklynActive     = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
 function toggleOnlyBronx(){
-  queensActive = false; changeAria("QueensBtn", "false");
-  bronxActive = true; changeAria("BronxBtn", "true");
-  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  queensActive       = false; changeAria("QueensBtn", "false");
+  bronxActive        = true;  changeAria("BronxBtn", "true");
+  manhattanActive    = false; changeAria("ManhattanBtn", "false");
   statenIslandActive = false; changeAria("StatenIslandBtn", "false");
-  brooklynActive = false; changeAria("BrooklynBtn", "false");
+  brooklynActive     = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
@@ -558,11 +530,11 @@ function toggleEverything(){
 }
 
 function toggleNothing(){
-  queensActive = false; changeAria("QueensBtn", "false");
-  bronxActive = false; changeAria("BronxBtn", "false");
-  manhattanActive = false; changeAria("ManhattanBtn", "false");
+  queensActive       = false; changeAria("QueensBtn", "false");
+  bronxActive        = false; changeAria("BronxBtn", "false");
+  manhattanActive    = false; changeAria("ManhattanBtn", "false");
   statenIslandActive = false; changeAria("StatenIslandBtn", "false");
-  brooklynActive = false; changeAria("BrooklynBtn", "false");
+  brooklynActive     = false; changeAria("BrooklynBtn", "false");
   brushed();
 }
 
@@ -575,14 +547,12 @@ function brushed_timeChart () {
 
 function brushed_barChart () {
   sel = d3.event.selection
-  // console.log(sel)
   sel_bar = sel ? sel : [0,1000000];
   brushed()
 }
 
 function brushed_mapChart () {
   sel = d3.event.selection
-  // console.log(toGlobalMapScale(sel));
   if (sel == null) {
     sel_map = [[0,0], [100000,100000]];
   }
@@ -620,27 +590,27 @@ function brushed () {
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
     if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
       if(bronxActive && d.BOROUGH=="BRONX"){
-          accidentsPerHour[d.TIME].bronx=accidentsPerHour[d.TIME].bronx+1;
+          accidentsPerHour[d.TIME].bronx += 1;
           activeData.push(d);
           return "dot activeDot";
       } else if(manhattanActive && d.BOROUGH=="MANHATTAN"){
-            accidentsPerHour[d.TIME].manhattan=accidentsPerHour[d.TIME].manhattan+1;
-       activeData.push(d);
-        return "dot activeDot";
+          accidentsPerHour[d.TIME].manhattan += 1;
+          activeData.push(d);
+          return "dot activeDot";
       } else if(queensActive && d.BOROUGH=="QUEENS"){
-            accidentsPerHour[d.TIME].queens=accidentsPerHour[d.TIME].queens+1;
-            activeData.push(d);
-        return "dot activeDot";
+          accidentsPerHour[d.TIME].queens += 1;
+          activeData.push(d);
+          return "dot activeDot";
       } else if(brooklynActive && d.BOROUGH=="BROOKLYN"){
-         accidentsPerHour[d.TIME].brooklyn=accidentsPerHour[d.TIME].brooklyn+1;
-         activeData.push(d);
-        return "dot activeDot";
+          accidentsPerHour[d.TIME].brooklyn += 1;
+          activeData.push(d);
+          return "dot activeDot";
       } else if(statenIslandActive && d.BOROUGH=="STATEN ISLAND"){
-          accidentsPerHour[d.TIME].statenIsland=accidentsPerHour[d.TIME].statenIsland+1;
+          accidentsPerHour[d.TIME].statenIsland += 1;
           activeData.push(d);
           return "dot activeDot";
       } else {
-        return "dot noneActiveDot";
+          return "dot noneActiveDot";
       }
     } else { 
         return "dot noneActiveDot";
@@ -682,10 +652,10 @@ function animate_time (brushSize, speed) {
 
   bar_svg.select(".brush").call(bar_brush.move, [0,brushSize]);
   bar_svg.select(".brush")
-          .transition()
-          .ease(d3.easeLinear)
-          .duration(transVar)
-          .call(bar_brush.move, [xBarScale.range()[1] - brushSize, xBarScale.range()[1]]);
+         .transition()
+         .ease(d3.easeLinear)
+         .duration(transVar)
+         .call(bar_brush.move, [xBarScale.range()[1] - brushSize, xBarScale.range()[1]]);
 }
 
 function toLocalMapScale(x0, y0, x1, y1) {
@@ -736,10 +706,10 @@ function animateStatenIsland_aux(){
   reset_brush();
   map_svg.select(".brush").call(map_brush.move, toLocalMapScale(50,50,10,10))
   map_svg.select(".brush")
-        .transition()
-        .ease(d3.easeLinear)
-        .duration(3000)
-        .call(map_brush.move, toLocalMapScale(12.618296529968454, 63.09148264984227, 32.391167192429023, 74.55520504731862));
+         .transition()
+         .ease(d3.easeLinear)
+         .duration(3000)
+         .call(map_brush.move, toLocalMapScale(12.618296529968454, 63.09148264984227, 32.391167192429023, 74.55520504731862));
 }
 
 //Vis alt data og lav bar chart brush på 14-18
@@ -860,10 +830,10 @@ function initBubbles() {
         });
 
     var node = factors_svg.selectAll(".node")
-      .data(pack(root).leaves())
-      .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+                          .data(pack(root).leaves())
+                          .enter().append("g")
+                          .attr("class", "node")
+                          .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
     node.append("circle")
         .attr("id", function(d) { return d.id; })
@@ -874,13 +844,11 @@ function initBubbles() {
         .style("fill", function(d) { return color(d.package); });
 
     node.append("text")
-        // .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
         .selectAll("tspan")
         .data(function(d) { 
           return d.class.split(/(?=[A-Z][^A-Z])/g); 
         })
         .enter().append("tspan")
-
         .style("font-size", function(d) { 
           var val = (this.parentNode.__data__.data.percent)*5 + 0.6;
           return val + "em"
@@ -892,5 +860,4 @@ function initBubbles() {
     node.append("title")
         .text(function(d) { return d.id + "\nNo. of accidents: " + format(d.value) + "\nPercent of top 20: " + (Number(this.parentNode.__data__.data.percent)*100.00).toFixed(1) + "%"; });
   });
-
 }
