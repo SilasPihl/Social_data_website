@@ -1,3 +1,16 @@
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:0px 14px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#444;background-color:#F7FDFA;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:0px 14px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-top-width:1px;border-bottom-width:1px;border-color:#999;color:#fff;background-color:#26ADE4;}
+.tg .tg-q6a5{font-weight:bold;font-size:10px;border-color:inherit;text-align:center;vertical-align:bottom}
+.tg .tg-oexo{font-size:10px;border-color:inherit;vertical-align:bottom}
+.tg .tg-v0l1{font-weight:bold;font-size:10px;border-color:inherit;vertical-align:bottom}
+.tg .tg-xocx{font-size:10px;border-color:inherit;text-align:center}
+
+table {
+    margin: 0 auto;
+}
+
+
 .borough-button[aria-pressed="false"] {
     opacity: 0.5;
 }
@@ -13,8 +26,13 @@
 }
 
 .std-button {
-    height:40px;
-    font-size: 0.9em;
+    height:30px;
+    width: 60px;
+    font-size: 0.8em;
+}
+
+.sm-btn {
+    font-size: 0.6em;
 }
 
 body {
@@ -24,6 +42,11 @@ body {
 
 .chart_info {
     font-size: 0.75em;
+}
+
+#line_svg_slider {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 div.bar {

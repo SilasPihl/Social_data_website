@@ -448,19 +448,21 @@ function updateLineChartFromDays (noOfDays) {
 
 // others
 function init_line_svg_slider() {
+  var chartDiv = document.getElementById("line_svg_slider");
+  slider_w = chartDiv.clientWidth+30;
 
   line_svg_slider = d3.sliderHorizontal()
     .min(1)
     .max(30)
     .step(1)
-    .width(300)
+    .width(slider_w-50)
     .on('end', val => {
       d3.select("#line_svg_line_interval").text(val);
       updateLineChartFromDays(val);
     });
 
   var g = d3.select("#line_svg_slider").append("svg")
-    .attr("width", 350)
+    .attr("width", slider_w)
     .attr("height", 65)
     .style("margin-top",'-20px')
     .append("g")
