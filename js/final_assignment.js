@@ -770,7 +770,7 @@ function animateButtons_1_aux(){
 }
 
 function animateButtons_2(){
-  animate ("animateButtons_2_btn", 15000, () => animateButtons_2_aux())
+  animate ("animateButtons_2_btn", 5000, () => animateButtons_2_aux())
 }
 
 function animateButtons_2_aux(){
@@ -779,13 +779,10 @@ function animateButtons_2_aux(){
 
   setTimeout(function() {
     toggleQueens();
-    setTimeout(function() {
-      toggleEverything()
-    }, 5000);
-  }, 5000);
+  }, 3000);
 }
 
-automateAnimations = true;
+automateAnimations = false;
 function toggleAutomateAnimations () {
   automateAnimations = !automateAnimations
 }
@@ -820,7 +817,7 @@ d3.graphScroll()
   .container(d3.select('#fixedcontainer'))  
 
 
-$('.go-to-bottom').click( function(e) {
+$('#go-to-bottom').click( function(e) {
   e.preventDefault(); 
   document.body.scrollIntoView(false);
   return false; 

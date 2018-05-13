@@ -7,9 +7,14 @@
   <li>
 <em>What is your dataset?</em> <br/>
 
-<br/><p>Our dataset is from <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">OpenNYC</a> and encompasses all recorded traffic collisions from 2014 to now in New York.
-</p><br/>
-
+<br/><p>Our dataset is from <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">OpenNYC</a> and encompasses all recorded traffic collisions from 2014 to now in New York. <br>
+Link to direct download of files used in the visualizations are here, some mentioned later:</p>
+<div class="text-center">
+  <a href="data/boroughs.json" >Download boroughs used in the map chart (boroughs.json)</a><br>
+  <a href="data/accidentsInNewYorkReduced.csv" >Download accidents file used all around (accidentsInNewYorkReduced.csv)</a><br>
+  <a href="data/countAllUniqueContributingFactor.csv" >Download top 20 factors used in bubble chart (countAllUniqueContributingFactor.csv)</a><br>
+</div>
+<br>
   </li>
   <li>
 <em>Why did you choose this/these particular dataset(s)?</em>
@@ -21,11 +26,10 @@
   <li>
 <em>What was your goal for the end user’s experience?</em><br/>
 <br/><p>We wanted to tell the user a story first and then open the visualization up for interaction. This allows us to guide the user to a few interesting data points and then open up to allow them to explore. Ideally, we’d want this visualization to be good enough for it to affect the users behavior, or at least make them aware of things like how it’s more likely that you are in an accident when driving home from work, than when driving to work.
-</p><br/>
+</p>
 
   </li>
 </ul>
-<br/>
 <br/>
 <!-- Basic stats. Let’s understand the dataset better -->
 <h2>Basic stats</h2>
@@ -46,7 +50,6 @@ Also, we have found two areas which merit some follow-up. Queens has a ‘bald s
 
   </li>
 </ul>
-<br/>
 <br/>
 <!-- Genre. Which genre of data story did you use? -->
 <h2>Genre</h2>
@@ -82,7 +85,6 @@ Finally, we have made use of an Introductory Text and visualization in our slide
     
 </ul>
 <br/>
-<br/>
 <h2>Visualizations</h2>
 <!-- Explain the visualizations you’ve chosen. -->
 <ul>
@@ -90,11 +92,10 @@ Finally, we have made use of an Introductory Text and visualization in our slide
 <em>Why are they right for the story you want to tell?</em><br/>
 <br/><p>
 These are the right tool as we first allow ourselves to relay to the user the information we have gleaned from preprocessing and then follow it up with the user being allowed to tell the story from their point of view. If they are from Staten Island and mainly travel on Staten Island, they are then allowed to filter out the noise and just look at Staten Island, perhaps even their own corner of Staten Island, and thus see at which parts of the day they are safest. Having three different visualizations that interact with each other allows the user to have four different ways of filtering the data and viewing it three different ways, allowing for view of emergent information.
-</p><br/>
+</p>
 
   </li>
 </ul>
-<br/>
 <br/>
 <!-- Discussion. Think critically about your creation -->
 <h2>Discussion</h2>
@@ -117,16 +118,22 @@ Ideally we would have also liked to have not just tooltips, but the possibility 
 One thing especially could have used more time. We spent a great deal of time trying to implement using canvas to draw instead of drawing svg elements the standard D3 way, as we have quite a large dataset. However, we had to stop once we realized how much effort it would take to get it to work with our three different brushes and visualizations. Even getting it to work with just one seemed to be a lot of effort. Therefore we instead chose to use a smaller portion of our dataset and focus on enhancing our storytelling and narrative. To actually see the transitions happen we chose to only use every 40th data point of our already heavily filtered dataset. If we had successfully implemented the canvas method we had hoped to get up to at least every 20th data point or more.
 </p>
 <p>
-In a real life commercial article with visualizations we would use canvas for painting. Making a circle element for each point means that the DOM tree expands quickly. Each of these points automatically creates a databinding to our svg when using D3. We optimized the rendering by using css classes and minimizing the update calls, but there is a limit. Normally it becomes slow when using more than 1000 points (and we have a lot more). Since this wasn't the most important part to fulfill our narrative, we have provided the information here and some pictures of a performance recording in the browser. Images of client side javascript performance measures when doing a animation is seen below.
+In a real life commercial article with visualizations we would use canvas for painting. Making a circle element for each point means that the DOM tree expands quickly. Each of these points automatically creates a databinding to our svg when using D3. We optimized the rendering by using css classes and minimizing the update calls, but there is a limit. Normally it becomes slow when using more than 1000 points (and we have a lot more). Since this wasn't the most important part to fulfill our narrative, we have provided the information here and some pictures of a performance recording in the browser. Images of client side javascript performance measures when doing a animation is seen below. First it's seen how the paint execution takes up processing time seen in a waterfall layout. The green line is the painting of the map. 
 </p>
 
 
-<br/><br/>
+<div class="text-center">
+  
 <figure class="figure text-align">
   <img src="images/waterfall_map_paint.jpg" alt="waterfall_map_paint.jpg"/>
   <figcaption class="figure-caption">The paint execution takes up a lot of time when doing the animations.</figcaption>
 </figure>
 
+</div>
+
+<p>Below is seen a tree layout comparison between two executions times. The first with the map with display:block and the next with the map display:none. This shows the impact of the painting in the map relative to the entire page. The graphics processing time went from 4.4 seconds down to 1.3 seconds, and 49.77% to 16.75% of total javascript cost.</p>   
+
+<div class="text-center">
 
 <figure class="figure text-align">
   <img src="images/call_tree_paint.jpg" alt="call_tree_paint.jpg"/>
@@ -138,6 +145,7 @@ In a real life commercial article with visualizations we would use canvas for pa
   <figcaption class="figure-caption">The map svg is display none and the graphics only takes 1,3 seconds.</figcaption>
 </figure>
 
+</div>
 
 
     

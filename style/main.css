@@ -65,11 +65,15 @@ div.bar {
 } 
 
 #steps .step.graph-scroll-active{
-  opacity: 1;
+  opacity: 1!important;
   min-height: 400px;
   margin-bottom: 300px;
   padding-right: 20px;
   padding-left: 20px;
+}
+
+.graph-scroll-active {
+  opacity: 1!important;
 }
 
 #steps {
