@@ -673,19 +673,19 @@ function reset_brush() {
 function animate_time (brushSize, speed) {
   var brushSize, transVar;
 
-  brushSize = 100;
+  brushSize = 200;
   transVar = 5000;
 
   line_svg.select(".brush").call(line_brush.move, [0,0]);
   bar_svg.select(".brush").call(bar_brush.move, [0,0]);
   map_svg.select(".brush").call(map_brush.move, [[0,0],[0,0]]);
 
-  line_svg.select(".brush").call(line_brush.move, [0,brushSize]);
-  line_svg.select(".brush")
+  bar_svg.select(".brush").call(bar_brush.move, [0,brushSize]);
+  bar_svg.select(".brush")
           .transition()
           .ease(d3.easeLinear)
           .duration(transVar)
-          .call(line_brush.move, [xScale_line_svg.range()[1] - brushSize, xScale_line_svg.range()[1]]);
+          .call(bar_brush.move, [xBarScale.range()[1] - brushSize, xBarScale.range()[1]]);
 }
 
 function toLocalMapScale(x0, y0, x1, y1) {
