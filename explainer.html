@@ -5,98 +5,122 @@
 <h2>Motivation</h2>
 <ul>
   <li>
-What is your dataset? 
-<br/><em>Our dataset is from NYC Open Data and encompasses all recorded traffic collisions from 2014 to now in New York. </em>
-<br/>Our dataset is from NYC Open Data and encompasses all recorded traffic collisions from 2014 to now in New York. 
+<em>What is your dataset?</em> <br/>
+
+<br/><p>Our dataset is from NYC Open Data and encompasses all recorded traffic collisions from 2014 to now in New York.
+</p><br/>
+
   </li>
   <li>
-Why did you choose this/these particular dataset(s)?
-<br/><em>Notes</em>
-<br/>We chose this specific dataset because it seemed a natural continuation of our previous assignment. This allowed us to spend less time worrying about boilerplate, and more time taking what we already had further. Thus choosing a new dataset, but keeping with the same type of visualization and the same location, seemed optimal. There was still a lot of work in analyzing and filtering the new data set. Also, the murder dataset didn’t really supply any useful or behavior affecting information for most people. This dataset however, can tell you where you shouldn’t ride your bike and what times, or where, you shouldn’t drive your new Porsche around. 
+<em>Why did you choose this/these particular dataset(s)?</em>
+<br/>
+
+<br/><p>We chose this specific dataset because it seemed a natural continuation of our previous assignment. This allowed us to spend less time worrying about boilerplate, and more time taking what we already had further. Thus choosing a new dataset, but keeping with the same type of visualization and the same location, seemed optimal. There was still a lot of work in analyzing and filtering the new data set. Also, the murder dataset didn’t really supply any useful or behavior affecting information for most people. This dataset however, can tell you where you shouldn’t ride your bike and what times, or where, you shouldn’t drive your new Porsche around.
+</p><br/>
   </li>
   <li>
-What was your goal for the end user’s experience?
-<br/><em>Notes</em>
-<br/>We wanted to tell the user a story first and then open the visualization up for interaction. This allows us to guide the user to a few interesting data points and then open up to allow them to explore. Ideally, we’d want this visualization to be good enough for it to affect the users behavior, or at least make them aware of things like how it’s more likely that you are in an accident when driving home from work, than when driving to work.
+<em>What was your goal for the end user’s experience?</em><br/>
+<br/><p>We wanted to tell the user a story first and then open the visualization up for interaction. This allows us to guide the user to a few interesting data points and then open up to allow them to explore. Ideally, we’d want this visualization to be good enough for it to affect the users behavior, or at least make them aware of things like how it’s more likely that you are in an accident when driving home from work, than when driving to work.
+</p><br/>
+
   </li>
 </ul>
-
+<br/>
+<br/>
 <!-- Basic stats. Let’s understand the dataset better -->
 <h2>Basic stats</h2>
 <ul>
   <li>
-Write about your choices in data cleaning and preprocessing &amp; Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.
-<br/><em>Notes</em>
-<br/>For preprocessing Python, Pandas and Jupyter Notebook was used.
+<em>Write about your choices in data cleaning and preprocessing &amp; Write a short section that discusses the dataset stats, containing key points/plots from your exploratory data analysis.</em><br/><br/>
 
+<p>For preprocessing Python, Pandas and Jupyter Notebook was used.
+</p>
+
+<p>
 The dataset has 29 columns, Date, Time, Borough, Zip Code, Latitude, Longitude, Location, On Street Name, Cross Street Name, Number of Persons Injured &amp; Killed, Number of Pedestrians Injured &amp; Killed, Number of Cyclist Injured &amp; Killed, Number of Motorist Injured &amp; Killed, Contributing Factor Vehicle 1-5, Unique Key and Vehicle Type Code 1-5. It is quite substantial with 1242727 rows. To focus the dataset a bit, and make the response time of the visualization significantly faster we chose to only examine data points from January 1st 2017 and onwards. We felt that this subset allowed us to look for significant peaks (like drunk driving for christmas) without weighing the visualization down with too much data. The dataset is not perfect though and carries a significant amount of lacking entries. At least 69 entries are geographically in the wrong borough, i.e. an entry with the Borough value of ‘Brooklyn’ might be geographically placed in Queens. This is visually confusing when put on a choropleth map, and these points have been removed from the dataset. Additionally, about 33% of the data has no Borough at all and since we would like for the user to be able to filter the boroughs in and out, this data has been eliminated. This yielded 286411 rows for all of New York, 39379 rows for Manhattan, 7715 rows for Staten Island, 26833 rows for the Bronx, 48693 rows for Queens and 56263 rows for Brooklyn. Also, to properly show our transitions we elected to only use every 40th data point, as we deprioritized our performance enhancement as we wanted to focus on narrative.
+</p>
 
+<p>
 Also, we have found two areas which merit some follow-up. Queens has a ‘bald spot’ on the southern part of the island, above Long Beach. This was found to be due to John F. Kennedy International Airport being placed there. Another ‘bald spot’ was found at the northwestern part of Staten Island. This ‘bald spot’ however seems to be both because of a harbor/industrial area taking up a significant amount of space, but also because of what looks like a systematic error in entering the borough value for that area. Thus when entries with a ‘Borough’ entry are filtered away, so is that entire area. 
+</p>
 
   </li>
 </ul>
-
+<br/>
+<br/>
 <!-- Genre. Which genre of data story did you use? -->
 <h2>Genre</h2>
 <ul>
   <li>
-Which tools did you use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?
-<br/><em>Notes</em>
-<br/>We decided to use a consistent visual platform as our three visualizations interact with each other and we want to keep that interaction inside a single view. With further development we might have added more visualizations that could have had separate views, but we thought we’d make a really good interactive single page before expanding to more. However, we did add one bubble chart to act as a loading buffer. It loads rather quickly and distracts from the long loading time for the visualization further down the page. Additionally, it allows us to open with a small story that introduces our dataset and shows a visualization that doesn't quite fit in with the other three visualizations.
+<em>Which tools did you use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?</em><br/><br/>
+<p>
+We decided to use a consistent visual platform as our three visualizations interact with each other and we want to keep that interaction inside a single view. With further development we might have added more visualizations that could have had separate views, but we thought we’d make a really good interactive single page before expanding to more. However, we did add one bubble chart to act as a loading buffer. It loads rather quickly and distracts from the long loading time for the visualization further down the page. Additionally, it allows us to open with a small story that introduces our dataset and shows a visualization that doesn't quite fit in with the other three visualizations.
+</p>
 
+<p>
 We use Feature Distinction by setting each burrough and every feature relating to that borough to the same color. Thus the stacked bar chart has sections corresponding to data from a specific borough, the buttons allowing the user to enable or disable certain borough datasets are also color coded to the corresponding borough.
-
-Finally we use Animated Transitions to transition our bars, our dots and our line chart. When you use the slider belonging to the line chart it will transition in and out of the aggregation of the data points.
+</p>
+<p>
+Finally we use Animated Transitions to transition our bars, our dots and our line chart. When you use the slider belonging to the line chart it will transition in and out of the aggregation of the data points.</em>
+</p>
 
   </li>
   <li>
-Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?
-<br/><em>Notes</em>
-<br/>We use a combination of Random Access and Linear. The visualization is linear in the beginning as we use the slider and a begining section to tell the user a story. Later on the visualization becomes random access as the visualization is all one page and the user can interact with any part he or she wants.
-
+<em>Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?</em><br/>
+<br/><p>
+We use a combination of Random Access and Linear. The visualization is linear in the beginning as we use the slider and a begining section to tell the user a story. Later on the visualization becomes random access as the visualization is all one page and the user can interact with any part he or she wants.
+</p>
+<p>
 We use Filtering, Selection and Search in allowing the user to choose which parts of the data he or she wants to view. They can have the line chart in the top left show fewer data points, thus aggregating several data points into a single data point, smoothing out the data, or have every data point be a single day, allowing the user to see day-specific spikes. The bar chart can be used to filter the entire data set looked at based on the time, which is then reflected in the choropleth. The choropleth on the other hand allows the user to filter based on geographical location.
-
+</p>
+<p>
 Finally, we have made use of an Introductory Text and visualization in our slider and Annotations for the interactive part of our visualization.
+</p>
+
 
   </li>  
     
 </ul>
-
+<br/>
+<br/>
 <h2>Visualizations</h2>
 <!-- Explain the visualizations you’ve chosen. -->
 <ul>
   <li>
-Why are they right for the story you want to tell?
-<br/><em>Notes</em>
-<br/>These are the right tool as we first allow ourselves to relay to the user the information we have gleaned from preprocessing and then follow it up with the user being allowed to tell the story from their point of view. If they are from Staten Island and mainly travel on Staten Island, they are then allowed to filter out the noise and just look at Staten Island, perhaps even their own corner of Staten Island, and thus see at which parts of the day they are safest.
+<em>Why are they right for the story you want to tell?</em><br/>
+<br/><p>
+These are the right tool as we first allow ourselves to relay to the user the information we have gleaned from preprocessing and then follow it up with the user being allowed to tell the story from their point of view. If they are from Staten Island and mainly travel on Staten Island, they are then allowed to filter out the noise and just look at Staten Island, perhaps even their own corner of Staten Island, and thus see at which parts of the day they are safest.
+</p><br/>
 
   </li>
 </ul>
-
+<br/>
+<br/>
 <!-- Discussion. Think critically about your creation -->
 <h2>Discussion</h2>
 <ul>
   <li>
-What went well?
-<br/><em>Notes</em>
-<br/>We succeeded with improving our base implementation with an additional layer of interactivity between the three visualizations, for example allowing the user to toggle which of the boroughs he/she wants to see information from, as when simply filtering with the choropleth and a bounding box it can be impossible to get just one borough. Additionally the color coding of borough specific data increases seperation and understanding of data. We were happy with our focus on the narrative, implementing a scroller with an animation or transition activated for each activated section and an intro section having a bit more text, explaining the dataset and a small visualization functioning as a distraction from the load time.
+<em>What went well?</em><br/>
+<br/><p>We succeeded with improving our base implementation with an additional layer of interactivity between the three visualizations, for example allowing the user to toggle which of the boroughs he/she wants to see information from, as when simply filtering with the choropleth and a bounding box it can be impossible to get just one borough. Additionally the color coding of borough specific data increases seperation and understanding of data. We were happy with our focus on the narrative, implementing a scroller with an animation or transition activated for each activated section and an intro section having a bit more text, explaining the dataset and a small visualization functioning as a distraction from the load time.
+</p><br/>
+
   </li>
   <li>
-    What is still missing? What could be improved?, Why?
-<br/><em>Notes</em>
-<br/>Due to our focus on presenting and improving our initial page there wasn’t time to implement some more interesting statistics. We would have liked to include another on-the-fly calculated bar chart showcasing ‘Contributing Factor’ statistics, which should be based on the chosen time and included boroughs. Additionally, we would have liked to incorporate a heat map on the choropleth instead of dots, based on amount of accidents relative to the population density as a place like Manhattan has an inordinate amount of collisions, yet it’s unclear what the scope of these accidents are as Manhattan has much larger population density than Staten Island, but another contributing factors is that a lot of people work in Manhattan, but don’t live there. This should correlate with our calculated peak of 5 pm, which amounts to the time where the most amount of people are traveling home from work.
-
-<p>  
+    <em>What is still missing? What could be improved?, Why?</em><br/>
+<br/><p>
+Due to our focus on presenting and improving our initial page there wasn’t time to implement some more interesting statistics. We would have liked to include another on-the-fly calculated bar chart showcasing ‘Contributing Factor’ statistics, which should be based on the chosen time and included boroughs. Additionally, we would have liked to incorporate a heat map on the choropleth instead of dots, based on amount of accidents relative to the population density as a place like Manhattan has an inordinate amount of collisions, yet it’s unclear what the scope of these accidents are as Manhattan has much larger population density than Staten Island, but another contributing factors is that a lot of people work in Manhattan, but don’t live there. This should correlate with our calculated peak of 5 pm, which amounts to the time where the most amount of people are traveling home from work.
+</p>
+<p>
 Ideally we would have also liked to have not just tooltips, but the possibility of clicking a datapoint and then seeing all relevant information. Another feature which would have improved the visualization would be for the corresponding borough in the choropleth to disappear when the dataset was removed from usage.
 </p>
-
 <p>
 One thing especially could have used more time. We spent a great deal of time trying to implement using canvas instead of drawing svg elements the standard D3 way, as we have quite a large dataset. However, we had to stop once we realized how much effort it would take to get it to work with our three different brushes and visualizations. Even getting it to work with just one was seemed to be a lot of effort. Therefore we instead chose to use a smaller portion of our dataset and focus on enhancing our storytelling and narrative. To actually see the transitions happen we chose to only use every 30th data point of our already heavily filtered dataset. If we had successfully implemented the canvas method we had hoped to get up to at least every 20th data point or more.
 </p>
-
 <p>
 In a real life commercial article with visualizations we would use canvas for painting. Making a circle element for each point means that the DOM tree expands quickly. Each of these point automatically create a databinding to our svg when using D3. We optimized the rendering by using css classes and minimizing the update calls, but there is a limit and normally it becomes slow when using more than 1000 points (and we have a lot more). Since this wasn't the most important part to fulfill our narrative, we have provided the information here and some pictures of a performance recording in the browser. Images of client side javascript performance measures when doing a animation is seen below.
 </p>
+
+
 
 <figure class="figure text-align">
   <img src="images/waterfall_map_paint.jpg" alt="waterfall_map_paint.jpg"/>
