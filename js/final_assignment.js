@@ -123,7 +123,7 @@ function removeD3() {
 function initBarChart (data) {
   var chartDiv = document.getElementById("d3_bar");
   barW = chartDiv.clientWidth-30;
-  barH = 250;
+  barH = barW/2.65;
 
   // Margins
   bar_m = {
@@ -589,7 +589,7 @@ function initLineChart (data) {
 
   var chartDiv = document.getElementById("d3_linechart");
   var line_w = chartDiv.clientWidth-30;
-  var line_h = 250;
+  var line_h = line_w/2.65;
 
   // create line_svg
   line_svg = d3.select("#d3_linechart")
