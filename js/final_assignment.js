@@ -34,7 +34,7 @@ sel_bar  = [0,1000000];
 accidentsPerHour = new Uint32Array(24);
 
 
-map_canvas_active = true;
+map_canvas_mode = false;
 lasso_active = false;
 inCanvasMode = false;
 
@@ -87,7 +87,7 @@ function initInteractive () {
       // Counting Accidents per day
       accidentsPerDay = getAccidentsPerDay(data);
       
-      if (inCanvasMode) {
+      if (map_canvas_mode) {
         initMapChartCanvas(data, json) // this before initBarChart
       }
       else {
@@ -120,17 +120,22 @@ function removeD3() {
   reset_buttons()
 }
 
+message = true;
 $( window ).resize(function() {
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
    // do nothing
   }
   else {
-    setTimeout(function (){
-      var r = confirm("You changed the page size! Update page for charts to have proper size. Press OK to confirm! :) ");
-      if (r == true) {
-        location.reload();
-      }
-    }, 2000);
+    if (message){
+      message = false;
+      setTimeout(function (){
+        var r = confirm("You changed the page size! Update page for charts to have proper size. Press OK to confirm! :) ");
+        if (r == true) {
+          location.reload();
+        }
+        message = true;
+      }, 2000);
+    }
 }
   
 });
@@ -292,7 +297,7 @@ function fillWithNullDays (data) {
 }
 
 function initMapChart (data, json) {
-  map_canvas_active = false;
+  map_canvas_mode = false;
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
   map_h = chartDiv.clientWidth;
@@ -368,7 +373,7 @@ function initMapChart (data, json) {
 }
 
 function initMapChartCanvas (data, json) {
-  map_canvas_active = true;
+  map_canvas_mode = true;
 
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
@@ -566,6 +571,7 @@ function draw(canvas, points) {
   // remove what is on the canvas
   context.beginPath();
   context.clearRect(0, 0, map_w, map_h);
+  context.closePath();
 
   context.globalAlpha = 1;
   // draw each point as an arc
@@ -581,6 +587,8 @@ function draw(canvas, points) {
       context.strokeStyle = 'black';
       context.stroke();
     }
+    context.closePath();
+
 
     // const point = points[i];
     // context.fillStyle = point.color;
@@ -855,7 +863,7 @@ function brushed_mapChart () {
 }
 
 function brushed() {
-  if(map_canvas_active) {
+  if(map_canvas_mode) {
     brushed_with_canvas()
   }
   else {
@@ -876,15 +884,22 @@ function toggleChangeBrushOnMap(force) {
 }
 
 function toggleCanvas() {
-  if (inCanvasMode) {
-    inCanvasMode = false;
-    reloadInteractiveD3();
-    $("#changeBrushOnMap").html('Change to normal brush');
+  var isChrome = !!window.chrome && !!window.chrome.webstore;
+  console.log(isChrome)
+  if (isChrome) {
+    alert("Chrome doesn't support this feature, try another browser to see canvas! ;)")
   }
   else {
-    inCanvasMode = true;
+    if (map_canvas_mode) {
+    map_canvas_mode = false;
     reloadInteractiveD3();
-    $("#tryCanvas").html('Go back to map with SVG circles');
+    $("#tryCanvas").html('Try map with Canvas');
+    }
+    else {
+      map_canvas_mode = true;
+      reloadInteractiveD3();
+      $("#tryCanvas").html('Go back to map with SVG circles');
+    }  
   }
 }
 
