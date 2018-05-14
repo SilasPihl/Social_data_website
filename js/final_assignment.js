@@ -11,6 +11,14 @@ var groups;
 var rects;
 colors     = d3.scaleOrdinal().range(["rgb(255, 179, 166) ","rgb(169, 186, 255) ","rgb(243, 195, 240)", "rgb(180, 165, 145)","rgb(170, 255, 201)"])
 colors_bar = d3.scaleOrdinal().range([ "rgb(170, 255, 201)","rgb(180, 165, 145)", "rgb(169, 186, 255) ", "rgb(243, 195, 240)","rgb(255, 179, 166) "])
+color_point = 
+  {
+    "MANHATTAN": "rgb(180, 165, 145)",
+    "STATEN ISLAND": "rgb(255, 179, 166)",
+    "BRONX" : "rgb(170, 255, 201)",
+    "QUEENS" : "rgb(169, 186, 255)",
+    "BROOKLYN": "rgb(243, 195, 240)"
+  }
 
 var accidentsPerHour_empty = Array(24).fill({ bronx: 0, brooklyn: 0, manhattan: 0, queens: 0, statenIsland: 0 });
 
@@ -25,55 +33,93 @@ sel_time = [0,1000000];
 sel_bar  = [0,1000000];
 accidentsPerHour = new Uint32Array(24);
 
+
+map_canvas_active = true;
+lasso_active = false;
+inCanvasMode = false;
+
 formatMonthYear = d3.timeFormat("%b-%y");
 date_format = d3.timeFormat("%Y-%m-%d");
 
-//Load in GeoJSON data
-d3.json("data/boroughs.json", function(json) {
-  colors.domain(json.features.map(function(j) {
-      return j.properties.BoroCode;
-  }));
-  
-  manhattanBtn.style.backgroundColor    = colors(1);
-  bronxBtn.style.backgroundColor        = colors(2);
-  brooklynBtn.style.backgroundColor     = colors(3);
-  queensBtn.style.backgroundColor       = colors(4);
-  statenIslandBtn.style.backgroundColor = colors(5);
-  
-  d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
-    var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
+function initInteractive () {
+
+  //Load in GeoJSON data
+  d3.json("data/boroughs.json", function(json) {
+    colors.domain(json.features.map(function(j) {
+        return j.properties.BoroCode;
+    }));
     
-    data.forEach (function(d) {
-      d.DATE = date_format(new Date(d.DATE));
-      d.TIME = d.TIME.split(":")[0];
+    manhattanBtn.style.backgroundColor    = colors(1);
+    bronxBtn.style.backgroundColor        = colors(2);
+    brooklynBtn.style.backgroundColor     = colors(3);
+    queensBtn.style.backgroundColor       = colors(4);
+    statenIslandBtn.style.backgroundColor = colors(5);
 
-      if (d.BOROUGH=="BRONX"){
-          accidentsPerHour[d.TIME].bronx += 1;
-      } else if(d.BOROUGH=="MANHATTAN"){
-          accidentsPerHour[d.TIME].manhattan += 1;
-      } else if(d.BOROUGH=="QUEENS"){
-          accidentsPerHour[d.TIME].queens += 1;
-      } else if(d.BOROUGH=="BROOKLYN"){
-          accidentsPerHour[d.TIME].brooklyn += 1;
-      } else if(d.BOROUGH=="STATEN ISLAND"){
-          accidentsPerHour[d.TIME].statenIsland += 1;
+    d3.csv("data/accidentsInNewYorkReduced.csv", function (data) {
+      var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
+      
+      data.forEach (function(d) {
+        d.DATE = date_format(new Date(d.DATE));
+        d.TIME = d.TIME.split(":")[0];
+
+        if (d.BOROUGH=="BRONX"){
+            accidentsPerHour[d.TIME].bronx += 1;
+        } else if(d.BOROUGH=="MANHATTAN"){
+            accidentsPerHour[d.TIME].manhattan += 1;
+        } else if(d.BOROUGH=="QUEENS"){
+            accidentsPerHour[d.TIME].queens += 1;
+        } else if(d.BOROUGH=="BROOKLYN"){
+            accidentsPerHour[d.TIME].brooklyn += 1;
+        } else if(d.BOROUGH=="STATEN ISLAND"){
+            accidentsPerHour[d.TIME].statenIsland += 1;
+        }
+      }); 
+
+      data = data.filter (function(d) {
+        if (d.BOROUGH) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      })
+
+      // Counting Accidents per day
+      accidentsPerDay = getAccidentsPerDay(data);
+      
+      if (inCanvasMode) {
+        initMapChartCanvas(data, json) // this before initBarChart
       }
-    }); 
+      else {
+        initMapChart(data, json) // this before initBarChart
+      }    
+      initLineChart(accidentsPerDay)
+      init_line_svg_slider();    
 
-    // Counting Accidents per day
-    accidentsPerDay = getAccidentsPerDay(data);
-    initLineChart(accidentsPerDay)
-    initMapChart(data, json) // this before initBarChart
-    initBarChart(accidentsPerHour)
+      initBarChart(accidentsPerHour)
 
+    });
   });
-});
 
+} 
+initInteractive()
+
+function reloadInteractiveD3() {
+  removeD3()
+  initInteractive()
+}
+
+function removeD3() {
+  $( "#d3_map" ).empty();
+  $( "#d3_bar" ).empty();
+  $( "#d3_linechart" ).empty();
+  $( "#line_svg_slider" ).empty();
+}
 
 function initBarChart (data) {
   var chartDiv = document.getElementById("d3_bar");
   barW = chartDiv.clientWidth-30;
-  barH = 200;
+  barH = 250;
 
   // Margins
   bar_m = {
@@ -227,6 +273,7 @@ function fillWithNullDays (data) {
 }
 
 function initMapChart (data, json) {
+  map_canvas_active = false;
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
   map_h = chartDiv.clientWidth-20;
@@ -234,8 +281,8 @@ function initMapChart (data, json) {
   xScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_w]);
   yScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_h]);
 
-  into_xScale_map = d3.scaleLinear().domain([0, 317]).range([0, 100]);
-  into_yScale_map = d3.scaleLinear().domain([0, 317]).range([0, 100]);
+  into_xScale_map = d3.scaleLinear().domain([0, map_w]).range([0, 100]);
+  into_yScale_map = d3.scaleLinear().domain([0, map_h]).range([0, 100]);
 
   //Define map projection
   var projection = d3.geoMercator()
@@ -253,7 +300,7 @@ function initMapChart (data, json) {
               .append("svg")
               .attr("width", map_w)
               .attr("height", map_h)
-              .append("g");
+              // .append("g");
 
   map_svg.selectAll("path")
          .data(json.features)
@@ -298,14 +345,212 @@ function initMapChart (data, json) {
              return d.properties.BoroName;
          });
 
-  // make brush for map
-  map_brush = d3.brush()
-                .on("brush end", brushed_mapChart);
+  appendBrush("normal");
+}
 
-  // map brush
-  map_svg.append("g")
-         .attr("class", "brush")
-         .call(map_brush); 
+function initMapChartCanvas (data, json) {
+  map_canvas_active = true;
+
+  var chartDiv = document.getElementById("d3_map");
+  map_w = chartDiv.clientWidth-20;
+  map_h = 550;
+  pointWidth = 2;
+  pointMargin = 3;
+
+  xScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_w]);
+  yScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_h]);
+
+  into_xScale_map = d3.scaleLinear().domain([0, map_w]).range([0, 100]);
+  into_yScale_map = d3.scaleLinear().domain([0, map_h]).range([0, 100]);
+
+  //Define map projection
+  projection = d3.geoMercator()
+          .scale(80*map_w+1300)
+          .center([-74, 40.71])
+          .translate([map_w * 0.5, map_h * 0.5]);
+
+  //Define path generator
+  var path = d3.geoPath().projection(projection);
+
+  screenScale = window.devicePixelRatio || 1;
+  
+  map_svg = d3.select("#d3_map")
+                .append("svg")
+                .attr("width", map_w)
+                .attr("height", map_h)
+                .append("g")
+                .attr("width", map_w)
+                .attr("height", map_h);
+
+  // background
+  map_svg.append("rect")
+    .attr("x", map_w)
+    .attr("y", map_h)
+    .attr("width", map_w)
+    .attr("height", map_h)
+    .attr("class", "bg");                
+
+  map_svg.selectAll("path")
+         .data(json.features)
+         .enter()
+         .append("path")
+         .attr("d", path)
+         .style("fill", function (d) {
+          return colors(d.properties.BoroCode)
+         });
+
+  map_svg.selectAll("text")
+       .data(json.features)
+       .enter()
+       .append("text")
+       .attr("fill", "black")
+       .attr("class", "map-label")
+       .attr("transform", function(d) {
+           var c = path.centroid(d);
+           return "translate("+c[0]+","+c[1]+")"
+       })
+       .attr("text-anchor", "middle")
+       .text(function(d) {
+           return d.properties.BoroName;
+       });
+
+  // CANVAS PART
+  var foreignObject = map_svg.append("foreignObject")
+                             .attr("x", 0)
+                             .attr("y", 0)
+                             .attr("width", map_w)
+                             .attr("height", map_h)
+                             .attr("class", "overlay");
+
+  // add embedded body to foreign object
+  var foBody = foreignObject.append("xhtml:body")
+                            .style("margin", "0px")
+                            .style("padding", "0px")
+                            .style("background-color", "none")
+                            .style("opacity", 0.7)
+                            .style("width", map_w + "px")
+                            .style("height", map_h + "px");
+
+  map_canvas = foBody.append('canvas')
+                     .attr('width', map_w * screenScale)
+                     .attr('height', map_h * screenScale)
+                     .style('width', `${map_w}px`)
+                     .style('height', `${map_h}px`)
+
+  minX = d3.min(data.map(function(d) { return projection([d.LONGITUDE, d.LATITUDE])[0];}));
+  maxX = d3.max(data.map(function(d) { return projection([d.LONGITUDE, d.LATITUDE])[0];}));
+  minY = d3.min(data.map(function(d) { return projection([d.LONGITUDE, d.LATITUDE])[1]; }));
+  maxY = d3.max(data.map(function(d) { return projection([d.LONGITUDE, d.LATITUDE])[1]; }));
+
+  var CanvasXScale = d3.scaleLinear().domain([minX, maxX]).range([0, map_w]);
+  var CanvasYScale = d3.scaleLinear().domain([minY, maxY]).range([0, map_h]);
+
+  points = []
+  data.forEach (d => {
+    d.x = projection([d.LONGITUDE, d.LATITUDE])[0];
+    d.y = projection([d.LONGITUDE, d.LATITUDE])[1];
+    d.BOROUGH = d.BOROUGH;
+    d.state = "active";
+    d.TIME = d.TIME;
+    d.date = d.DATE;
+    d.color = color_point[d.BOROUGH] ? color_point[d.BOROUGH] : "black";
+  });
+  points = data;
+
+  map_canvas.node().getContext('2d').scale(screenScale, screenScale);
+
+  draw(map_canvas.node().getContext('2d'), points);
+
+  appendBrush("normal");
+}
+
+function appendBrush(brush) {
+  if (brush == "lasso") {
+    lasso_active = true;
+    map_svg.selectAll(".brush").remove();
+    map_svg.selectAll(".lasso-group").remove();
+     // attach lasso to interaction SVG
+    lassoInstance = lasso("d3_map").on('end', brushed_mapChart_lasso)
+      // .on('start', handleLassoStart);
+
+    map_svg.append("g")
+            .attr("class", "brush")
+            .call(lassoInstance); 
+  }
+  else if (brush == "normal") {
+    lasso_active = false;
+    map_svg.selectAll(".brush").remove();
+    map_svg.selectAll(".lasso-group").remove();
+     // make brush for map
+    map_brush = d3.brush()
+                  .on("brush end", brushed_mapChart);
+
+    // map brush
+    map_svg.append("g")
+            .attr("class", "brush")
+            .call(map_brush); 
+    
+    sel_map = [[0,0], [100000,100000]];
+  }
+}
+
+function changeBrush (brush) {
+  appendBrush(brush);
+  brushed();
+}
+// reset selected points when starting a new polygon
+function handleLassoStart(lassoPolygon) {
+  updateSelectedPoints([]);
+}
+
+
+function updateSelectedPoints(selectedPoints) {
+  // if no selected points, reset to all tomato
+  if (!selectedPoints.length) {
+    // reset all
+    points.forEach(function (d) {
+      d.color = color_point[d.BOROUGH];
+      d.state = 'active';
+    });
+
+    // otherwise gray out selected and color selected black
+  } else {
+    points.forEach(function (d) {
+      d.color = '#eee';
+      d.state = 'notactive';
+    });
+    selectedPoints.forEach(function (d) {
+      d.color = color_point[d.BOROUGH];
+      d.state = 'active';
+    });
+  }
+
+  // redraw with new colors
+  // draw(map_canvas.node().getContext('2d'), points);
+  drawPoints();
+}
+
+function drawPoints () {
+  draw(map_canvas.node().getContext('2d'), points);
+}
+
+function draw(canvas, points) {
+  const context = canvas;
+  context.save();
+
+  // remove what is on the canvas
+  context.beginPath();
+
+  context.clearRect(0, 0, map_w, map_h);
+  // context.globalAlpha = .8;
+  // draw each point as an arc
+  for (let i = 0; i < points.length; ++i) {
+    const point = points[i];
+    context.fillStyle = point.color;
+    context.fillRect(point.x, point.y, pointWidth, pointWidth);
+    context.fill();
+  }
+  context.restore();
 }
 
 function initLineChart (data) {
@@ -319,7 +564,7 @@ function initLineChart (data) {
 
   var chartDiv = document.getElementById("d3_linechart");
   var line_w = chartDiv.clientWidth-30;
-  var line_h = 200;
+  var line_h = 250;
 
   // create line_svg
   line_svg = d3.select("#d3_linechart")
@@ -376,7 +621,6 @@ function initLineChart (data) {
   line_svg.select('.brush')
           .call(line_brush);
 
-  init_line_svg_slider();    
 }
 
 function updateLineChart (data) {
@@ -430,20 +674,17 @@ function init_line_svg_slider() {
                       .ticks(5)
                       .width(slider_w-50)
                       .on('end', val => {
-                        d3.select("#line_svg_line_interval").text(val);
                         updateLineChartFromDays(val);
                       });
 
-  var g = d3.select("#line_svg_slider").append("svg")
+  slider = d3.select("#line_svg_slider").append("svg")
             .attr("width", slider_w)
             .attr("height", 65)
             .style("margin-top",'-20px')
             .append("g")
             .attr("transform", "translate(30,30)");
 
-  g.call(line_svg_slider);
-
-  d3.select("#line_svg_line_interval").text((line_svg_slider.value()));
+  slider.call(line_svg_slider);
 }
 
 function reset_line_svg_slider () {
@@ -478,22 +719,27 @@ function changeAria(id, bool) {
 
 function toggleBrooklyn(){
   brooklynActive = !brooklynActive;
+  changeAria("BrooklynBtn", "true");
   brushed();
 }
 function toggleBronx(){
   bronxActive = !bronxActive;
+  changeAria("BronxBtn", "true");
   brushed();
 }
 function toggleManhattan(){
   manhattanActive = !manhattanActive;
+  changeAria("ManhattanBtn", "true");
   brushed();
 }
 function toggleStatenIsland(){
   statenIslandActive = !statenIslandActive;
+  changeAria("StatenIslandBtn", "true");
   brushed();
 }
 function toggleQueens(){
   queensActive = !queensActive;
+  changeAria("QueensBtn", "true");
   brushed();
 }
 
@@ -551,8 +797,14 @@ function brushed_barChart () {
   brushed()
 }
 
+function brushed_mapChart_lasso (lassoPolygon) {
+  sel_map = lassoPolygon
+  brushed()
+}
+
 function brushed_mapChart () {
   sel = d3.event.selection
+  // console.log(toGlobalMapScale(sel))
   if (sel == null) {
     sel_map = [[0,0], [100000,100000]];
   }
@@ -562,16 +814,132 @@ function brushed_mapChart () {
   brushed()
 }
 
-function brushed () {
+function brushed() {
+  if(map_canvas_active) {
+    brushed_with_canvas()
+  }
+  else {
+    brushed_NoCanvas();
+  }
+}
+
+function toggleChangeBrushOnMap(force) {
+  if (lasso_active || force == "normal") {
+    changeBrush("normal")
+    $("#changeBrushOnMap").html('Change to lasso brush');
+    
+  }
+  else {
+    changeBrush("lasso")
+    $("#changeBrushOnMap").html('Change to normal brush');
+  }
+}
+
+function toggleCanvas() {
+  if (inCanvasMode) {
+    inCanvasMode = false;
+    reloadInteractiveD3();
+    $("#changeBrushOnMap").html('Change to normal brush');
+  }
+  else {
+    inCanvasMode = true;
+    reloadInteractiveD3();
+    $("#tryCanvas").html('Go back to map with SVG circles');
+  }
+}
+
+function brushed_with_canvas () {
+  var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
+  var activeData = [];
+
+  if (!lasso_active){
+    var x0 = sel_map[0][0],
+        x1 = sel_map[1][0],
+        y0 = sel_map[0][1],
+        y1 = sel_map[1][1];
+  }
+  
+  var t0 = sel_time[0],
+      t1 = sel_time[1];
+
+  var b0 = sel_bar[0],
+      b1 = sel_bar[1];      
+
+  brushedDataSet=[];
+  var dotDate;
+
+  var selectedPoints = points.filter(function (d) {
+  
+    dotDate = xScale_line_svg(new Date(d.DATE));
+    var cx = d.x;
+    var cy = d.y;
+
+    var inMap = false;
+
+    if (lasso_active){
+      if (sel_map.length <= 2 || d3.polygonContains(sel_map, [cx, cy])) {
+      inMap = true;
+      }
+    }
+    else {
+      inMap = x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+    }
+    
+    // checking if the dot is inside both the timeline and map interval 
+    // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
+    if (inMap && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
+        if(bronxActive && d.BOROUGH=="BRONX"){
+            accidentsPerHour[d.TIME].bronx += 1;
+            activeData.push(d);
+            d.state = "active"
+            return true;
+        } else if(manhattanActive && d.BOROUGH=="MANHATTAN"){
+            accidentsPerHour[d.TIME].manhattan += 1;
+            activeData.push(d);
+            d.state = "active"
+            return true;
+        } else if(queensActive && d.BOROUGH=="QUEENS"){
+            accidentsPerHour[d.TIME].queens += 1;
+            activeData.push(d);
+            d.state = "active"
+            return true;
+        } else if(brooklynActive && d.BOROUGH=="BROOKLYN"){
+            accidentsPerHour[d.TIME].brooklyn += 1;
+            activeData.push(d);
+            d.state = "active"
+            return true;
+        } else if(statenIslandActive && d.BOROUGH=="STATEN ISLAND"){
+            accidentsPerHour[d.TIME].statenIsland += 1;
+            activeData.push(d);
+            d.state = "active"
+            return true;
+        } else {
+            d.state = "notactive"
+            return false;
+        }
+    } else { 
+          d.state = "notactive"
+        return false;
+    }               
+  });
+  updateSelectedPoints(selectedPoints);
+  updateBarChart(accidentsPerHour);
+  accidentsPerDay = getAccidentsPerDay(activeData);
+  updateLineChart(accidentsPerDay);
+}
+
+function brushed_NoCanvas () {
   var accidentsPerHour = JSON.parse( JSON.stringify( accidentsPerHour_empty ) );
   var activeData = [];
 
   dots = d3.selectAll('.dot');
 
-  var x0 = sel_map[0][0],
-      x1 = sel_map[1][0],
-      y0 = sel_map[0][1],
-      y1 = sel_map[1][1];
+  if (!lasso_active){
+    var x0 = sel_map[0][0],
+        x1 = sel_map[1][0],
+        y0 = sel_map[0][1],
+        y1 = sel_map[1][1];
+  }
 
   var t0 = sel_time[0],
       t1 = sel_time[1];
@@ -582,13 +950,25 @@ function brushed () {
   brushedDataSet=[];
   var dotDate;
   dots.attr("class", function(d) {
+
     dotDate = xScale_line_svg(new Date(d.DATE));
     var cx = parseFloat(d3.select(this).attr("cx"));
     var cy = parseFloat(d3.select(this).attr("cy"));
 
+
+    var inMap = false;
+    if (lasso_active){
+      if (sel_map.length <= 2 || d3.polygonContains(sel_map, [cx, cy])) {
+      inMap = true;
+      }
+    }
+    else {
+      inMap = x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+    }
+
     // checking if the dot is inside both the timeline and map interval 
     // if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1){
-    if(x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1 && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
+    if(inMap && t0 <= dotDate && dotDate <= t1 && b0 <= xBarScale(d.TIME) && xBarScale(d.TIME) <= b1){
       if(bronxActive && d.BOROUGH=="BRONX"){
           accidentsPerHour[d.TIME].bronx += 1;
           activeData.push(d);
@@ -621,11 +1001,6 @@ function brushed () {
   updateLineChart(accidentsPerDay);
 }
 
-function fillDots () {
-    d3.selectAll('.dot')
-      .attr("class", "dot activeDot");
-}
-
 function reset_brush() {
   reset_buttons()
 
@@ -635,12 +1010,25 @@ function reset_brush() {
   
   line_svg.select(".brush").call(line_brush.move, [0,0]);
   bar_svg.select(".brush").call(bar_brush.move, [0,0]);
-  map_svg.select(".brush").call(map_brush.move, [[0,0],[0,0]]);
+
+  if (lasso_active) {
+    changeBrush("lasso")
+  }
+  else {
+    changeBrush("normal")
+  }
   brushed()
+}
+
+function fillDots () {
+    d3.selectAll('.dot')
+      .attr("class", "dot activeDot");
 }
 
 // animation stuff
 function animate_time (brushSize, speed) {
+  toggleChangeBrushOnMap("normal");
+
   var brushSize, transVar;
 
   brushSize = 200;
@@ -666,6 +1054,32 @@ function toGlobalMapScale(arr) {
   return "" + into_xScale_map(arr[0][0]) + ", " + into_yScale_map(arr[0][1]) + ", " + into_xScale_map(arr[1][0]) + ", " + into_yScale_map(arr[1][1])
 }
 
+function toLocalMapScale(x0, y0, x1, y1) {
+  return [[xScale_map(x0), yScale_map(y0)], [xScale_map(x1), yScale_map(y1)]]
+}
+
+function toGlobalMapScaleLasso(arr) {
+  var arrayString = "[";
+  for (var i = 0; i < arr.length; i++) {
+   var globalX = into_xScale_map(arr[i][0])
+   var globalY = into_xScale_map(arr[i][1])
+   arrayString += ("["+ globalX + "," + globalY + "],")
+  }
+  arrayString += "]";
+  console.log(arrayString)
+  // return "" + into_xScale_map(arr[0][0]) + ", " + into_yScale_map(arr[0][1]) + ", " + into_xScale_map(arr[1][0]) + ", " + into_yScale_map(arr[1][1])
+}
+
+function toLocalMapScaleLasso(arr) {
+  var lassoArray = [];
+  for (var i = 0; i < arr.length; i++) {
+   var localX = arr[i][0]
+   var localY = arr[i][1]
+   lassoArray.push([xScale_map(localX), yScale_map(localY)])
+  }
+  return lassoArray;
+}
+
 function beginAnimation (id) {
   $("#" + id).html('Animating...');
 }
@@ -675,6 +1089,7 @@ function doneAnimation (id) {
 }
 
 function animate (id, ms, _animateFunction) {
+  toggleChangeBrushOnMap("normal");
   beginAnimation(id);
   _animateFunction()
   setTimeout(function() {
@@ -684,25 +1099,29 @@ function animate (id, ms, _animateFunction) {
 
 //Lav brush på det sydøstlige hjørne af Queens    
 function animateAirPort(){
+  toggleChangeBrushOnMap("normal");
   animate ("animateAirPort_btn", 4000, () => animateAirPort_aux())
 }
 
 function animateAirPort_aux (){
+  toggleChangeBrushOnMap("normal");
   reset_brush();
   map_svg.select(".brush").call(map_brush.move, toLocalMapScale(50,50,10,10))
   map_svg.select(".brush")
          .transition()
          .ease(d3.easeLinear)
          .duration(3000)
-         .call(map_brush.move, toLocalMapScale(78.86,56.78,94.63, 72.55));
+         .call(map_brush.move, toLocalMapScale(72.26938691529088, 58.64848743785511, 86.73479572032232, 71.19394198330966));
 }
 
 //Lav brush på det nordvestlige hjørne af Staten Island
 function animateStatenIsland(){
+  toggleChangeBrushOnMap("normal");
   animate ("animateStatenIsland_btn", 4000, () => animateStatenIsland_aux())
 }
 
 function animateStatenIsland_aux(){
+  toggleChangeBrushOnMap("normal");
   reset_brush();
   map_svg.select(".brush").call(map_brush.move, toLocalMapScale(50,50,10,10))
   map_svg.select(".brush")
@@ -714,11 +1133,12 @@ function animateStatenIsland_aux(){
 
 //Vis alt data og lav bar chart brush på 14-18
 function animateBarChart1418(){ 
+  toggleChangeBrushOnMap("normal");
   animate ("animateBarChart1418_btn", 6000, () => animateBarChart1418_aux())
-
 }
 
 function animateBarChart1418_aux(){
+  toggleChangeBrushOnMap("normal");
   reset_brush();
   bar_svg.select(".brush").call(bar_brush.move, [xBarScale(0),xBarScale(23)])
   bar_svg.select(".brush")
@@ -796,6 +1216,8 @@ $('#go-to-bottom').click( function(e) {
   return false; 
 });
 
+
+// init bubble chart
 function initBubbles() {
 
   d3.csv("data/countAllUniqueContributingFactor.csv", function(d) {
@@ -861,3 +1283,4 @@ function initBubbles() {
         .text(function(d) { return d.id + "\nNo. of accidents: " + format(d.value) + "\nPercent of top 20: " + (Number(this.parentNode.__data__.data.percent)*100.00).toFixed(1) + "%"; });
   });
 }
+

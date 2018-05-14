@@ -8,6 +8,10 @@
     <script src="js/graph-scroll.js"></script>
     <script src="js/d3-simple-slider.js"></script>
 
+
+    <script src="js/lasso.dist.js"></script>
+    <script src="js/lasso.js"></script>
+
     <!--jQuery CDN-->
     <script src="js/jquery-3.3.1.min.js"></script>
     <!--Bootstrap-->
@@ -54,7 +58,9 @@
     </script>
 </head>
 <body>
-
+<!--     <div id="d3_canvas_container" style="width:400px">
+      
+    </div> -->
   <div class="row" style="margin-left:20px">
     <div class="col-2"></div>
     <div class="col-8">
@@ -151,7 +157,11 @@
                   
                 <div class="col-5">
                   <h5>Map of accidents at location</h5>
-       
+                  
+                  <button type="button" 
+                      class="btn-outline-primary btn"
+                      id="changeBrushOnMap"
+                      onclick="toggleChangeBrushOnMap();">Use lasso brush on map</button>
                   <div class="text-center">
                     <div id="d3_map" ></div>
                   </div> 
@@ -183,6 +193,11 @@
                       Staten Island</button>
                       
                     </div>
+                    <button type="button" 
+                      class="btn-outline-primary btn"
+                      id="tryCanvas"
+                      style="margin-top: 10px"
+                      onclick="toggleCanvas();">Try map with Canvas</button>
                 </div>      
               </div> <!-- end of 7-5 row -->
 
@@ -265,6 +280,20 @@
         </div>
 
         <div class="step">
+          <h1>Change the map brush</h1>
+          <p>
+            Try changing the map brush by clicking the button just above the map. You can use a lasso or the normal brush.
+          </p>
+        </div>
+
+        <div class="step">
+          <h1>Change the map to canvas</h1>
+          <p>
+            You can change the fell an view of the map by trying out the canvas mode. Try click the button under the map. 
+          </p>
+        </div>
+
+        <div class="step">
           <h1>Reset</h1>
           <p>
             You can reset the brushes and borough buttons independently. Click outside the brush to reset only that. 
@@ -287,6 +316,7 @@
   </div> <!-- end of main-d3-content -->
 
   <script type="text/javascript" src="js/final_assignment.js"> </script>
+<!-- <script type="text/javascript" src="canvas.js"> </script> -->
 
   <script type="text/javascript">
     showHide('main-d3-content', 'block'); 

@@ -10,6 +10,18 @@ table {
     margin: 0 auto;
 }
 
+.d3_canvas_container {
+  border: 1px solid #E6AAAA; /*#e3e3e3 = bootstrap .well look*/;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+  display: inline;
+  vertical-align: top;
+  position: relative;
+}
+ 
+.d3_canvas_container .bg {
+  fill: #F5F5F5
+}
+
 #line_svg_slider text {
     opacity:1;
 }
