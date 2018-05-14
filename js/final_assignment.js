@@ -280,7 +280,7 @@ function initMapChart (data, json) {
   map_canvas_active = false;
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
-  map_h = chartDiv.clientWidth-20;
+  map_h = chartDiv.clientWidth;
 
   xScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_w]);
   yScale_map = d3.scaleLinear().domain([0, 100]).range([0, map_h]);
@@ -357,7 +357,7 @@ function initMapChartCanvas (data, json) {
 
   var chartDiv = document.getElementById("d3_map");
   map_w = chartDiv.clientWidth-20;
-  map_h = 550;
+  map_h = chartDiv.clientWidth;
   pointWidth = 2;
   pointMargin = 3;
 
