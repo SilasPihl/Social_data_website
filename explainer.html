@@ -6,7 +6,7 @@
 <h2>Motivation</h2>
 <ul>
   <li>
-<em>What is your dataset?</em> <br/>
+<em>What is our dataset?</em> <br/>
 
 <br/><p>Our dataset is from <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i">OpenNYC</a> and encompasses all recorded traffic collisions from 2014 to now in New York. <br/>
 Link to direct download of files used in the visualizations are here, some mentioned later:</p>
@@ -18,15 +18,16 @@ Link to direct download of files used in the visualizations are here, some menti
 <br/>
   </li>
   <li>
-<em>Why did you choose this/these particular dataset(s)?</em>
+<em>Why did we choose this/these particular dataset(s)?</em>
 <br/>
 
 <br/><p>We chose this specific dataset because it seemed a natural continuation of our previous assignment. This allowed us to spend less time worrying about boilerplate, and more time taking what we already had further. Thus choosing a new dataset, but keeping with the same type of visualization and the same location, seemed optimal. There was still a lot of work in analyzing and filtering the new data set. Also, the murder dataset didn’t really supply any useful or behavior-affecting information for most people. This dataset however, can tell you where you shouldn’t ride your bike and what times, or where, you shouldn’t drive your new Porsche around.
 </p><br/>
   </li>
   <li>
-<em>What was your goal for the end user’s experience?</em><br/>
-<br/><p>We wanted to tell the user a story first and then open the visualization up for interaction. This allows us to guide the user to a few interesting data points and then open up to allow them to explore. Ideally, we’d want this visualization to be good enough for it to affect the users behavior, or at least make them aware of things like how it’s more likely that you are in an accident when driving home from work, than when driving to work.
+<em>What was our goal for the end user’s experience?</em><br/>
+<br/><p>We wanted to tell the user a story first and then open the visualization up for interaction. This allows us to guide the user to a few interesting data points and then open up to allow them to explore. This visualizations are complex and can be modified in many ways. Therefore the sliding text boxes would serve as both some fact but even more as a guidance to the features in the visualizations.<br/>
+Ideally, we’d want this visualization to be good enough for it to affect the users behavior, or at least make them aware of things like how it’s more likely that you are in an accident when driving home from work, than when driving to work.
 </p>
 
   </li>
@@ -56,7 +57,7 @@ Also, we have found two areas which merit some follow-up. Queens has a ‘bald s
 <h2>Genre</h2>
 <ul>
   <li>
-<em>Which tools did you use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?</em><br/><br/>
+<em>Which tools did we use from each of the 3 categories of Visual Narrative (Figure 7 in Segal and Heer). Why?</em><br/><br/>
 <p>
 We decided to use a consistent visual platform as our three visualizations interact with each other and we wanted to keep that interaction inside a single view. With further development we might have added more visualizations that could have had separate views, but we thought we’d make a really good interactive single page before expanding to more. However, we did add one bubble chart to act as a loading buffer. It loads rather quickly and distracts from the longer loading time for the visualizations further down the page. Additionally, it allows us to open with a small story that introduces our dataset and shows a visualization that doesn't quite fit in with the other three visualizations. Given more development time, the bubble visualization could have interacted with the other visualizations as well, allowing you to filter the data based on contributing factor.
 </p>
@@ -67,18 +68,20 @@ We use Feature Distinction by setting each borough and every feature relating to
 <p>
 Finally we use Animated Transitions to transition our bars, our dots and our line chart. When you use the slider belonging to the line chart it will transition in and out of the aggregation of the data points.
 </p>
-
+<p>
+  We chose annotated graph as a core feature of our visualization. This allowed us, having a dataset without any clear peaks or points of interest and a high degree of interactivity, to guide our users towards points of interest and to instruct them in the optimal usage of the various sliders, brushes and buttons.
+</p>
   </li>
   <li>
-<em>Which tools did you use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?</em><br/>
+<em>Which tools did we use from each of the 3 categories of Narrative Structure (Figure 7 in Segal and Heer). Why?</em><br/>
 <br/><p>
-We use a combination of Random Access and Linear. The visualization is linear in the beginning as we use the slider and a begining section to tell the user a story. Later on the visualization becomes random access as the visualization is all one page and the user can interact with any part he or she wants.
+We use a combination of Random Access and Linear. The visualization is linear in the beginning as we use the slider and a begining section to tell the user a story. Later on the visualization becomes random access as the visualization is all one page and the user can interact with any part the user wants.
 </p>
 <p>
-We use Filtering, Selection and Search in allowing the user to choose which parts of the data he or she wants to view. They can have the line chart in the top left show fewer data points, thus aggregating several data points into a single data point, smoothing out the data, or have every data point be a single day, allowing the user to see day-specific spikes. The bar chart can be used to filter the entire data set looked at based on the time, which is then reflected in the choropleth. The choropleth on the other hand allows the user to filter based on geographical location.
+We use Filtering, Selection and Search in allowing the user to choose which parts of the data the user wants to view. They can have the line chart in the top left show fewer data points, thus aggregating several data points into a single data point, smoothing out the data, or have every data point be a single day, allowing the user to see day-specific spikes. The bar chart can be used to filter the entire data set looked at based on the time, which is then reflected in the choropleth. The choropleth on the other hand allows the user to filter based on geographical location both with a cubic brush and a lasso brush, which can be changed dynamically.
 </p>
 <p>
-Finally, we have made use of an Introductory Text and visualization in our slider and Annotations for the interactive part of our visualization.
+Finally, we have made use of an Introductory Text and on demand sliding text boxes with annotations and visualizations and Annotations for the interactive part of our visualization.
 </p>
   If you are interested in first part of this final project, making a 3 min video of the expectations (Project A), can be seen here 
   <a href="https://app.peergrade.io/handin/download/5ad394d80c701000120cacda">Youtube link</a>.
@@ -93,6 +96,9 @@ Finally, we have made use of an Introductory Text and visualization in our slide
 <em>Why are they right for the story you want to tell?</em><br/>
 <br/><p>
 These are the right tool as we first allow ourselves to relay to the user the information we have gleaned from preprocessing and then follow it up with the user being allowed to tell the story from their point of view. If they are from Staten Island and mainly travel on Staten Island, they are then allowed to filter out the noise and just look at Staten Island, perhaps even their own corner of Staten Island, and thus see at which parts of the day they are safest. Having three different visualizations that interact with each other allows the user to have four different ways of filtering the data and viewing it three different ways, allowing for view of emergent information.
+</p>
+<p>
+  The sliding text boxes allows us to give brief informations and guidance, which provides a powerfull but also a non dominant way of leading the way for the user, while never taking away the focus from the visualizations. 
 </p>
 
   </li>
@@ -145,6 +151,10 @@ In a real life commercial article with visualizations we would use canvas for pa
   <img src="images/call_tree_nopaint.jpg" alt="call_tree_nopaint.jpg"/>
   <figcaption class="figure-caption">The map svg is display none and the graphics only takes 1.3 seconds.</figcaption>
 </figure>
+<br/>
+In the end of the project we did manage get the canvas up and running. If you haven't seen it then try it in a browser that is not chrome. The button to activate canvas is below the map chart. With more time, this would as mentioned be explored more as we would apply larger dataset and maybe live dataset. 
+
+More options to zoom in and out on different scales would be preferable as well.
 
 </div>
     

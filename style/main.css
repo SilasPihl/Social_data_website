@@ -35,7 +35,7 @@ table {
 }
 
 .borough-button, .borough-button .active {
-    border:solid 1px black;
+    border:none!important;
     padding:5px;
     color: black!important;
 }
@@ -64,6 +64,11 @@ div.bar {
   height: 75px; /* We'll override height later */
   margin-right: 2px;
   background-color: teal;
+}
+
+.btn-outline-primary {
+    border:solid grey 1px;
+    color:black;
 }
 
 #d3_map{
