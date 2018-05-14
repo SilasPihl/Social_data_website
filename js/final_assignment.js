@@ -121,12 +121,17 @@ function removeD3() {
 }
 
 $( window ).resize(function() {
-  setTimeout(function (){
-    var r = confirm("You changed the page size! Update page for charts to have proper size. Press OK to confirm! :) ");
-    if (r == true) {
-      location.reload();
-    }
-  }, 2000);
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+   // do nothing
+  }
+  else {
+    setTimeout(function (){
+      var r = confirm("You changed the page size! Update page for charts to have proper size. Press OK to confirm! :) ");
+      if (r == true) {
+        location.reload();
+      }
+    }, 2000);
+}
   
 });
 
