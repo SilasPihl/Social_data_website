@@ -114,6 +114,10 @@ function removeD3() {
   $( "#d3_bar" ).empty();
   $( "#d3_linechart" ).empty();
   $( "#line_svg_slider" ).empty();
+  if (lasso_active) {
+    $("#changeBrushOnMap").html('Change to lasso brush');
+  }
+  reset_buttons()
 }
 
 function initBarChart (data) {
@@ -390,29 +394,7 @@ function initMapChartCanvas (data, json) {
     .attr("height", map_h)
     .attr("class", "bg");                
 
-  map_svg.selectAll("path")
-         .data(json.features)
-         .enter()
-         .append("path")
-         .attr("d", path)
-         .style("fill", function (d) {
-          return colors(d.properties.BoroCode)
-         });
-
-  map_svg.selectAll("text")
-       .data(json.features)
-       .enter()
-       .append("text")
-       .attr("fill", "black")
-       .attr("class", "map-label")
-       .attr("transform", function(d) {
-           var c = path.centroid(d);
-           return "translate("+c[0]+","+c[1]+")"
-       })
-       .attr("text-anchor", "middle")
-       .text(function(d) {
-           return d.properties.BoroName;
-       });
+  
 
   // CANVAS PART
   var foreignObject = map_svg.append("foreignObject")
@@ -427,7 +409,8 @@ function initMapChartCanvas (data, json) {
                             .style("margin", "0px")
                             .style("padding", "0px")
                             .style("background-color", "none")
-                            .style("opacity", 0.7)
+                            .style("opacity", 1)
+                            .style("position", 'relative')
                             .style("width", map_w + "px")
                             .style("height", map_h + "px");
 
@@ -460,6 +443,32 @@ function initMapChartCanvas (data, json) {
   map_canvas.node().getContext('2d').scale(screenScale, screenScale);
 
   draw(map_canvas.node().getContext('2d'), points);
+
+  map_svg.selectAll("path")
+         .data(json.features)
+         .enter()
+         .append("path")
+         .attr("d", path)
+         .style("opacity", 0.4)
+         .style("fill", function (d) {
+          return colors(d.properties.BoroCode)
+         });
+
+  map_svg.selectAll("text")
+       .data(json.features)
+       .enter()
+       .append("text")
+       .attr("fill", "black")
+       .attr("class", "map-label")
+       .style("position", "relative")
+       .attr("transform", function(d) {
+           var c = path.centroid(d);
+           return "translate("+c[0]+","+c[1]+")"
+       })
+       .attr("text-anchor", "middle")
+       .text(function(d) {
+           return d.properties.BoroName;
+       });
 
   appendBrush("normal");
 }
@@ -517,6 +526,7 @@ function updateSelectedPoints(selectedPoints) {
   } else {
     points.forEach(function (d) {
       d.color = '#eee';
+      d.stroke = 'none';
       d.state = 'notactive';
     });
     selectedPoints.forEach(function (d) {
@@ -540,15 +550,30 @@ function draw(canvas, points) {
 
   // remove what is on the canvas
   context.beginPath();
-
   context.clearRect(0, 0, map_w, map_h);
-  // context.globalAlpha = .8;
+
+  context.globalAlpha = 1;
   // draw each point as an arc
+  var circ = 2 * Math.PI
   for (let i = 0; i < points.length; ++i) {
     const point = points[i];
+    context.beginPath();
+    context.arc(point.x, point.y, pointWidth, 0, circ, false);
     context.fillStyle = point.color;
-    context.fillRect(point.x, point.y, pointWidth, pointWidth);
     context.fill();
+    context.lineWidth = 1;
+    if (point.state == 'active') {
+      context.strokeStyle = 'black';
+      context.stroke();
+    }
+
+    // const point = points[i];
+    // context.fillStyle = point.color;
+    // context.fillRect(point.x, point.y, pointWidth, pointWidth);
+    // context.fill();
+    // context.lineWidth = 1;
+    // context.strokeStyle = 'black';
+    // context.stroke();
   }
   context.restore();
 }

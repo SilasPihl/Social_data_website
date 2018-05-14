@@ -55,7 +55,7 @@ bbox.height = map_h
       lassoPath = g
         .append('path')
         .attr('fill', '#0bb')
-        .attr('fill-opacity', 0.1)
+        .attr('fill-opacity', 0.3)
         .attr('stroke', '#0bb')
         .attr('stroke-dasharray', '3, 3');
 
