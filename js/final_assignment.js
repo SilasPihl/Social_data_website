@@ -120,6 +120,16 @@ function removeD3() {
   reset_buttons()
 }
 
+$( window ).resize(function() {
+  setTimeout(function (){
+    var r = confirm("You changed the page size! Update page for charts to have proper size. Press OK to confirm! :) ");
+    if (r == true) {
+      location.reload();
+    }
+  }, 2000);
+  
+});
+
 function initBarChart (data) {
   var chartDiv = document.getElementById("d3_bar");
   barW = chartDiv.clientWidth-30;
